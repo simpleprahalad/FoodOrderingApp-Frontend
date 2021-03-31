@@ -48,15 +48,11 @@ class Checkout extends Component {
   }
 
   handleBack = () => {
-    this.setState((state) => ({
-      activeStep: this.state.activeStep - 1,
-    }));
+    this.setState({ activeStep: this.state.activeStep - 1 });
   };
 
-  handleBack = () => {
-    this.setState((state) => ({
-      activeStep: this.state.activeStep + 1,
-    }));
+  handleNext = () => {
+    this.setState({ activeStep: this.state.activeStep + 1 });
   };
 
   render() {
