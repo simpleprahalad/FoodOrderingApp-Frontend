@@ -7,6 +7,9 @@ import StepLabel from "@material-ui/core/StepLabel";
 import StepContent from "@material-ui/core/StepContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 const styles = (theme) => ({
   root: {
@@ -28,22 +31,12 @@ function getSteps() {
   return ["Delivery", "Payment"];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return `Delivery Address to be updated`;
-    case 1:
-      return "An ad group contains one or more ads which target a shared set of keywords.";
-    default:
-      return "Unknown step";
-  }
-}
-
 class Checkout extends Component {
   constructor() {
     super();
     this.state = {
       activeStep: 0,
+      value: 0,
     };
   }
 
@@ -53,6 +46,32 @@ class Checkout extends Component {
 
   handleNext = () => {
     this.setState({ activeStep: this.state.activeStep + 1 });
+  };
+
+  tabChangeHandler = (event, value) => {
+    this.setState({ value });
+  };
+
+  getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <AppBar position="static">
+            <Tabs
+              value={this.state.value}
+              onChange={this.tabChangeHandler}
+              aria-label="simple tabs example"
+            >
+              <Tab label="Existing Address" />
+              <Tab label="New Address" />
+            </Tabs>
+          </AppBar>
+        );
+      case 1:
+        return "An ad group contains one or more ads which target a shared set of keywords.";
+      default:
+        return "Unknown step";
+    }
   };
 
   render() {
@@ -69,7 +88,7 @@ class Checkout extends Component {
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
                 <StepContent>
-                  <Typography>{getStepContent(index)}</Typography>
+                  <Typography>{this.getStepContent(index)}</Typography>
                   <div className={classes.actionsContainer}>
                     <div>
                       <Button
