@@ -1,15 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import Header from './screens/header/Header';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import Header from "./screens/header/Header";
+import Home from "./screens/home/Home";
+import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
-    <div>
-        <Header/>
-        Food Ordering App
-    </div>,
-    document.getElementById('root')
+  <div>
+    <Header />
+    <Home />
+  </div>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

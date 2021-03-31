@@ -1,0 +1,27 @@
+.cards-layout {
+  width: 560px;
+  margin: 20px 10px;
+  height: 0%;
+}
+
+.posts {
+  margin: 5px 20px;
+}
+
+.likes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.input {
+  width: 400px;
+}
+
+.dispNone {
+  display: none;
+}
+
+.dispBlock {
+  display: block;
+}
