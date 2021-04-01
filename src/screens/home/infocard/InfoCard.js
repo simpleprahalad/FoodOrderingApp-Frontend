@@ -59,11 +59,12 @@ export default function InfoCard(props) {
         >
           {ratingString()}
         </Button>
+
         <Button
           aria-label="inr"
+          disabled={true}
           className={classes.button}
           startIcon={rupeeIcon}
-          color={"primary"}
         >
           {props.pricing} for two
         </Button>
