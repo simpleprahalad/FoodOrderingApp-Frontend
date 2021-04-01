@@ -13,7 +13,6 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRupeeSign, faStopCircle } from "@fortawesome/free-solid-svg-icons";
-import { StoreMallDirectorySharp } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
