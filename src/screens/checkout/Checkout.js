@@ -124,17 +124,47 @@ class Checkout extends Component {
                   this.state.existingAddresses.map((value) => (
                     <Card className={this.props.card} key={value.id}>
                       <Typography>
-                        {value.flat_buil_number}
-                        <br />
-                        {value.flat_building_name}
-                        <br />
-                        {value.locality}
-                        <br />
-                        {value.city}
-                        <br />
-                        {value.state.state_name}
-                        <br />
-                        {value.pincode}
+                        {value.flat_buil_number && (
+                          <div>
+                            {value.flat_buil_number}
+                            <br />
+                          </div>
+                        )}
+
+                        {value.flat_building_name && (
+                          <div>
+                            {value.flat_building_name}
+                            <br />
+                          </div>
+                        )}
+
+                        {value.locality && (
+                          <div>
+                            {value.locality}
+                            <br />
+                          </div>
+                        )}
+
+                        {value.city && (
+                          <div>
+                            {value.city}
+                            <br />
+                          </div>
+                        )}
+
+                        {value.state.state_name && (
+                          <div>
+                            {value.state.state_name}
+                            <br />
+                          </div>
+                        )}
+
+                        {value.pincode && (
+                          <div>
+                            {value.pincode}
+                            <br />
+                          </div>
+                        )}
                       </Typography>
                     </Card>
                   ))
