@@ -7,20 +7,23 @@ import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRupeeSign, faStopCircle } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 500,
+    justify: "center",
   },
 
   margin: {
     margin: theme.spacing(1),
+  },
+  paper: {
+    padding: theme.spacing(1),
+    textAlign: "start",
   },
 }));
 
@@ -30,34 +33,115 @@ export default function SummaryCard() {
   const inrIcon = <FontAwesomeIcon icon={faRupeeSign} />;
   const stopCircleIcon = <FontAwesomeIcon icon={faStopCircle} />;
 
+  function BillableItemRow() {
+    return (
+      <React.Fragment>
+        <Grid item xs={6}>
+          <FontAwesomeIcon icon={faStopCircle} />
+          <Typography
+            className={classes.paper}
+            variant="body1"
+            component="span"
+            color="textSecondary"
+          >
+            Hakka Noodles
+          </Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <Typography
+            className={classes.paper}
+            variant="body1"
+            component="span"
+            color="textSecondary"
+          >
+            4
+          </Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <FontAwesomeIcon icon={faRupeeSign} />
+          <Typography
+            className={classes.paper}
+            variant="body1"
+            component="span"
+            color="textSecondary"
+          >
+            400
+          </Typography>
+        </Grid>
+      </React.Fragment>
+    );
+  }
+
+  function BillableItemGrid() {
+    return (
+      <React.Fragment>
+        <Grid container spacing={1}>
+          <Grid container item xs={10} spacing={4}>
+            <BillableItemRow />
+          </Grid>
+          <Grid container item xs={10} spacing={4}>
+            <BillableItemRow />
+          </Grid>
+          <Grid container item xs={10} spacing={4}>
+            <BillableItemRow />
+          </Grid>
+        </Grid>
+      </React.Fragment>
+    );
+  }
+
+  function NetBillableItemRow() {
+    return (
+      <React.Fragment>
+        <Grid>
+          <Typography
+            className={classes.paper}
+            variant="body1"
+            component="span"
+          >
+            Net Amount
+          </Typography>
+        </Grid>
+        <Grid>
+          <FontAwesomeIcon icon={faRupeeSign} />
+          <Typography
+            className={classes.paper}
+            variant="body1"
+            component="span"
+          >
+            653
+          </Typography>
+        </Grid>
+      </React.Fragment>
+    );
+  }
+
+  function NetBillableItemGrid() {
+    return (
+      <React.Fragment>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          item
+        >
+          <NetBillableItemRow />
+        </Grid>
+      </React.Fragment>
+    );
+  }
+
   return (
     <Card className={classes.root}>
       <CardHeader title="Summary" />
-
       <CardContent>
         <Typography variant="body1" color="textSecondary" component="p">
           Restaurant Name
         </Typography>
-
-        <List component="nav" className={classes.root} aria-label="contacts">
-          <ListItem button>
-            <ListItemIcon>{stopCircleIcon}</ListItemIcon>
-            <ListItemText primary="Hakka Noodles" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>{stopCircleIcon}</ListItemIcon>
-            <ListItemText primary="Chocolate IceCream" />
-          </ListItem>
-        </List>
-
-        <Typography variant="body1" color="textPrimary" component="span">
-          Net Amount
-        </Typography>
-        {inrIcon}
-        <Typography variant="body1" color="textSecondary" component="span">
-          122.00
-        </Typography>
+        <BillableItemGrid />
         <Divider />
+        <NetBillableItemGrid />
       </CardContent>
       <CardActions disableSpacing>
         <Button
