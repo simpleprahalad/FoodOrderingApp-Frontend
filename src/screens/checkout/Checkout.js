@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Header from "../header/Header";
+import "./Checkout.css";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -17,6 +18,9 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles = (theme) => ({
   root: {
@@ -31,6 +35,10 @@ const styles = (theme) => ({
   },
   resetContainer: {
     padding: theme.spacing(3),
+  },
+  saveAddressButton: {
+    display: "block",
+    marginTop: 30,
   },
 });
 
@@ -89,6 +97,8 @@ class Checkout extends Component {
       ],
       paymentOptions: [],
       selectedPaymentOption: "",
+      flatBuildingNum: "",
+      flatBuildingNumRequired: "dispNone",
     };
   }
 
@@ -173,6 +183,16 @@ class Checkout extends Component {
     this.getPaymentMethods();
   };
 
+  flatBuildingNumRequired = (e) => {
+    this.setState({ flatBuildingNum: e.target.value });
+  };
+
+  saveAddressClickHandler = () => {
+    this.state.flatBuildingNum === ""
+      ? this.setState({ flatBuildingNumRequired: "dispBlock" })
+      : this.setState({ flatBuildingNumRequired: "dispNone" });
+  };
+
   getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -188,24 +208,55 @@ class Checkout extends Component {
                 <Tab label="New Address" />
               </Tabs>
             </AppBar>
-            <TabPanel value={this.state.value} index={0}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                {this.state.existingAddresses.length > 0 ? (
-                  this.displayAddress()
-                ) : (
-                  <p style={{ color: "gray", height: 200 }}>
-                    There are no saved addresses! You can save an address using
-                    the 'New Address' tab or using your ‘Profile’ menu option.
-                  </p>
-                )}
-              </div>
-            </TabPanel>
+            {this.state.value === 0 ? (
+              <TabPanel value={this.state.value} index={0}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {this.state.existingAddresses.length > 0 ? (
+                    this.displayAddress()
+                  ) : (
+                    <p style={{ color: "gray", height: 200 }}>
+                      There are no saved addresses! You can save an address
+                      using the 'New Address' tab or using your ‘Profile’ menu
+                      option.
+                    </p>
+                  )}
+                </div>
+              </TabPanel>
+            ) : (
+              <TabPanel value={this.state.value} index={1}>
+                <FormControl required>
+                  <InputLabel htmlFor="flatBuildNo">
+                    {" "}
+                    Flat / Building No.{" "}
+                  </InputLabel>
+                  <Input
+                    id="flatBuildNo"
+                    type="text"
+                    username={this.state.flatBuildingNum}
+                    onChange={this.flatNumChangeHandler}
+                  />
+                  <FormHelperText
+                    className={this.state.flatBuildingNumRequired}
+                  >
+                    <span className="red">required</span>
+                  </FormHelperText>
+                </FormControl>
+
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={this.saveAddressClickHandler}
+                >
+                  SAVE ADDRESS
+                </Button>
+              </TabPanel>
+            )}
           </div>
         );
       case 1:
