@@ -199,6 +199,18 @@ class Checkout extends Component {
     this.setState({ locality: e.target.value });
   };
 
+  cityChangeHandler = (e) => {
+    this.setState({ city: e.target.value });
+  };
+
+  stateChangeHandler = (e) => {
+    this.setState({ state: e.target.value });
+  };
+
+  pincodeChangeHandler = (e) => {
+    this.setState({ pincode: e.target.value });
+  };
+
   saveAddressClickHandler = () => {
     this.state.flatBuildingNum === ""
       ? this.setState({ flatBuildingNumRequired: "dispBlock" })
@@ -207,6 +219,18 @@ class Checkout extends Component {
     this.state.locality === ""
       ? this.setState({ localityRequired: "dispBlock" })
       : this.setState({ localityRequired: "dispNone" });
+
+    this.state.city === ""
+      ? this.setState({ cityRequired: "dispBlock" })
+      : this.setState({ cityRequired: "dispNone" });
+
+    this.state.state === ""
+      ? this.setState({ stateRequired: "dispBlock" })
+      : this.setState({ stateRequired: "dispNone" });
+
+    this.state.pincode === ""
+      ? this.setState({ pincodeRequired: "dispBlock" })
+      : this.setState({ pincodeRequired: "dispNone" });
   };
 
   getStepContent = (step) => {
@@ -273,6 +297,48 @@ class Checkout extends Component {
                     onChange={this.localityChangeHandler}
                   />
                   <FormHelperText className={this.state.localityRequired}>
+                    <span className="red">required</span>
+                  </FormHelperText>
+                </FormControl>
+                <br />
+                <br />
+                <FormControl required>
+                  <InputLabel htmlFor="city">City</InputLabel>
+                  <Input
+                    id="city"
+                    type="text"
+                    username={this.state.city}
+                    onChange={this.cityChangeHandler}
+                  />
+                  <FormHelperText className={this.state.cityRequired}>
+                    <span className="red">required</span>
+                  </FormHelperText>
+                </FormControl>
+                <br />
+                <br />
+                <FormControl required>
+                  <InputLabel htmlFor="state">State</InputLabel>
+                  <Input
+                    id="state"
+                    type="text"
+                    username={this.state.state}
+                    onChange={this.stateChangeHandler}
+                  />
+                  <FormHelperText className={this.state.stateRequired}>
+                    <span className="red">required</span>
+                  </FormHelperText>
+                </FormControl>
+                <br />
+                <br />
+                <FormControl required>
+                  <InputLabel htmlFor="pincode">Pincode</InputLabel>
+                  <Input
+                    id="pincode"
+                    type="text"
+                    username={this.state.pincode}
+                    onChange={this.pincodeChangeHandler}
+                  />
+                  <FormHelperText className={this.state.pincodeRequired}>
                     <span className="red">required</span>
                   </FormHelperText>
                 </FormControl>
