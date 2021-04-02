@@ -32,11 +32,37 @@
   height: 40px;
 }
 
-/** Login and profile box **/
 .login-button {
   align-self: center;
   margin-right: 20px !important;
 }
+
+/* Modal **/
+@keyframes app-logo-spin {
+  from { transform: scaleX(-1); }
+}
+
+.MuiFormControl-root {
+  width: 80%;
+}
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.dispNone {
+  display: none;
+}
+
+.dispBlock {
+  display: block;
+}
+
+.red {
+  color: red;
+}
+
+
 
 /* Smaller devices */
 @media screen and (max-width:600px) {
@@ -53,4 +79,9 @@
     align-self: flex-start;
     margin-left: -5px;
   } 
+
+  .modal-style {
+    min-width: 70%;
+  }
+
 }
