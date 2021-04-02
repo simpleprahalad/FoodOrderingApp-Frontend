@@ -152,7 +152,7 @@ class Header extends Component {
                   <Search />
                 </InputAdornment>
               }
-              placeholder="Search by Restuarnt Name"
+              placeholder="Search by Restuarant Name"
             />
           </div>
           <Button className="login-button" size="medium" variant="contained" onClick={this.openModalHandler}>
