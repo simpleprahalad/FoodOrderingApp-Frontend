@@ -12,6 +12,11 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import PropTypes from "prop-types";
 import Card from "@material-ui/core/Card";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const styles = (theme) => ({
   root: {
@@ -82,6 +87,8 @@ class Checkout extends Component {
           },
         },
       ],
+      paymentOptions: [],
+      selectedPaymentOption: "",
     };
   }
 
@@ -95,6 +102,75 @@ class Checkout extends Component {
 
   tabChangeHandler = (event, value) => {
     this.setState({ value });
+  };
+
+  displayAddress = () => {
+    return this.state.existingAddresses.map((value) => (
+      <Card className={this.props.card} key={value.id}>
+        <Typography>
+          {value.flat_buil_number && (
+            <div>
+              {value.flat_buil_number}
+              <br />
+            </div>
+          )}
+
+          {value.flat_building_name && (
+            <div>
+              {value.flat_building_name}
+              <br />
+            </div>
+          )}
+
+          {value.locality && (
+            <div>
+              {value.locality}
+              <br />
+            </div>
+          )}
+
+          {value.city && (
+            <div>
+              {value.city}
+              <br />
+            </div>
+          )}
+
+          {value.state.state_name && (
+            <div>
+              {value.state.state_name}
+              <br />
+            </div>
+          )}
+
+          {value.pincode && (
+            <div>
+              {value.pincode}
+              <br />
+            </div>
+          )}
+        </Typography>
+      </Card>
+    ));
+  };
+
+  getPaymentMethods = () => {
+    // TODO : to be received from backend
+    const paymentOptions = [
+      "Cash on Delivery",
+      "Wallet",
+      "Net Banking",
+      "Debit / Credit Card",
+    ];
+    this.setState({ paymentOptions: paymentOptions });
+  };
+
+  handlePaymentModeChange = (e) => {
+    this.setState({ selectedPaymentOption: e.target.value });
+  };
+
+  componentWillMount = () => {
+    this.getPaymentMethods();
   };
 
   getStepContent = (step) => {
@@ -121,53 +197,7 @@ class Checkout extends Component {
                 }}
               >
                 {this.state.existingAddresses.length > 0 ? (
-                  this.state.existingAddresses.map((value) => (
-                    <Card className={this.props.card} key={value.id}>
-                      <Typography>
-                        {value.flat_buil_number && (
-                          <div>
-                            {value.flat_buil_number}
-                            <br />
-                          </div>
-                        )}
-
-                        {value.flat_building_name && (
-                          <div>
-                            {value.flat_building_name}
-                            <br />
-                          </div>
-                        )}
-
-                        {value.locality && (
-                          <div>
-                            {value.locality}
-                            <br />
-                          </div>
-                        )}
-
-                        {value.city && (
-                          <div>
-                            {value.city}
-                            <br />
-                          </div>
-                        )}
-
-                        {value.state.state_name && (
-                          <div>
-                            {value.state.state_name}
-                            <br />
-                          </div>
-                        )}
-
-                        {value.pincode && (
-                          <div>
-                            {value.pincode}
-                            <br />
-                          </div>
-                        )}
-                      </Typography>
-                    </Card>
-                  ))
+                  this.displayAddress()
                 ) : (
                   <p style={{ color: "gray", height: 200 }}>
                     There are no saved addresses! You can save an address using
@@ -179,7 +209,26 @@ class Checkout extends Component {
           </div>
         );
       case 1:
-        return "An ad group contains one or more ads which target a shared set of keywords.";
+        return (
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Select Mode of Payment</FormLabel>
+            <RadioGroup
+              aria-label="Payment Method"
+              name="payment"
+              value={this.state.selectedPaymentOption}
+              onChange={this.handlePaymentModeChange}
+            >
+              {this.state.paymentOptions.map((payMethod, index) => (
+                <FormControlLabel
+                  value={payMethod}
+                  control={<Radio />}
+                  label={payMethod}
+                  key={index}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        );
       default:
         return "Unknown step";
     }
