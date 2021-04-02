@@ -99,6 +99,14 @@ class Checkout extends Component {
       selectedPaymentOption: "",
       flatBuildingNum: "",
       flatBuildingNumRequired: "dispNone",
+      locality: "",
+      localityRequired: "dispNone",
+      city: "",
+      cityRequired: "dispNone",
+      state: "",
+      stateRequired: "dispNone",
+      pincode: "",
+      pincodeRequired: "dispNone",
     };
   }
 
@@ -183,14 +191,22 @@ class Checkout extends Component {
     this.getPaymentMethods();
   };
 
-  flatBuildingNumRequired = (e) => {
+  flatNumChangeHandler = (e) => {
     this.setState({ flatBuildingNum: e.target.value });
+  };
+
+  localityChangeHandler = (e) => {
+    this.setState({ locality: e.target.value });
   };
 
   saveAddressClickHandler = () => {
     this.state.flatBuildingNum === ""
       ? this.setState({ flatBuildingNumRequired: "dispBlock" })
       : this.setState({ flatBuildingNumRequired: "dispNone" });
+
+    this.state.locality === ""
+      ? this.setState({ localityRequired: "dispBlock" })
+      : this.setState({ localityRequired: "dispNone" });
   };
 
   getStepContent = (step) => {
@@ -232,8 +248,7 @@ class Checkout extends Component {
               <TabPanel value={this.state.value} index={1}>
                 <FormControl required>
                   <InputLabel htmlFor="flatBuildNo">
-                    {" "}
-                    Flat / Building No.{" "}
+                    Flat / Building No.
                   </InputLabel>
                   <Input
                     id="flatBuildNo"
@@ -247,7 +262,22 @@ class Checkout extends Component {
                     <span className="red">required</span>
                   </FormHelperText>
                 </FormControl>
-
+                <br />
+                <br />
+                <FormControl required>
+                  <InputLabel htmlFor="locality">Locality</InputLabel>
+                  <Input
+                    id="locality"
+                    type="text"
+                    username={this.state.locality}
+                    onChange={this.localityChangeHandler}
+                  />
+                  <FormHelperText className={this.state.localityRequired}>
+                    <span className="red">required</span>
+                  </FormHelperText>
+                </FormControl>
+                <br />
+                <br />
                 <Button
                   variant="contained"
                   color="secondary"
