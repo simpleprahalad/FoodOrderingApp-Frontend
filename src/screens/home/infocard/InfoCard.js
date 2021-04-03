@@ -35,8 +35,7 @@ export default function InfoCard(props) {
   };
 
   const itemTypes = () => {
-    let finalString = props.item_types.map((item) => item).toString();
-    return finalString.toString().substring(0, finalString.length - 1);
+    return props.item_types.join(", ");
   };
 
   return (
