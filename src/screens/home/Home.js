@@ -44,6 +44,24 @@ class Home extends Component {
           restaurant_image_url:
             "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg",
         },
+        {
+          avg_rating: 3.5,
+          rating_count: 350,
+          pricing: 2300,
+          item_types: ["French", "German"],
+          restaurant_name: "The Grapes Valley",
+          restaurant_image_url:
+            "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg",
+        },
+        {
+          avg_rating: 3.5,
+          rating_count: 350,
+          pricing: 2300,
+          item_types: ["French", "German"],
+          restaurant_name: "The Grapes Valley",
+          restaurant_image_url:
+            "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg",
+        },
       ],
     };
   }

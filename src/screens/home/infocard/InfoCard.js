@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
-
   button: {
     background: "#EACC5E",
   },
@@ -36,7 +35,7 @@ export default function InfoCard(props) {
   };
 
   const itemTypes = () => {
-    let finalString = props.item_types.map((item) => item + ",").toString();
+    let finalString = props.item_types.map((item) => item).toString();
     return finalString.toString().substring(0, finalString.length - 1);
   };
 
@@ -47,16 +46,12 @@ export default function InfoCard(props) {
         image={props.restaurant_image_url}
         title="Resturant Name"
       />
-
-      <CardHeader title={props.restaurant_name} subheader={itemTypes()} />
-
+      <CardHeader title={props.restaurant_name} />
+      <br />
+      <CardHeader subheader={itemTypes()} />
+      <br />
       <CardActions disableSpacing>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-        >
+        <Grid container justify="space-between">
           <Grid item>
             <Button
               variant="contained"
