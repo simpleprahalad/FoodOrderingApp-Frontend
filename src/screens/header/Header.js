@@ -9,7 +9,8 @@ import {
   Typography,
   FormControl,
   FormHelperText,
-  InputLabel
+  InputLabel,
+  Snackbar
 } from "@material-ui/core";
 import {
   Fastfood,
@@ -77,10 +78,13 @@ class Header extends Component {
       signupPasswordRequired: "dispNone",
       signupContact: "",
       signupContactRequired: "dispNone",
-      invalidEmail: "",
-      invalidPasswordFormat: "",
+      invalidEmail: "dispNone",
+      invalidPasswordFormat: "dispNone",
       invalidContactNumber: "dispNone",
       invalidLoginContact: "dispNone",
+      contactAlreadyInUse: "dispNone",
+      isSnackBarVisible: false,
+      snackBarMessage: "",
     };
   }
 
@@ -114,8 +118,46 @@ class Header extends Component {
   }
 
   signupClickHandler = () => {
+    console.log('I was triggered during componentDidMount')
     if (this.signUpFormValidation()) {
-
+      //Populate post data
+      let data = JSON.stringify({
+        "contact_number": this.state.signupContact,
+        "email_address": this.state.email,
+        "first_name": this.state.firstname,
+        "last_name": this.state.lastName,
+        "password": this.state.signupPassword
+      });
+      let xhrSignUp = new XMLHttpRequest();
+      let that = this;
+      xhrSignUp.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+          //Success
+          if (xhrSignUp.status === 201) {
+            that.setState({
+              ...that.state,
+              value: 0,
+              isSnackBarVisible: true,
+              snackBarMessage: "Registered successfully! Please login now!"
+            })
+          }
+          //Error
+          if (xhrSignUp.status === 400) {
+            let responseData = JSON.parse(this.responseText)
+            console.log(responseData);
+            if (responseData.code === 'SGR-001') {
+              that.setState({
+                ...that.state,
+                contactAlreadyInUse: "dispBlock"
+              })
+            }
+          }
+        }
+      });
+      xhrSignUp.open("POST", "http://localhost:8080/api/" + "customer/signup");
+      xhrSignUp.setRequestHeader("Content-Type", "application/json");
+      xhrSignUp.setRequestHeader("Cache-Control", "no-cache");
+      xhrSignUp.send(data);
     }
   }
 
@@ -144,15 +186,15 @@ class Header extends Component {
     let loginContactRequired = "dispNone";
     let invalidLoginContact = "dispNone";
     let loginPasswordRequired = "dispNone";
-   
+
     let isFormValid = true;
 
     //Contact validation
-    if (this.state.contactNumber === "") { 
+    if (this.state.contactNumber === "") {
       loginContactRequired = "dispBlock";
       isFormValid = false;
     }
-    else if (this.state.contactNumber !== "") { 
+    else if (this.state.contactNumber !== "") {
       var validator = "[7-9][0-9]{9}";
       if (!this.state.contactNumber.match(validator)) {
         invalidLoginContact = "dispBlock"
@@ -161,11 +203,11 @@ class Header extends Component {
     }
 
     //Password validation
-    if (this.state.loginPassword === "") { 
+    if (this.state.loginPassword === "") {
       loginPasswordRequired = "dispBlock"
       isFormValid = false;
     }
-    
+
     this.setState({
       loginContactRequired: loginContactRequired,
       invalidLoginContact: invalidLoginContact,
@@ -197,7 +239,7 @@ class Header extends Component {
       isSignupFormValidated = false;
     }
     else if (this.state.email !== "") {
-      if (!(/^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w+)+$/.test(this.state.email))) {
+      if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(this.state.email))) {
         invalidEmail = "dispBlock"
         isSignupFormValidated = false;
       }
@@ -209,8 +251,8 @@ class Header extends Component {
       isSignupFormValidated = false;
     }
     else if (this.state.signupContact !== "") {
-      var contactNumber = "[7-9][0-9]{9}";
-      if (!this.state.signupContact.match(contactNumber)) {
+      var pattern = new RegExp(/^[0-9\b]+$/);
+      if (!pattern.test(this.state.signupContact) || this.state.signupContact.length != 10) {
         invalidContactNumber = "dispBlock"
         isSignupFormValidated = false;
       }
@@ -277,6 +319,17 @@ class Header extends Component {
     return false;
   }
 
+  snackBarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({
+      ...this.state,
+      snackBarMessage: "",
+      isSnackBarVisible: false,
+    })
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -285,7 +338,7 @@ class Header extends Component {
         <div className="inner-container">
           <Fastfood className="logo" fontSize="large" htmlColor="white" />
           <div className="search-container">
-            <Input className={classes.searchBox} id="contactNumber" type="search"
+            <Input className={classes.searchBox} id="search-box" type="search"
               startAdornment={
                 <InputAdornment position="start">
                   <Search />
@@ -367,18 +420,43 @@ class Header extends Component {
               <br /><br />
               <FormControl required>
                 <InputLabel htmlFor="contact">Contact No.</InputLabel>
-                <Input id="contact" type="text" contact={this.state.signupContact} onChange={this.inputSignupContactChangeHandler} />
+                <Input id="contact" type="text" signupContact={this.state.signupContact} onChange={this.inputSignupContactChangeHandler} />
                 <FormHelperText className={this.state.signupContactRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
                 <FormHelperText className={this.state.invalidContactNumber}>
                   <span className="red">Contact No. must contain only numbers and must be 10 digits long</span>
                 </FormHelperText>
+                <FormHelperText className={this.state.contactAlreadyInUse}>
+                  <span className="red">This contact number is already registered! Try other contact number.</span>
+                </FormHelperText>
               </FormControl>
               <br /><br />
               <Button variant="contained" color="primary" onClick={this.signupClickHandler}>SIGNUP</Button>
             </TabContainer>}
         </Modal>
+
+        {/* Snack bar  for toast message*/}
+        <div>
+          
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            style={{
+              color: 'red'
+            }}
+            open={this.state.isSnackBarVisible}
+            autoHideDuration={4000}
+            onClose={this.snackBarClose}
+            TransitionComponent={this.state.transition}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">{this.state.snackBarMessage}</span>}
+          />
+        </div>
       </div>
     );
   }
