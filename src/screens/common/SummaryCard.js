@@ -30,12 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SummaryCard() {
+export default function SummaryCard(props) {
   const classes = useStyles();
   const inrSymbol = (
     <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
   );
-  function BillableItemRow() {
+  function BillableItemRow(billedItem) {
     return (
       <React.Fragment>
         <Grid item xs={6}>
@@ -46,7 +46,7 @@ export default function SummaryCard() {
             component="span"
             color="textSecondary"
           >
-            Hakka Noodles
+            {billedItem.itemName}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -56,7 +56,7 @@ export default function SummaryCard() {
             component="span"
             color="textSecondary"
           >
-            4
+            {billedItem.qty}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -67,7 +67,7 @@ export default function SummaryCard() {
             component="span"
             color="textSecondary"
           >
-            400
+            {billedItem.qty * billedItem.price}
           </Typography>
         </Grid>
       </React.Fragment>
@@ -78,15 +78,11 @@ export default function SummaryCard() {
     return (
       <React.Fragment>
         <Grid container spacing={1}>
-          <Grid container item>
-            <BillableItemRow />
-          </Grid>
-          <Grid container item>
-            <BillableItemRow />
-          </Grid>
-          <Grid container item>
-            <BillableItemRow />
-          </Grid>
+          {props.billedItems.map((billedItem) => (
+            <Grid container item>
+              <BillableItemRow {...billedItem} />
+            </Grid>
+          ))}
         </Grid>
       </React.Fragment>
     );
@@ -141,10 +137,10 @@ export default function SummaryCard() {
           color="textSecondary"
           component="p"
         >
-          Restaurant Name
+          {props.billedRestaurant}
         </Typography>
 
-        <BillableItemGrid />
+        <BillableItemGrid {...props} />
         <Divider />
         <br />
         <NetBillableItemGrid />
