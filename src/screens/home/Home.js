@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import InfoCard from "./infocard/InfoCard";
 import "./Home.css";
+import Header from "../header/Header";
 
 class Home extends Component {
   constructor() {
@@ -49,10 +50,13 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="container">
-        {this.state.restaurants.map((restaurant) => (
-          <InfoCard {...restaurant} />
-        ))}
+      <div>
+        <Header />
+        <div className="container">
+          {this.state.restaurants.map((restaurant) => (
+            <InfoCard {...restaurant} />
+          ))}
+        </div>
       </div>
     );
   }
