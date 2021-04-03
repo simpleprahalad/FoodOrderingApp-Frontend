@@ -22,15 +22,24 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     textAlign: "start",
   },
+  stopIcon: {
+    color: "#5A9A5A",
+  },
+  inrIcon: {
+    color: theme.palette.text.secondary,
+  },
 }));
 
 export default function SummaryCard() {
   const classes = useStyles();
+  const inrSymbol = (
+    <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
+  );
   function BillableItemRow() {
     return (
       <React.Fragment>
         <Grid item xs={6}>
-          <FontAwesomeIcon icon={faStopCircle} />
+          <FontAwesomeIcon icon={faStopCircle} className={classes.stopIcon} />
           <Typography
             className={classes.paper}
             variant="body1"
@@ -51,7 +60,7 @@ export default function SummaryCard() {
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          <FontAwesomeIcon icon={faRupeeSign} />
+          {inrSymbol}
           <Typography
             className={classes.paper}
             variant="body1"
@@ -97,7 +106,7 @@ export default function SummaryCard() {
         </Grid>
         <Grid item xs={3} />
         <Grid item xs={3}>
-          <FontAwesomeIcon icon={faRupeeSign} />
+          <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
           <Typography
             className={classes.paper}
             variant="body1"
@@ -137,6 +146,7 @@ export default function SummaryCard() {
 
         <BillableItemGrid />
         <Divider />
+        <br />
         <NetBillableItemGrid />
       </CardContent>
       <CardActions disableSpacing>
