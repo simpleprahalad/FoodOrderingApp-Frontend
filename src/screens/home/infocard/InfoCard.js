@@ -7,17 +7,20 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
+import { Container, Grid, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
+    margin: theme.spacing(1),
   },
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
+
   button: {
-    margin: theme.spacing(1),
+    background: "#EACC5E",
   },
 }));
 
@@ -25,8 +28,6 @@ export default function InfoCard(props) {
   const classes = useStyles();
 
   const starIcon = <FontAwesomeIcon icon={faStar} />;
-
-  const rupeeIcon = <FontAwesomeIcon icon={faRupeeSign} />;
 
   const ratingString = () => {
     return (
@@ -50,24 +51,32 @@ export default function InfoCard(props) {
       <CardHeader title={props.restaurant_name} subheader={itemTypes()} />
 
       <CardActions disableSpacing>
-        <Button
-          variant="contained"
-          aria-label="start"
-          className={classes.button}
-          startIcon={starIcon}
-          color="secondary"
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
         >
-          {ratingString()}
-        </Button>
-
-        <Button
-          aria-label="inr"
-          disabled={true}
-          className={classes.button}
-          startIcon={rupeeIcon}
-        >
-          {props.pricing} for two
-        </Button>
+          <Grid item>
+            <Button
+              variant="contained"
+              aria-label="start"
+              className={classes.button}
+              startIcon={starIcon}
+              color="secondary"
+            >
+              {ratingString()}
+            </Button>
+          </Grid>
+          <Grid item>
+            <Container>
+              <FontAwesomeIcon icon={faRupeeSign} />
+              <Typography variant="h6" component="span">
+                {props.pricing} for two
+              </Typography>
+            </Container>
+          </Grid>
+        </Grid>
       </CardActions>
     </Card>
   );
