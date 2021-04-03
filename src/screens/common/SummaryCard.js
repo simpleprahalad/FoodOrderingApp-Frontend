@@ -88,7 +88,8 @@ export default function SummaryCard(props) {
     );
   }
 
-  function NetBillableItemRow() {
+  function NetBillableItemRow(billableItems) {
+    console.log(typeof billableItems);
     return (
       <React.Fragment>
         <Grid item xs={6}>
@@ -108,19 +109,21 @@ export default function SummaryCard(props) {
             variant="body1"
             component="span"
           >
-            400
+            {/* {billableItems.reduce(
+              (total, item) => total + item.qty * item.price
+            )} */}
           </Typography>
         </Grid>
       </React.Fragment>
     );
   }
 
-  function NetBillableItemGrid() {
+  function NetBillableItemGrid(billableItems) {
     return (
       <React.Fragment>
         <Grid container spacing={1}>
           <Grid container item>
-            <NetBillableItemRow />
+            <NetBillableItemRow {...billableItems} />
           </Grid>
         </Grid>
       </React.Fragment>
@@ -143,7 +146,7 @@ export default function SummaryCard(props) {
         <BillableItemGrid {...props} />
         <Divider />
         <br />
-        <NetBillableItemGrid />
+        <NetBillableItemGrid {...props.billedItems} />
       </CardContent>
       <CardActions disableSpacing>
         <Button

@@ -84,19 +84,19 @@ class Checkout extends Component {
       billedItems: [
         {
           itemName: "Hakka Noodles",
-          price: "100",
+          price: 100,
           qty: 2,
           isVeg: "true",
         },
         {
           itemName: "Hyderabadi Biryani",
-          price: "250",
+          price: 250,
           qty: 1,
           isVeg: "false",
         },
         {
           itemName: "Veg. Manchuriyan",
-          price: "140",
+          price: 140,
           qty: 2,
           isVeg: "true",
         },
