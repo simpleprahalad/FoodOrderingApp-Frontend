@@ -23,6 +23,8 @@ import Input from "@material-ui/core/Input";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import SummaryCard from "../common/SummaryCard";
+import Grid from "@material-ui/core/Grid";
 
 const styles = (theme) => ({
   root: {
@@ -41,6 +43,11 @@ const styles = (theme) => ({
   saveAddressButton: {
     display: "block",
     marginTop: 30,
+  },
+  container: {
+    display: "grid",
+    gridTemplateColumns: "repeat(12, 1fr)",
+    gridGap: theme.spacing(3),
   },
 });
 
@@ -175,6 +182,101 @@ class Checkout extends Component {
     ));
   };
 
+  getAddNewAddressTabDetails = () => {
+    return (
+      <div>
+        <FormControl required>
+          <InputLabel htmlFor="flatBuildNo">Flat / Building No.</InputLabel>
+          <Input
+            id="flatBuildNo"
+            type="text"
+            username={this.state.flatBuildingNum}
+            onChange={this.flatNumChangeHandler}
+          />
+          <FormHelperText className={this.state.flatBuildingNumRequired}>
+            <span className="red">required</span>
+          </FormHelperText>
+        </FormControl>
+        <br />
+        <br />
+        <FormControl required>
+          <InputLabel htmlFor="locality">Locality</InputLabel>
+          <Input
+            id="locality"
+            type="text"
+            username={this.state.locality}
+            onChange={this.localityChangeHandler}
+          />
+          <FormHelperText className={this.state.localityRequired}>
+            <span className="red">required</span>
+          </FormHelperText>
+        </FormControl>
+        <br />
+        <br />
+        <FormControl required>
+          <InputLabel htmlFor="city">City</InputLabel>
+          <Input
+            id="city"
+            type="text"
+            username={this.state.city}
+            onChange={this.cityChangeHandler}
+          />
+          <FormHelperText className={this.state.cityRequired}>
+            <span className="red">required</span>
+          </FormHelperText>
+        </FormControl>
+        <br />
+        <br />
+        <FormControl required>
+          <InputLabel htmlFor="state-label">State</InputLabel>
+          <Select
+            id="state"
+            value={this.state.selectedState}
+            onChange={this.stateChangeHandler}
+            style={{ width: "200px" }}
+            MenuProps={{
+              style: { marginTop: "50px", maxHeight: "250px" },
+            }}
+          >
+            {this.state.addressStates.map((stateName, index) => (
+              <MenuItem key={index + stateName} value={stateName}>
+                {stateName}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText className={this.state.stateRequired}>
+            <span className="red">required</span>
+          </FormHelperText>
+        </FormControl>
+        <br />
+        <br />
+        <FormControl required>
+          <InputLabel htmlFor="pincode">Pincode</InputLabel>
+          <Input
+            id="pincode"
+            type="text"
+            username={this.state.pincode}
+            onChange={this.pincodeChangeHandler}
+          />
+          <FormHelperText className={this.state.pincodeRequired}>
+            <span className="red">required</span>
+          </FormHelperText>
+        </FormControl>
+        <br />
+        <br />
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={this.saveAddressClickHandler}
+        >
+          SAVE ADDRESS
+        </Button>
+        <br />
+        <br />
+      </div>
+    );
+  };
+
   getPaymentMethods = () => {
     // TODO : to be received from backend
     const paymentOptions = [
@@ -287,98 +389,7 @@ class Checkout extends Component {
               </TabPanel>
             ) : (
               <TabPanel value={this.state.value} index={1}>
-                <FormControl required>
-                  <InputLabel htmlFor="flatBuildNo">
-                    Flat / Building No.
-                  </InputLabel>
-                  <Input
-                    id="flatBuildNo"
-                    type="text"
-                    username={this.state.flatBuildingNum}
-                    onChange={this.flatNumChangeHandler}
-                  />
-                  <FormHelperText
-                    className={this.state.flatBuildingNumRequired}
-                  >
-                    <span className="red">required</span>
-                  </FormHelperText>
-                </FormControl>
-                <br />
-                <br />
-                <FormControl required>
-                  <InputLabel htmlFor="locality">Locality</InputLabel>
-                  <Input
-                    id="locality"
-                    type="text"
-                    username={this.state.locality}
-                    onChange={this.localityChangeHandler}
-                  />
-                  <FormHelperText className={this.state.localityRequired}>
-                    <span className="red">required</span>
-                  </FormHelperText>
-                </FormControl>
-                <br />
-                <br />
-                <FormControl required>
-                  <InputLabel htmlFor="city">City</InputLabel>
-                  <Input
-                    id="city"
-                    type="text"
-                    username={this.state.city}
-                    onChange={this.cityChangeHandler}
-                  />
-                  <FormHelperText className={this.state.cityRequired}>
-                    <span className="red">required</span>
-                  </FormHelperText>
-                </FormControl>
-                <br />
-                <br />
-                <FormControl required>
-                  <InputLabel htmlFor="state-label">State</InputLabel>
-                  <Select
-                    id="state"
-                    value={this.state.selectedState}
-                    onChange={this.stateChangeHandler}
-                    style={{ width: "200px" }}
-                    MenuProps={{
-                      style: { marginTop: "50px", maxHeight: "250px" },
-                    }}
-                  >
-                    {this.state.addressStates.map((stateName, index) => (
-                      <MenuItem key={index + stateName} value={stateName}>
-                        {stateName}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText className={this.state.stateRequired}>
-                    <span className="red">required</span>
-                  </FormHelperText>
-                </FormControl>
-                <br />
-                <br />
-                <FormControl required>
-                  <InputLabel htmlFor="pincode">Pincode</InputLabel>
-                  <Input
-                    id="pincode"
-                    type="text"
-                    username={this.state.pincode}
-                    onChange={this.pincodeChangeHandler}
-                  />
-                  <FormHelperText className={this.state.pincodeRequired}>
-                    <span className="red">required</span>
-                  </FormHelperText>
-                </FormControl>
-                <br />
-                <br />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={this.saveAddressClickHandler}
-                >
-                  SAVE ADDRESS
-                </Button>
-                <br />
-                <br />
+                {this.getAddNewAddressTabDetails()}
               </TabPanel>
             )}
           </div>
@@ -417,37 +428,42 @@ class Checkout extends Component {
     return (
       <div className={classes.root}>
         <Header />
-        <div>
-          <Stepper activeStep={activeStep} orientation="vertical">
-            {steps.map((label, index) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-                <StepContent>
-                  <Typography>{this.getStepContent(index)}</Typography>
-                  <div className={classes.actionsContainer}>
-                    <div>
-                      <Button
-                        disabled={activeStep === 0}
-                        onClick={this.handleBack}
-                        className={classes.button}
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleNext}
-                        className={classes.button}
-                      >
-                        {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                      </Button>
+        <Grid container spacing={1}>
+          <Grid item md={9}>
+            <Stepper activeStep={activeStep} orientation="vertical">
+              {steps.map((label, index) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                  <StepContent>
+                    <Typography>{this.getStepContent(index)}</Typography>
+                    <div className={classes.actionsContainer}>
+                      <div>
+                        <Button
+                          disabled={activeStep === 0}
+                          onClick={this.handleBack}
+                          className={classes.button}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.handleNext}
+                          className={classes.button}
+                        >
+                          {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
-        </div>
+                  </StepContent>
+                </Step>
+              ))}
+            </Stepper>
+          </Grid>
+          <Grid item md={3} style={{ marginTop: "20px", marginLeft: "-10px" }}>
+            <SummaryCard />
+          </Grid>
+        </Grid>
       </div>
     );
   }
