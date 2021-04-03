@@ -21,6 +21,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const styles = (theme) => ({
   root: {
@@ -103,7 +105,8 @@ class Checkout extends Component {
       localityRequired: "dispNone",
       city: "",
       cityRequired: "dispNone",
-      state: "",
+      selectedState: "",
+      addressStates: [],
       stateRequired: "dispNone",
       pincode: "",
       pincodeRequired: "dispNone",
@@ -183,12 +186,26 @@ class Checkout extends Component {
     this.setState({ paymentOptions: paymentOptions });
   };
 
+  getStates = () => {
+    const states = [
+      "Karnataka",
+      "Odissa",
+      "Kerala",
+      "Maharastra",
+      "MP",
+      "Delhi",
+      "Haryana",
+    ];
+    this.setState({ addressStates: states });
+  };
+
   handlePaymentModeChange = (e) => {
     this.setState({ selectedPaymentOption: e.target.value });
   };
 
   componentWillMount = () => {
     this.getPaymentMethods();
+    this.getStates();
   };
 
   flatNumChangeHandler = (e) => {
@@ -204,7 +221,7 @@ class Checkout extends Component {
   };
 
   stateChangeHandler = (e) => {
-    this.setState({ state: e.target.value });
+    this.setState({ selectedState: e.target.value });
   };
 
   pincodeChangeHandler = (e) => {
@@ -224,7 +241,7 @@ class Checkout extends Component {
       ? this.setState({ cityRequired: "dispBlock" })
       : this.setState({ cityRequired: "dispNone" });
 
-    this.state.state === ""
+    this.state.selectedState === ""
       ? this.setState({ stateRequired: "dispBlock" })
       : this.setState({ stateRequired: "dispNone" });
 
@@ -317,13 +334,22 @@ class Checkout extends Component {
                 <br />
                 <br />
                 <FormControl required>
-                  <InputLabel htmlFor="state">State</InputLabel>
-                  <Input
+                  <InputLabel htmlFor="state-label">State</InputLabel>
+                  <Select
                     id="state"
-                    type="text"
-                    username={this.state.state}
+                    value={this.state.selectedState}
                     onChange={this.stateChangeHandler}
-                  />
+                    style={{ width: "200px" }}
+                    MenuProps={{
+                      style: { marginTop: "50px", maxHeight: "250px" },
+                    }}
+                  >
+                    {this.state.addressStates.map((stateName, index) => (
+                      <MenuItem key={index + stateName} value={stateName}>
+                        {stateName}
+                      </MenuItem>
+                    ))}
+                  </Select>
                   <FormHelperText className={this.state.stateRequired}>
                     <span className="red">required</span>
                   </FormHelperText>
@@ -351,6 +377,8 @@ class Checkout extends Component {
                 >
                   SAVE ADDRESS
                 </Button>
+                <br />
+                <br />
               </TabPanel>
             )}
           </div>
