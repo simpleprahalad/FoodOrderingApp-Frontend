@@ -25,10 +25,18 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import SummaryCard from "../common/SummaryCard";
 import Grid from "@material-ui/core/Grid";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import IconButton from "@material-ui/core/IconButton";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const styles = (theme) => ({
   root: {
-    width: "100%",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    overflow: "hidden",
+    backgroundColor: theme.palette.background.paper,
   },
   button: {
     marginTop: theme.spacing(1),
@@ -48,6 +56,24 @@ const styles = (theme) => ({
     display: "grid",
     gridTemplateColumns: "repeat(12, 1fr)",
     gridGap: theme.spacing(3),
+  },
+  gridList: {
+    flexWrap: "nowrap",
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: "translateZ(0)",
+  },
+  gridListTile: {
+    //Style for the Grid list tile .
+    textAlign: "left",
+    margin: "30px 0px 20px 0px",
+    "border-style": "solid",
+    "border-width": "0.5px 3px 3px 0.5px",
+    "border-radius": "10px",
+    padding: "8px",
+  },
+  addressCheckButton: {
+    // Style fro the address check button
+    float: "right",
   },
 });
 
@@ -105,17 +131,42 @@ class Checkout extends Component {
         {
           id: 100,
           flat_buil_number: "B113",
-          flat_building_name: "SVS Palsm1",
+          flat_building_name: "SVS Palms1",
           locality: "Marathalli",
           city: "Bangalore",
           pincode: 560037,
           state: {
             state_name: "Karnataka",
           },
+          selected: false,
         },
         {
           id: 101,
           flat_buil_number: "B112",
+          flat_building_name: "SVS Palms1",
+          locality: "Marathalli",
+          city: "Bangalore",
+          pincode: 560037,
+          state: {
+            state_name: "Karnataka",
+          },
+          selected: false,
+        },
+        {
+          id: 102,
+          flat_buil_number: "B114",
+          flat_building_name: "SVS Palms1",
+          locality: "Marathalli",
+          city: "Bangalore",
+          pincode: 560037,
+          state: {
+            state_name: "Karnataka",
+          },
+          selected: false,
+        },
+        {
+          id: 103,
+          flat_buil_number: "B115",
           flat_building_name: "SVS Palsm1",
           locality: "Marathalli",
           city: "Bangalore",
@@ -123,9 +174,12 @@ class Checkout extends Component {
           state: {
             state_name: "Karnataka",
           },
+          selected: false,
         },
       ],
       paymentOptions: [],
+      selectedAddress: "",
+      noOfColumn: 3,
       selectedPaymentOption: "",
       flatBuildingNum: "",
       flatBuildingNumRequired: "dispNone",
@@ -151,6 +205,74 @@ class Checkout extends Component {
 
   tabChangeHandler = (event, value) => {
     this.setState({ value });
+  };
+
+  addressSelectedClickHandler = (addressId) => {
+    let addresses = this.state.existingAddresses;
+    let selectedAddress = "";
+    addresses.forEach((address) => {
+      if (address.id === addressId) {
+        address.selected = true;
+        selectedAddress = address.id;
+      } else {
+        address.selected = false;
+      }
+    });
+    this.setState({
+      ...this.state,
+      addresses: addresses,
+      selectedAddress: selectedAddress,
+    });
+  };
+  displayAddressNew = () => {
+    const { classes } = this.props;
+    return (
+      <GridList
+        className={classes.gridList}
+        cols={this.state.noOfColumn}
+        spacing={2}
+        cellHeight="auto"
+      >
+        {this.state.existingAddresses.map((address) => (
+          <GridListTile
+            className={classes.gridListTile}
+            key={address.id}
+            style={{
+              borderColor: address.selected ? "rgb(224,37,96)" : "white",
+            }}
+          >
+            <div className="grid-list-tile-container">
+              <Typography variant="body1" component="p">
+                {address.flat_buil_number}
+              </Typography>
+              <Typography variant="body1" component="p">
+                {address.flat_building_name}
+              </Typography>
+              <Typography variant="body1" component="p">
+                {address.locality}
+              </Typography>
+              <Typography variant="body1" component="p">
+                {address.city}
+              </Typography>
+              <Typography variant="body1" component="p">
+                {address.state.state_name}
+              </Typography>
+              <Typography variant="body1" component="p">
+                {address.pincode}
+              </Typography>
+              <IconButton
+                className={classes.addressCheckButton}
+                onClick={() => this.addressSelectedClickHandler(address.id)}
+              >
+                <CheckCircleIcon
+                  style={{ color: address.selected ? "green" : "grey" }}
+                />
+              </IconButton>
+            </div>
+          </GridListTile>
+        ))}
+      </GridList>
+    );
   };
 
   displayAddress = () => {
@@ -390,23 +512,14 @@ class Checkout extends Component {
             </AppBar>
             {this.state.value === 0 ? (
               <TabPanel value={this.state.value} index={0}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {this.state.existingAddresses.length > 0 ? (
-                    this.displayAddress()
-                  ) : (
-                    <p style={{ color: "gray", height: 200 }}>
-                      There are no saved addresses! You can save an address
-                      using the 'New Address' tab or using your ‘Profile’ menu
-                      option.
-                    </p>
-                  )}
-                </div>
+                {this.state.existingAddresses.length !== 0 ? (
+                  this.displayAddressNew()
+                ) : (
+                  <Typography variant="body1" component="p">
+                    There are no saved addresses! You can save an address using
+                    the 'New Address' tab or using your ‘Profile’ menu option.
+                  </Typography>
+                )}
               </TabPanel>
             ) : (
               <TabPanel value={this.state.value} index={1}>
@@ -450,7 +563,7 @@ class Checkout extends Component {
       <div className={classes.root}>
         <Header />
         <Grid container spacing={1}>
-          <Grid item md={9}>
+          <Grid item xs={12} md={8}>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((label, index) => (
                 <Step key={label}>
@@ -481,7 +594,8 @@ class Checkout extends Component {
               ))}
             </Stepper>
           </Grid>
-          <Grid item md={3} style={{ marginTop: "20px", marginLeft: "-10px" }}>
+
+          <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
             <SummaryCard {...this.state} />
           </Grid>
         </Grid>
