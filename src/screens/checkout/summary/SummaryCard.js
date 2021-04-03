@@ -7,17 +7,14 @@ import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRupeeSign, faStopCircle } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 500,
-    justify: "center",
+    maxWidth: 420,
   },
-
   margin: {
     margin: theme.spacing(1),
   },
@@ -29,10 +26,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SummaryCard() {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  const inrIcon = <FontAwesomeIcon icon={faRupeeSign} />;
-  const stopCircleIcon = <FontAwesomeIcon icon={faStopCircle} />;
-
   function BillableItemRow() {
     return (
       <React.Fragment>
@@ -76,13 +69,13 @@ export default function SummaryCard() {
     return (
       <React.Fragment>
         <Grid container spacing={1}>
-          <Grid container item xs={10} spacing={4}>
+          <Grid container item>
             <BillableItemRow />
           </Grid>
-          <Grid container item xs={10} spacing={4}>
+          <Grid container item>
             <BillableItemRow />
           </Grid>
-          <Grid container item xs={10} spacing={4}>
+          <Grid container item>
             <BillableItemRow />
           </Grid>
         </Grid>
@@ -93,7 +86,7 @@ export default function SummaryCard() {
   function NetBillableItemRow() {
     return (
       <React.Fragment>
-        <Grid>
+        <Grid item xs={6}>
           <Typography
             className={classes.paper}
             variant="body1"
@@ -102,14 +95,15 @@ export default function SummaryCard() {
             Net Amount
           </Typography>
         </Grid>
-        <Grid>
+        <Grid item xs={3} />
+        <Grid item xs={3}>
           <FontAwesomeIcon icon={faRupeeSign} />
           <Typography
             className={classes.paper}
             variant="body1"
             component="span"
           >
-            653
+            400
           </Typography>
         </Grid>
       </React.Fragment>
@@ -119,14 +113,10 @@ export default function SummaryCard() {
   function NetBillableItemGrid() {
     return (
       <React.Fragment>
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-          item
-        >
-          <NetBillableItemRow />
+        <Grid container spacing={1}>
+          <Grid container item>
+            <NetBillableItemRow />
+          </Grid>
         </Grid>
       </React.Fragment>
     );
@@ -136,15 +126,22 @@ export default function SummaryCard() {
     <Card className={classes.root}>
       <CardHeader title="Summary" />
       <CardContent>
-        <Typography variant="body1" color="textSecondary" component="p">
+        <Typography
+          className={classes.margin}
+          variant="h6"
+          color="textSecondary"
+          component="p"
+        >
           Restaurant Name
         </Typography>
+
         <BillableItemGrid />
         <Divider />
         <NetBillableItemGrid />
       </CardContent>
       <CardActions disableSpacing>
         <Button
+          fullWidth="true"
           variant="contained"
           size="large"
           color="primary"
