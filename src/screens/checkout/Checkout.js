@@ -106,6 +106,27 @@ class Checkout extends Component {
     this.state = {
       activeStep: 0,
       value: 0,
+      billedRestaurant: "The Food League",
+      billedItems: [
+        {
+          itemName: "Hakka Noodles",
+          price: "100",
+          qty: 2,
+          isVeg: "true",
+        },
+        {
+          itemName: "Hyderabadi Biryani",
+          price: "250",
+          qty: 1,
+          isVeg: "false",
+        },
+        {
+          itemName: "Veg. Manchuriyan",
+          price: "140",
+          qty: 2,
+          isVeg: "true",
+        },
+      ],
       existingAddresses: [
         {
           id: 100,
@@ -573,8 +594,9 @@ class Checkout extends Component {
               ))}
             </Stepper>
           </Grid>
+
           <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
-            <SummaryCard />
+            <SummaryCard {...this.state} />
           </Grid>
         </Grid>
       </div>
