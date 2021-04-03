@@ -85,6 +85,9 @@ class Header extends Component {
       contactAlreadyInUse: "dispNone",
       isSnackBarVisible: false,
       snackBarMessage: "",
+      isLoggedIn: false,
+      invalidPassword: "dispNone",
+      notRegisteredContact: "dispNone"
     };
   }
 
@@ -113,7 +116,50 @@ class Header extends Component {
 
   loginClickHandler = () => {
     if (this.loginFormValidation()) {
-
+      let dataLogin = null;
+      let xhrLogin = new XMLHttpRequest();
+      let that = this;
+      xhrLogin.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+          //Successs
+          if (xhrLogin.status === 200) {
+            let loginResponse = JSON.parse(this.responseText);
+            sessionStorage.setItem("uuid", JSON.parse(this.responseText).id);
+            sessionStorage.setItem("access-token", xhrLogin.getResponseHeader("access-token"));
+            sessionStorage.setItem("customer-name", loginResponse.first_name);
+            that.setState({
+              ...that.state,
+              isLoggedIn: true,
+              isSnackBarVisible: true,
+              snackBarMessage: "Logged in successfully!"
+            })
+            //Close modal on successfull login
+            that.closeModalHandler();
+            //Error
+          } else if (xhrLogin.status === 401) {
+            let loginResponse = JSON.parse(this.responseText);
+            console.log(loginResponse);
+            let notRegisteredContact = "dispNone"
+            let invalidPassword = "dispNone"
+            if (loginResponse.code === 'ATH-001') {
+              notRegisteredContact = "dispBlock"
+            }
+            if (loginResponse.code === 'ATH-002') {
+              invalidPassword = "dispBlock"
+            }
+            that.setState({
+              ...that.state,
+              notRegisteredContact: notRegisteredContact,
+              invalidPassword: invalidPassword,
+            })
+          }
+        }
+      })
+      xhrLogin.open("POST", "http://localhost:8080/api/" + "customer/login");
+      xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.contactNumber + ":" + this.state.loginPassword));
+      xhrLogin.setRequestHeader("Content-Type", "application/json");
+      xhrLogin.setRequestHeader("Cache-Control", "no-cache");
+      xhrLogin.send(dataLogin);
     }
   }
 
@@ -252,7 +298,7 @@ class Header extends Component {
     }
     else if (this.state.signupContact !== "") {
       var pattern = new RegExp(/^[0-9\b]+$/);
-      if (!pattern.test(this.state.signupContact) || this.state.signupContact.length != 10) {
+      if (!pattern.test(this.state.signupContact) || this.state.signupContact.length !== 10) {
         invalidContactNumber = "dispBlock"
         isSignupFormValidated = false;
       }
@@ -376,6 +422,12 @@ class Header extends Component {
                 <FormHelperText className={this.state.loginPasswordRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
+                <FormHelperText className={this.state.invalidPassword}>
+                  <span className="red">Invalid Credentials</span>
+                </FormHelperText>
+                <FormHelperText className={this.state.notRegisteredContact}>
+                  <span className="red">This contact number has not been registered!</span>
+                </FormHelperText>
               </FormControl>
               <br /><br />
               <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
@@ -438,7 +490,7 @@ class Header extends Component {
 
         {/* Snack bar  for toast message*/}
         <div>
-          
+
           <Snackbar
             anchorOrigin={{
               vertical: 'bottom',
