@@ -20,7 +20,7 @@ class Controller extends Component {
           />
           <Route
             exact
-            path="/home"
+            path="/"
             render={(props) => <Home {...props} baseUrl={this.baseUrl} />}
           />
         </div>
