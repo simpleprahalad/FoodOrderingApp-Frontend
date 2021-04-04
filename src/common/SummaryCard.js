@@ -13,7 +13,7 @@ import { faRupeeSign, faStopCircle } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 420,
+    maxWidth: 400,
   },
   margin: {
     margin: theme.spacing(1),
@@ -22,8 +22,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     textAlign: "start",
   },
-  stopIcon: {
+  vegIcon: {
     color: "#5A9A5A",
+  },
+  nonVegIcon: {
+    color: "red",
   },
   inrIcon: {
     color: theme.palette.text.secondary,
@@ -46,7 +49,12 @@ export default function SummaryCard(props) {
     return (
       <React.Fragment>
         <Grid item xs={6}>
-          <FontAwesomeIcon icon={faStopCircle} className={classes.stopIcon} />
+          <FontAwesomeIcon
+            icon={faStopCircle}
+            className={
+              billedItem.isVeg === "true" ? classes.vegIcon : classes.nonVegIcon
+            }
+          />
           <Typography
             className={classes.paper}
             variant="body1"
@@ -95,7 +103,7 @@ export default function SummaryCard(props) {
     );
   }
 
-  function NetBillableItemRow() {
+  function NetBillableItemRow(props) {
     return (
       <React.Fragment>
         <Grid item xs={6}>
@@ -104,7 +112,7 @@ export default function SummaryCard(props) {
             variant="body1"
             component="span"
           >
-            Net Amount
+            {props.text}
           </Typography>
         </Grid>
         <Grid item xs={3} />
@@ -115,7 +123,7 @@ export default function SummaryCard(props) {
             variant="body1"
             component="span"
           >
-            {calculateNetTotal()}
+            {props.value}
           </Typography>
         </Grid>
       </React.Fragment>
@@ -127,7 +135,7 @@ export default function SummaryCard(props) {
       <React.Fragment>
         <Grid container spacing={1}>
           <Grid container item>
-            <NetBillableItemRow />
+            <NetBillableItemRow text="Net Amount" value={calculateNetTotal()} />
           </Grid>
         </Grid>
       </React.Fragment>
@@ -148,6 +156,7 @@ export default function SummaryCard(props) {
         </Typography>
 
         <BillableItemGrid />
+        <br />
         <Divider />
         <br />
         <NetBillableItemGrid />

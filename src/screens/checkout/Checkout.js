@@ -135,6 +135,7 @@ class Checkout extends Component {
       stateRequired: "dispNone",
       pincode: "",
       pincodeRequired: "dispNone",
+      changeOption: "dispNone",
     };
   }
 
@@ -143,7 +144,17 @@ class Checkout extends Component {
   };
 
   handleNext = () => {
-    this.setState({ activeStep: this.state.activeStep + 1 });
+    if (this.state.activeStep === 1) {
+      this.setState({
+        activeStep: this.state.activeStep + 1,
+        changeOption: "dispText",
+      });
+    } else {
+      this.setState({
+        activeStep: this.state.activeStep + 1,
+        changeOption: "dispNone",
+      });
+    }
   };
 
   tabChangeHandler = (event, value) => {
@@ -441,6 +452,12 @@ class Checkout extends Component {
       : this.setState({ pincodeRequired: "dispNone" });
   };
 
+  onClickChangeHandler = () => {
+    this.setState({
+      activeStep: 0,
+    });
+  };
+
   getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -539,6 +556,21 @@ class Checkout extends Component {
                 </Step>
               ))}
             </Stepper>
+            <div
+              className={this.state.changeOption}
+              style={{ marginTop: "10px" }}
+            >
+              <div style={{ marginLeft: "3%", fontSize: "24px" }}>
+                View the summary and place your order now!
+              </div>
+              <Button
+                style={{ marginLeft: "5%", fontSize: "20px" }}
+                onClick={this.onClickChangeHandler}
+                className={classes.button}
+              >
+                CHANGE
+              </Button>
+            </div>
           </Grid>
 
           <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
