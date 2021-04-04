@@ -192,8 +192,28 @@ class Checkout extends Component {
     this.setState({ activeStep: this.state.activeStep - 1 });
   };
 
+  invokePaymentsApi() {
+    let xhrPaymentMethods = new XMLHttpRequest();
+    let that = this;
+
+    xhrPaymentMethods.addEventListener("readystatechange", function () {
+      if (this.readyState === 4 && xhrPaymentMethods.status === 200) {
+        let rspPaymentOptions = JSON.parse(this.responseText).paymentMethods;
+        that.setState({ paymentOptions: rspPaymentOptions });
+
+        that.setState({ activeStep: that.state.activeStep + 1 });
+      } else {
+        console.log(this.responseText);
+      }
+    });
+    xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "payment");
+    xhrPaymentMethods.setRequestHeader("Accept", "application/json");
+    xhrPaymentMethods.send();
+  }
+
   handleNext = () => {
-    this.setState({ activeStep: this.state.activeStep + 1 });
+    //Invoke payments api
+    this.invokePaymentsApi();
   };
 
   tabChangeHandler = (event, value) => {
@@ -271,7 +291,7 @@ class Checkout extends Component {
 
   getAddNewAddressTabDetails = () => {
     return (
-      <div style={{maxWidth: "250px"}}>
+      <div style={{ maxWidth: "250px" }}>
         <FormControl required>
           <InputLabel htmlFor="flatBuildNo">Flat / Building No.</InputLabel>
           <Input
