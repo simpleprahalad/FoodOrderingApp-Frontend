@@ -123,13 +123,13 @@ export default function SummaryCard(props) {
           <img
             src={coupon}
             alt={"flat 50"}
-            style={{ width: "200px", height: "60px" }}
+            style={{ marginLeft: "-30px", width: "200px", height: "60px" }}
           />
           <Button
             variant="contained"
             color="default"
             onClick={applyButtonClickHandler}
-            style={{ width: "80px", height: "40px" }}
+            style={{ width: "40px", height: "40px" }}
           >
             APPLY
           </Button>
