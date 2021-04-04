@@ -168,6 +168,7 @@ export default function SummaryCard(props) {
           size="large"
           color="primary"
           className={classes.margin}
+          onClick={props.placeOrderClickHandler}
         >
           Place Order
         </Button>

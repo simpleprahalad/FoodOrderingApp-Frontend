@@ -28,6 +28,8 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
   button: {
@@ -185,8 +187,18 @@ class Checkout extends Component {
       pincode: "",
       pincodeRequired: "dispNone",
       changeOption: "dispNone",
+      isSnackBarVisible: false,
+      snackBarMessage: "",
     };
   }
+
+  snackBarClose = () => {
+    this.setState({
+      ...this.state,
+      snackBarMessage: "",
+      isSnackBarVisible: false,
+    });
+  };
 
   handleBack = () => {
     this.setState({ activeStep: this.state.activeStep - 1 });
@@ -530,6 +542,14 @@ class Checkout extends Component {
     }
   };
 
+  placeOrderClickHandler = () => {
+    // TODO : handler order/success failure cases
+    this.setState({
+      snackBarMessage: "Order placed successfully! Your order ID is XXX",
+      isSnackBarVisible: true,
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
@@ -587,9 +607,32 @@ class Checkout extends Component {
           </Grid>
 
           <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
-            <SummaryCard {...this.state} />
+            <SummaryCard
+              {...this.state}
+              placeOrderClickHandler={this.placeOrderClickHandler}
+            />
           </Grid>
         </Grid>
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            open={this.state.isSnackBarVisible}
+            autoHideDuration={4000}
+            onClose={this.snackBarClose}
+            ContentProps={{
+              "aria-describedby": "message-id",
+            }}
+            message={<span id="message-id">{this.state.snackBarMessage}</span>}
+            action={
+              <IconButton color="inherit" onClick={this.snackBarClose}>
+                <CloseIcon />
+              </IconButton>
+            }
+          />
+        </div>
       </div>
     );
   }
