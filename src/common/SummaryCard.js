@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRupeeSign, faStopCircle } from "@fortawesome/free-solid-svg-icons";
-import coupon from "./../../assets/CouponFlat50.png";
+import coupon from "../assets/CouponFlat50.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
