@@ -31,13 +31,6 @@ import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const styles = (theme) => ({
-  root: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-    backgroundColor: theme.palette.background.paper,
-  },
   button: {
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -224,7 +217,8 @@ class Checkout extends Component {
       selectedAddress: selectedAddress,
     });
   };
-  displayAddressNew = () => {
+
+  displayAddressList = () => {
     const { classes } = this.props;
     return (
       <GridList
@@ -275,59 +269,9 @@ class Checkout extends Component {
     );
   };
 
-  displayAddress = () => {
-    return this.state.existingAddresses.map((value) => (
-      <Card className={this.props.card} key={value.id}>
-        <Typography>
-          {value.flat_buil_number && (
-            <div>
-              {value.flat_buil_number}
-              <br />
-            </div>
-          )}
-
-          {value.flat_building_name && (
-            <div>
-              {value.flat_building_name}
-              <br />
-            </div>
-          )}
-
-          {value.locality && (
-            <div>
-              {value.locality}
-              <br />
-            </div>
-          )}
-
-          {value.city && (
-            <div>
-              {value.city}
-              <br />
-            </div>
-          )}
-
-          {value.state.state_name && (
-            <div>
-              {value.state.state_name}
-              <br />
-            </div>
-          )}
-
-          {value.pincode && (
-            <div>
-              {value.pincode}
-              <br />
-            </div>
-          )}
-        </Typography>
-      </Card>
-    ));
-  };
-
   getAddNewAddressTabDetails = () => {
     return (
-      <div>
+      <div style={{maxWidth: "250px"}}>
         <FormControl required>
           <InputLabel htmlFor="flatBuildNo">Flat / Building No.</InputLabel>
           <Input
@@ -513,7 +457,7 @@ class Checkout extends Component {
             {this.state.value === 0 ? (
               <TabPanel value={this.state.value} index={0}>
                 {this.state.existingAddresses.length !== 0 ? (
-                  this.displayAddressNew()
+                  this.displayAddressList()
                 ) : (
                   <Typography variant="body1" component="p">
                     There are no saved addresses! You can save an address using
@@ -560,7 +504,7 @@ class Checkout extends Component {
     const { activeStep } = this.state;
 
     return (
-      <div className={classes.root}>
+      <div>
         <Header />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
