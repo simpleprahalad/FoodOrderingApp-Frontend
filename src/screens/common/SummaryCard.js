@@ -22,22 +22,38 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     textAlign: "start",
   },
+  stopIcon: {
+    color: "#5A9A5A",
+  },
+  inrIcon: {
+    color: theme.palette.text.secondary,
+  },
 }));
 
-export default function SummaryCard() {
+export default function SummaryCard(props) {
   const classes = useStyles();
-  function BillableItemRow() {
+  const inrSymbol = (
+    <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
+  );
+
+  function calculateNetTotal() {
+    return props.billedItems
+      .map((item) => item.qty * item.price)
+      .reduce((total, val) => total + val);
+  }
+
+  function BillableItemRow(billedItem) {
     return (
       <React.Fragment>
         <Grid item xs={6}>
-          <FontAwesomeIcon icon={faStopCircle} />
+          <FontAwesomeIcon icon={faStopCircle} className={classes.stopIcon} />
           <Typography
             className={classes.paper}
             variant="body1"
             component="span"
             color="textSecondary"
           >
-            Hakka Noodles
+            {billedItem.itemName}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -47,18 +63,18 @@ export default function SummaryCard() {
             component="span"
             color="textSecondary"
           >
-            4
+            {billedItem.qty}
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          <FontAwesomeIcon icon={faRupeeSign} />
+          {inrSymbol}
           <Typography
             className={classes.paper}
             variant="body1"
             component="span"
             color="textSecondary"
           >
-            400
+            {billedItem.qty * billedItem.price}
           </Typography>
         </Grid>
       </React.Fragment>
@@ -69,15 +85,11 @@ export default function SummaryCard() {
     return (
       <React.Fragment>
         <Grid container spacing={1}>
-          <Grid container item>
-            <BillableItemRow />
-          </Grid>
-          <Grid container item>
-            <BillableItemRow />
-          </Grid>
-          <Grid container item>
-            <BillableItemRow />
-          </Grid>
+          {props.billedItems.map((billedItem) => (
+            <Grid container item>
+              <BillableItemRow {...billedItem} />
+            </Grid>
+          ))}
         </Grid>
       </React.Fragment>
     );
@@ -97,13 +109,13 @@ export default function SummaryCard() {
         </Grid>
         <Grid item xs={3} />
         <Grid item xs={3}>
-          <FontAwesomeIcon icon={faRupeeSign} />
+          <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
           <Typography
             className={classes.paper}
             variant="body1"
             component="span"
           >
-            400
+            {calculateNetTotal()}
           </Typography>
         </Grid>
       </React.Fragment>
@@ -132,11 +144,12 @@ export default function SummaryCard() {
           color="textSecondary"
           component="p"
         >
-          Restaurant Name
+          {props.billedRestaurant}
         </Typography>
 
         <BillableItemGrid />
         <Divider />
+        <br />
         <NetBillableItemGrid />
       </CardContent>
       <CardActions disableSpacing>
