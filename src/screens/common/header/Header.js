@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Header.css";
+import "../../Controller"
 import {
   Input,
   Button,
@@ -10,7 +11,10 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
-  Snackbar
+  Snackbar,
+  Menu,
+  MenuItem,
+  MenuList
 } from "@material-ui/core";
 import {
   Fastfood,
@@ -20,6 +24,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Modal from "react-modal";
+import { Link } from 'react-router-dom';
 
 // Custom Styles
 const styles = (theme => ({
@@ -87,7 +92,9 @@ class Header extends Component {
       snackBarMessage: "",
       isLoggedIn: false,
       invalidPassword: "dispNone",
-      notRegisteredContact: "dispNone"
+      notRegisteredContact: "dispNone",
+      isProfileMenuOpen: false,
+      anchorEl: null
     };
   }
 
@@ -376,6 +383,43 @@ class Header extends Component {
     })
   }
 
+  //Profile menu
+  openMenu = () => this.setState({
+    ...this.state,
+    isProfileMenuOpen: !this.state.isProfileMenuOpen
+  })
+
+  profileMenuClickHandler = (event) => {
+    this.openMenu();
+    this.state.anchorEl ? this.setState({ anchorEl: null }) : this.setState({ anchorEl: event.currentTarget });
+  };
+
+  //Logout
+  logoutClickHandler = () => {
+    let logoutData = null;
+    let that = this
+    let xhrLogout = new XMLHttpRequest();
+    xhrLogout.addEventListener("readystatechange", function () {
+      if (xhrLogout.readyState === 4 && xhrLogout.status === 200) {
+        sessionStorage.removeItem("uuid");
+        sessionStorage.removeItem("access-token");
+        sessionStorage.removeItem("customer-name");
+        that.setState({
+          ...that.state,
+          loggedIn: false,
+          menuIsOpen: !that.state.isProfileMenuOpen,
+        });
+      }
+
+    })
+
+    xhrLogout.open('POST', "http://localhost:8080/api/" + 'customer/logout');
+    xhrLogout.setRequestHeader('authorization', 'Bearer ' + sessionStorage.getItem('access-token'));
+    xhrLogout.send(logoutData);
+
+
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -393,10 +437,25 @@ class Header extends Component {
               placeholder="Search by Restuarant Name"
             />
           </div>
-          <Button className="login-button" size="medium" variant="contained" onClick={this.openModalHandler}>
-            <AccountCircle /> &nbsp; LOGIN
+          {this.state.isLoggedIn !== true ?
+            <Button className="login-button" size="medium" variant="contained" onClick={this.openModalHandler}>
+              <AccountCircle /> &nbsp; LOGIN
             </Button>
+            : <Button size="large" variant="text" onClick={this.profileMenuClickHandler}>
+              <AccountCircle className="profile-button-icon" htmlColor="#c2c2c2" />
+              {this.state.loggedInName}
+            </Button>
+          }
+          <Menu id="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen} onClose={this.profileMenuClickHandler}>
+            <MenuList >
+              <Link to={"/profile"} underline="none" color={"default"}>
+                <MenuItem disableGutters={false}>My profile</MenuItem>
+              </Link>
+              <MenuItem className="menu-items" onClick={this.logoutClickHandler}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
         </div>
+
         {/* Login and signup modal */}
         <Modal ariaHideApp={false} isOpen={this.state.modalIsOpen} contentLabel="Login" onRequestClose={this.closeModalHandler} style={customStyles}>
           <Tabs className="tabs" value={this.state.value} onChange={this.tabChangeHandler}>
