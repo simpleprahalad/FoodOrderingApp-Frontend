@@ -186,6 +186,7 @@ class Checkout extends Component {
       stateRequired: "dispNone",
       pincode: "",
       pincodeRequired: "dispNone",
+      pincodeHelpText: "dispNone",
       changeOption: "dispNone",
       isSnackBarVisible: false,
       snackBarMessage: "",
@@ -370,6 +371,11 @@ class Checkout extends Component {
           <FormHelperText className={this.state.pincodeRequired}>
             <span className="red">required</span>
           </FormHelperText>
+          <FormHelperText className={this.state.pincodeHelpText}>
+            <span className="red">
+              Pincode must contain only numbers and must be 6 digits long
+            </span>
+          </FormHelperText>
         </FormControl>
         <br />
         <br />
@@ -472,9 +478,24 @@ class Checkout extends Component {
       ? this.setState({ stateRequired: "dispBlock" })
       : this.setState({ stateRequired: "dispNone" });
 
-    this.state.pincode === ""
-      ? this.setState({ pincodeRequired: "dispBlock" })
-      : this.setState({ pincodeRequired: "dispNone" });
+    if (this.state.pincode !== "") {
+      var pincodePattern = /^\d{6}$/;
+      if (!this.state.pincode.match(pincodePattern)) {
+        this.setState({
+          pincodeRequired: "dispNone",
+          pincodeHelpText: "dispBlock",
+        });
+      } else {
+        this.setState({
+          pincodeHelpText: "dispNone",
+        });
+      }
+    } else {
+      this.setState({
+        pincodeRequired: "dispBlock",
+        pincodeHelpText: "dispNone",
+      });
+    }
   };
 
   onClickChangeHandler = () => {
