@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import InfoCard from "./infocard/InfoCard";
 import "./Home.css";
-import Header from "../header/Header";
+import Header from "../../common/header/Header";
 
 class Home extends Component {
   constructor() {

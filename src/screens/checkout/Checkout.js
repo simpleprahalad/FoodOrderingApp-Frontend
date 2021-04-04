@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Header from "../header/Header";
+import Header from "../../common/header/Header";
 import "./Checkout.css";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
