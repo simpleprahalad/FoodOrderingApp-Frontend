@@ -112,23 +112,28 @@ export default function SummaryCard(props) {
   function DiscountCoupons() {
     return (
       <React.Fragment>
-        <Grid xs={6}>
+        <div
+          style={{
+            display: "flex",
+            direction: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
           <img
             src={coupon}
             alt={"flat 50"}
-            style={{ marginLeft: "20px", width: "100%", height: "80px" }}
+            style={{ width: "200px", height: "60px" }}
           />
-        </Grid>
-        <Grid item xs={3} />
-        <Grid item xs={3}>
           <Button
             variant="contained"
             color="default"
             onClick={applyButtonClickHandler}
+            style={{ width: "80px", height: "40px" }}
           >
             APPLY
           </Button>
-        </Grid>
+        </div>
       </React.Fragment>
     );
   }
