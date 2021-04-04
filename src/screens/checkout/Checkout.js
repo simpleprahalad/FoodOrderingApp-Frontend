@@ -119,56 +119,7 @@ class Checkout extends Component {
           isVeg: "true",
         },
       ],
-      existingAddresses: [
-        {
-          id: 100,
-          flat_buil_number: "B113",
-          flat_building_name: "SVS Palms1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-        {
-          id: 101,
-          flat_buil_number: "B112",
-          flat_building_name: "SVS Palms1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-        {
-          id: 102,
-          flat_buil_number: "B114",
-          flat_building_name: "SVS Palms1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-        {
-          id: 103,
-          flat_buil_number: "B115",
-          flat_building_name: "SVS Palsm1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-      ],
+      existingAddresses: [],
       paymentOptions: [],
       selectedAddress: "",
       noOfColumn: 3,
@@ -414,11 +365,47 @@ class Checkout extends Component {
     xhrGetStatesMethod.send();
   };
 
+  getDeliveryAddresses = () => {
+    let xhrGetDeliveryAddressesMethod = new XMLHttpRequest();
+    let that = this;
+
+    xhrGetDeliveryAddressesMethod.addEventListener(
+      "readystatechange",
+      function () {
+        if (
+          this.readyState === 4 &&
+          xhrGetDeliveryAddressesMethod.status === 200
+        ) {
+          const rspAddressesInDetail = JSON.parse(this.responseText).addresses;
+          that.setState({ existingAddresses: rspAddressesInDetail });
+        } else {
+          console.log(this.responseText);
+        }
+      }
+    );
+    xhrGetDeliveryAddressesMethod.open(
+      "GET",
+      "http://localhost:8080/api/" + "address/customer"
+    );
+    xhrGetDeliveryAddressesMethod.setRequestHeader(
+      "Accept",
+      "application/json"
+    );
+
+    xhrGetDeliveryAddressesMethod.setRequestHeader(
+      "authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
+
+    xhrGetDeliveryAddressesMethod.send();
+  };
+
   handlePaymentModeChange = (e) => {
     this.setState({ selectedPaymentOption: e.target.value });
   };
 
   componentWillMount = () => {
+    this.getDeliveryAddresses();
     this.getPaymentMethods();
     this.getStates();
   };
