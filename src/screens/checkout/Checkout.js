@@ -12,7 +12,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import PropTypes from "prop-types";
-import Card from "@material-ui/core/Card";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -23,7 +22,7 @@ import Input from "@material-ui/core/Input";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import SummaryCard from "../common/SummaryCard";
+import SummaryCard from "../../common/SummaryCard";
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -271,7 +270,7 @@ class Checkout extends Component {
 
   getAddNewAddressTabDetails = () => {
     return (
-      <div style={{maxWidth: "250px"}}>
+      <div style={{ maxWidth: "250px" }}>
         <FormControl required>
           <InputLabel htmlFor="flatBuildNo">Flat / Building No.</InputLabel>
           <Input
@@ -365,14 +364,23 @@ class Checkout extends Component {
   };
 
   getPaymentMethods = () => {
-    // TODO : to be received from backend
-    const paymentOptions = [
-      "Cash on Delivery",
-      "Wallet",
-      "Net Banking",
-      "Debit / Credit Card",
-    ];
-    this.setState({ paymentOptions: paymentOptions });
+    let xhrPaymentMethods = new XMLHttpRequest();
+    let that = this;
+
+    xhrPaymentMethods.addEventListener("readystatechange", function () {
+      if (this.readyState === 4 && xhrPaymentMethods.status === 200) {
+        const rspPaymentOptions = JSON.parse(this.responseText).paymentMethods;
+        const paymentOptionStrings = rspPaymentOptions.map(
+          (paymentMode) => paymentMode.payment_name
+        );
+        that.setState({ paymentOptions: paymentOptionStrings });
+      } else {
+        console.log(this.responseText);
+      }
+    });
+    xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "payment");
+    xhrPaymentMethods.setRequestHeader("Accept", "application/json");
+    xhrPaymentMethods.send();
   };
 
   getStates = () => {
