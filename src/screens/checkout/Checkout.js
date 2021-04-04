@@ -28,6 +28,8 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
   button: {
@@ -135,9 +137,20 @@ class Checkout extends Component {
       stateRequired: "dispNone",
       pincode: "",
       pincodeRequired: "dispNone",
+      pincodeHelpText: "dispNone",
       changeOption: "dispNone",
+      isSnackBarVisible: false,
+      snackBarMessage: "",
     };
   }
+
+  snackBarClose = () => {
+    this.setState({
+      ...this.state,
+      snackBarMessage: "",
+      isSnackBarVisible: false,
+    });
+  };
 
   handleBack = () => {
     this.setState({ activeStep: this.state.activeStep - 1 });
@@ -309,6 +322,11 @@ class Checkout extends Component {
           <FormHelperText className={this.state.pincodeRequired}>
             <span className="red">required</span>
           </FormHelperText>
+          <FormHelperText className={this.state.pincodeHelpText}>
+            <span className="red">
+              Pincode must contain only numbers and must be 6 digits long
+            </span>
+          </FormHelperText>
         </FormControl>
         <br />
         <br />
@@ -447,9 +465,24 @@ class Checkout extends Component {
       ? this.setState({ stateRequired: "dispBlock" })
       : this.setState({ stateRequired: "dispNone" });
 
-    this.state.pincode === ""
-      ? this.setState({ pincodeRequired: "dispBlock" })
-      : this.setState({ pincodeRequired: "dispNone" });
+    if (this.state.pincode !== "") {
+      var pincodePattern = /^\d{6}$/;
+      if (!this.state.pincode.match(pincodePattern)) {
+        this.setState({
+          pincodeRequired: "dispNone",
+          pincodeHelpText: "dispBlock",
+        });
+      } else {
+        this.setState({
+          pincodeHelpText: "dispNone",
+        });
+      }
+    } else {
+      this.setState({
+        pincodeRequired: "dispBlock",
+        pincodeHelpText: "dispNone",
+      });
+    }
   };
 
   onClickChangeHandler = () => {
@@ -517,6 +550,14 @@ class Checkout extends Component {
     }
   };
 
+  placeOrderClickHandler = () => {
+    // TODO : handler order/success failure cases
+    this.setState({
+      snackBarMessage: "Order placed successfully! Your order ID is XXX",
+      isSnackBarVisible: true,
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
@@ -574,9 +615,32 @@ class Checkout extends Component {
           </Grid>
 
           <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
-            <SummaryCard {...this.state} />
+            <SummaryCard
+              {...this.state}
+              placeOrderClickHandler={this.placeOrderClickHandler}
+            />
           </Grid>
         </Grid>
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            open={this.state.isSnackBarVisible}
+            autoHideDuration={4000}
+            onClose={this.snackBarClose}
+            ContentProps={{
+              "aria-describedby": "message-id",
+            }}
+            message={<span id="message-id">{this.state.snackBarMessage}</span>}
+            action={
+              <IconButton color="inherit" onClick={this.snackBarClose}>
+                <CloseIcon />
+              </IconButton>
+            }
+          />
+        </div>
       </div>
     );
   }
