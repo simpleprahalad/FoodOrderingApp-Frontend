@@ -23,8 +23,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     textAlign: "start",
   },
-  stopIcon: {
+  vegIcon: {
     color: "#5A9A5A",
+  },
+  nonVegIcon: {
+    color: "red",
   },
   inrIcon: {
     color: theme.palette.text.secondary,
@@ -55,7 +58,10 @@ export default function SummaryCard(props) {
     return (
       <React.Fragment>
         <Grid item xs={6}>
-          <FontAwesomeIcon icon={faStopCircle} className={classes.stopIcon} />
+          <FontAwesomeIcon
+            icon={faStopCircle}
+            className={billedItem.isVeg === "true" ? classes.vegIcon : classes.nonVegIcon}
+          />
           <Typography
             className={classes.paper}
             variant="body1"
