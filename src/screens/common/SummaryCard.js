@@ -35,6 +35,13 @@ export default function SummaryCard(props) {
   const inrSymbol = (
     <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
   );
+
+  function calculateNetTotal() {
+    return props.billedItems
+      .map((item) => item.qty * item.price)
+      .reduce((total, val) => total + val);
+  }
+
   function BillableItemRow(billedItem) {
     return (
       <React.Fragment>
@@ -88,8 +95,7 @@ export default function SummaryCard(props) {
     );
   }
 
-  function NetBillableItemRow(billableItems) {
-    console.log(typeof billableItems);
+  function NetBillableItemRow() {
     return (
       <React.Fragment>
         <Grid item xs={6}>
@@ -109,21 +115,19 @@ export default function SummaryCard(props) {
             variant="body1"
             component="span"
           >
-            {/* {billableItems.reduce(
-              (total, item) => total + item.qty * item.price
-            )} */}
+            {calculateNetTotal()}
           </Typography>
         </Grid>
       </React.Fragment>
     );
   }
 
-  function NetBillableItemGrid(billableItems) {
+  function NetBillableItemGrid() {
     return (
       <React.Fragment>
         <Grid container spacing={1}>
           <Grid container item>
-            <NetBillableItemRow {...billableItems} />
+            <NetBillableItemRow />
           </Grid>
         </Grid>
       </React.Fragment>
@@ -143,10 +147,10 @@ export default function SummaryCard(props) {
           {props.billedRestaurant}
         </Typography>
 
-        <BillableItemGrid {...props} />
+        <BillableItemGrid />
         <Divider />
         <br />
-        <NetBillableItemGrid {...props.billedItems} />
+        <NetBillableItemGrid />
       </CardContent>
       <CardActions disableSpacing>
         <Button
