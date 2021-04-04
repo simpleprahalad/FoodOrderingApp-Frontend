@@ -384,16 +384,23 @@ class Checkout extends Component {
   };
 
   getStates = () => {
-    const states = [
-      "Karnataka",
-      "Odissa",
-      "Kerala",
-      "Maharastra",
-      "MP",
-      "Delhi",
-      "Haryana",
-    ];
-    this.setState({ addressStates: states });
+    let xhrGetStatesMethod = new XMLHttpRequest();
+    let that = this;
+
+    xhrGetStatesMethod.addEventListener("readystatechange", function () {
+      if (this.readyState === 4 && xhrGetStatesMethod.status === 200) {
+        const rspStateDetails = JSON.parse(this.responseText).states;
+        const states = rspStateDetails.map(
+          (stateDetails) => stateDetails.state_name
+        );
+        that.setState({ addressStates: states });
+      } else {
+        console.log(this.responseText);
+      }
+    });
+    xhrGetStatesMethod.open("GET", "http://localhost:8080/api/" + "states");
+    xhrGetStatesMethod.setRequestHeader("Accept", "application/json");
+    xhrGetStatesMethod.send();
   };
 
   handlePaymentModeChange = (e) => {
