@@ -10,11 +10,10 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRupeeSign, faStopCircle } from "@fortawesome/free-solid-svg-icons";
-import coupon from "../assets/CouponFlat50.png";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 420,
+    maxWidth: 400,
   },
   margin: {
     margin: theme.spacing(1),
@@ -40,18 +39,10 @@ export default function SummaryCard(props) {
     <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
   );
 
-  function calculateSubTotal() {
+  function calculateNetTotal() {
     return props.billedItems
       .map((item) => item.qty * item.price)
       .reduce((total, val) => total + val);
-  }
-
-  function calculateDiscount(discount = 0) {
-    return discount * calculateSubTotal();
-  }
-
-  function calculateNetTotal(discount = 0) {
-    return calculateSubTotal() - calculateDiscount(discount);
   }
 
   function BillableItemRow(billedItem) {
@@ -60,7 +51,9 @@ export default function SummaryCard(props) {
         <Grid item xs={6}>
           <FontAwesomeIcon
             icon={faStopCircle}
-            className={billedItem.isVeg === "true" ? classes.vegIcon : classes.nonVegIcon}
+            className={
+              billedItem.isVeg === "true" ? classes.vegIcon : classes.nonVegIcon
+            }
           />
           <Typography
             className={classes.paper}
@@ -110,40 +103,6 @@ export default function SummaryCard(props) {
     );
   }
 
-  function applyButtonClickHandler() {
-    console.log("Apply Discount !!!");
-    calculateNetTotal(0.5);
-  }
-
-  function DiscountCoupons() {
-    return (
-      <React.Fragment>
-        <div
-          style={{
-            display: "flex",
-            direction: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={coupon}
-            alt={"flat 50"}
-            style={{ marginLeft: "-30px", width: "200px", height: "60px" }}
-          />
-          <Button
-            variant="contained"
-            color="default"
-            onClick={applyButtonClickHandler}
-            style={{ width: "40px", height: "40px" }}
-          >
-            APPLY
-          </Button>
-        </div>
-      </React.Fragment>
-    );
-  }
-
   function NetBillableItemRow(props) {
     return (
       <React.Fragment>
@@ -183,30 +142,6 @@ export default function SummaryCard(props) {
     );
   }
 
-  function SubtotalItemGrid() {
-    return (
-      <React.Fragment>
-        <Grid container spacing={1}>
-          <Grid container item>
-            <NetBillableItemRow text="Subtotal" value={calculateSubTotal()} />
-          </Grid>
-        </Grid>
-      </React.Fragment>
-    );
-  }
-
-  function DiscountGrid() {
-    return (
-      <React.Fragment>
-        <Grid container spacing={1}>
-          <Grid container item>
-            <NetBillableItemRow text="Discount" value={calculateDiscount()} />
-          </Grid>
-        </Grid>
-      </React.Fragment>
-    );
-  }
-
   return (
     <Card className={classes.root}>
       <CardHeader title="Summary" />
@@ -221,12 +156,6 @@ export default function SummaryCard(props) {
         </Typography>
 
         <BillableItemGrid />
-        <br />
-        <DiscountCoupons />
-        <br />
-        <SubtotalItemGrid />
-        <br />
-        <DiscountGrid />
         <br />
         <Divider />
         <br />
