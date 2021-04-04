@@ -9,3 +9,15 @@
 .dispBlock {
   display: block;
 }
+
+.gridListMain {
+  display: flex;
+  flex-wrap: nowrap !important;
+  transform: translateZ(0);
+  height: 400px;
+  width: 1000px !important;
+}
+
+.grid-list-tile-container {
+  padding: 16px 8px 16px 16px;
+}
