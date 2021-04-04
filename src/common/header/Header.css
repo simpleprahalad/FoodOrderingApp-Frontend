@@ -62,7 +62,18 @@
   color: red;
 }
 
+/* Menu */
+.profile-menu {
+  margin-top: 30px;
+  padding: 0px;
+  margin-left: 20px;
+}
 
+.profile-button {
+  align-self: center;
+  margin-right: 10px;
+  color: lightgrey;
+}
 
 /* Smaller devices */
 @media screen and (max-width:600px) {
@@ -71,7 +82,7 @@
     height: 140px;
     justify-content: space-between;
   }
-  .search-container, .login-button {
+  .search-container, .login-button, .profile-button {
     align-self: flex-start;
   }
 

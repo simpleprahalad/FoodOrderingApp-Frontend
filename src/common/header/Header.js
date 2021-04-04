@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Header.css";
-import "../../Controller"
 import {
   Input,
   Button,
@@ -34,6 +33,16 @@ const styles = (theme => ({
       borderBottom: '2px solid white'
     },
     "align-self": "flex-start",
+  },
+  menuItems: {
+    "text-decoration": "none",
+    "color": "black",
+    "text-decoration-underline": "none",
+    "padding-top": "0px",
+    "padding-bottom": "0px",
+  },
+  menuList: {
+    'padding': "0px"
   }
 }));
 
@@ -69,7 +78,7 @@ class Header extends Component {
     this.state = {
       modalIsOpen: false,
       value: 0,
-      contactNumber: "",
+      contactnumber: "",
       loginContactRequired: "dispNone",
       loginPassword: "",
       loginPasswordRequired: "dispNone",
@@ -81,11 +90,11 @@ class Header extends Component {
       emailRequired: "dispNone",
       signupPassword: "",
       signupPasswordRequired: "dispNone",
-      signupContact: "",
-      signupContactRequired: "dispNone",
+      signupcontact: "",
+      signupcontactRequired: "dispNone",
       invalidEmail: "dispNone",
       invalidPasswordFormat: "dispNone",
-      invalidContactNumber: "dispNone",
+      invalidcontactnumber: "dispNone",
       invalidLoginContact: "dispNone",
       contactAlreadyInUse: "dispNone",
       isSnackBarVisible: false,
@@ -94,7 +103,9 @@ class Header extends Component {
       invalidPassword: "dispNone",
       notRegisteredContact: "dispNone",
       isProfileMenuOpen: false,
-      anchorEl: null
+      anchorEl: null,
+      isLoggedIn: sessionStorage.getItem('access-token') === null ? false : true,
+      loggedInUsername: sessionStorage.getItem('customer-name'),
     };
   }
 
@@ -105,7 +116,7 @@ class Header extends Component {
 
   closeModalHandler = () => {
     this.setState({ modalIsOpen: false });
-    this.setState({ contactNumberRequired: "dispNone" })
+    this.setState({ contactnumberRequired: "dispNone" })
     this.setState({ passwordRequired: "dispNone" })
   }
 
@@ -113,8 +124,8 @@ class Header extends Component {
     this.setState({ value });
   }
 
-  inputContactNumberChangeHandler = (e) => {
-    this.setState({ contactNumber: e.target.value });
+  inputcontactnumberChangeHandler = (e) => {
+    this.setState({ contactnumber: e.target.value });
   }
 
   inputPasswordChangeHandler = (e) => {
@@ -138,7 +149,8 @@ class Header extends Component {
               ...that.state,
               isLoggedIn: true,
               isSnackBarVisible: true,
-              snackBarMessage: "Logged in successfully!"
+              snackBarMessage: "Logged in successfully!",
+              loggedInUsername: loginResponse.first_name 
             })
             //Close modal on successfull login
             that.closeModalHandler();
@@ -163,7 +175,7 @@ class Header extends Component {
         }
       })
       xhrLogin.open("POST", "http://localhost:8080/api/" + "customer/login");
-      xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.contactNumber + ":" + this.state.loginPassword));
+      xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.contactnumber + ":" + this.state.loginPassword));
       xhrLogin.setRequestHeader("Content-Type", "application/json");
       xhrLogin.setRequestHeader("Cache-Control", "no-cache");
       xhrLogin.send(dataLogin);
@@ -175,7 +187,7 @@ class Header extends Component {
     if (this.signUpFormValidation()) {
       //Populate post data
       let data = JSON.stringify({
-        "contact_number": this.state.signupContact,
+        "contact_number": this.state.signupcontact,
         "email_address": this.state.email,
         "first_name": this.state.firstname,
         "last_name": this.state.lastName,
@@ -230,8 +242,8 @@ class Header extends Component {
     this.setState({ signupPassword: e.target.value });
   }
 
-  inputSignupContactChangeHandler = (e) => {
-    this.setState({ signupContact: e.target.value });
+  inputsignupcontactChangeHandler = (e) => {
+    this.setState({ signupcontact: e.target.value });
   }
 
   //Validating login from on Login button click
@@ -243,13 +255,13 @@ class Header extends Component {
     let isFormValid = true;
 
     //Contact validation
-    if (this.state.contactNumber === "") {
+    if (this.state.contactnumber === "") {
       loginContactRequired = "dispBlock";
       isFormValid = false;
     }
-    else if (this.state.contactNumber !== "") {
+    else if (this.state.contactnumber !== "") {
       var validator = "[7-9][0-9]{9}";
-      if (!this.state.contactNumber.match(validator)) {
+      if (!this.state.contactnumber.match(validator)) {
         invalidLoginContact = "dispBlock"
         isFormValid = false;
       }
@@ -274,9 +286,9 @@ class Header extends Component {
     let firstnameRequired = "dispNone";
     let emailRequired = "dispNone";
     let signupPasswordRequired = "dispNone";
-    let signupContactRequired = "dispNone";
+    let signupcontactRequired = "dispNone";
     let invalidPasswordFormat = "dispNone";
-    let invalidContactNumber = "dispNone";
+    let invalidcontactnumber = "dispNone";
     let invalidEmail = "dispNone";
     let isSignupFormValidated = true;
 
@@ -299,14 +311,14 @@ class Header extends Component {
     }
 
     //Contact number validation
-    if (this.state.signupContact === "") {
-      signupContactRequired = "dispBlock";
+    if (this.state.signupcontact === "") {
+      signupcontactRequired = "dispBlock";
       isSignupFormValidated = false;
     }
-    else if (this.state.signupContact !== "") {
+    else if (this.state.signupcontact !== "") {
       var pattern = new RegExp(/^[0-9\b]+$/);
-      if (!pattern.test(this.state.signupContact) || this.state.signupContact.length !== 10) {
-        invalidContactNumber = "dispBlock"
+      if (!pattern.test(this.state.signupcontact) || this.state.signupcontact.length !== 10) {
+        invalidcontactnumber = "dispBlock"
         isSignupFormValidated = false;
       }
     }
@@ -327,8 +339,8 @@ class Header extends Component {
       firstnameRequired: firstnameRequired,
       emailRequired: emailRequired,
       signupPasswordRequired: signupPasswordRequired,
-      signupContactRequired: signupContactRequired,
-      invalidContactNumber: invalidContactNumber,
+      signupcontactRequired: signupcontactRequired,
+      invalidcontactnumber: invalidcontactnumber,
       invalidEmail: invalidEmail,
       invalidPasswordFormat: invalidPasswordFormat,
     })
@@ -406,8 +418,8 @@ class Header extends Component {
         sessionStorage.removeItem("customer-name");
         that.setState({
           ...that.state,
-          loggedIn: false,
-          menuIsOpen: !that.state.isProfileMenuOpen,
+          isLoggedIn: false,
+          isProfileMenuOpen: !that.state.isProfileMenuOpen,
         });
       }
 
@@ -441,17 +453,16 @@ class Header extends Component {
             <Button className="login-button" size="medium" variant="contained" onClick={this.openModalHandler}>
               <AccountCircle /> &nbsp; LOGIN
             </Button>
-            : <Button size="large" variant="text" onClick={this.profileMenuClickHandler}>
-              <AccountCircle className="profile-button-icon" htmlColor="#c2c2c2" />
-              {this.state.loggedInName}
+            : <Button className="profile-button" size="medium" variant="text" onClick={this.profileMenuClickHandler}>
+              <AccountCircle />  &nbsp; {this.state.loggedInUsername}
             </Button>
           }
-          <Menu id="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen} onClose={this.profileMenuClickHandler}>
-            <MenuList >
+          <Menu className="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen} onClose={this.profileMenuClickHandler}>
+            <MenuList className={classes.menuItems}>
               <Link to={"/profile"} underline="none" color={"default"}>
-                <MenuItem disableGutters={false}>My profile</MenuItem>
+                <MenuItem className={classes.menuList} disableGutters={false}>My profile</MenuItem>
               </Link>
-              <MenuItem className="menu-items" onClick={this.logoutClickHandler}>Logout</MenuItem>
+              <MenuItem onClick={this.logoutClickHandler}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </div>
@@ -465,8 +476,8 @@ class Header extends Component {
           {this.state.value === 0 &&
             <TabContainer>
               <FormControl required>
-                <InputLabel htmlFor="contactNumber">Contact No.</InputLabel>
-                <Input id="contactNumber" type="text" contactNumber={this.state.contactNumber} onChange={this.inputContactNumberChangeHandler} />
+                <InputLabel htmlFor="contactnumber">Contact No.</InputLabel>
+                <Input id="contactnumber" type="text" contactnumber={this.state.contactnumber} onChange={this.inputcontactnumberChangeHandler} />
                 <FormHelperText className={this.state.loginContactRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -531,11 +542,11 @@ class Header extends Component {
               <br /><br />
               <FormControl required>
                 <InputLabel htmlFor="contact">Contact No.</InputLabel>
-                <Input id="contact" type="text" signupContact={this.state.signupContact} onChange={this.inputSignupContactChangeHandler} />
-                <FormHelperText className={this.state.signupContactRequired}>
+                <Input id="contact" type="text" signupcontact={this.state.signupcontact} onChange={this.inputsignupcontactChangeHandler} />
+                <FormHelperText className={this.state.signupcontactRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
-                <FormHelperText className={this.state.invalidContactNumber}>
+                <FormHelperText className={this.state.invalidcontactnumber}>
                   <span className="red">Contact No. must contain only numbers and must be 10 digits long</span>
                 </FormHelperText>
                 <FormHelperText className={this.state.contactAlreadyInUse}>
