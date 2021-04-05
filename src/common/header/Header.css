@@ -2,12 +2,12 @@
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  height: 35px;
   padding: 10px;
   background-color: #263238;
 }
 
 /** Search **/
+
 .search-container {
   height: 30px;
   align-self: center;
@@ -18,25 +18,26 @@
 }
 
 /** To remove cross icon **/
-[type="search"]::-webkit-search-cancel-button,
-[type="search"]::-webkit-search-decoration {
+
+[type="search"]::-webkit-search-cancel-button, [type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
   appearance: none;
 }
 
 /** Left Logo **/
+
 .logo {
   align-self: center;
-  padding-left: 20px;
+  padding-left: 15px;
   height: 40px;
 }
 
 .login-button {
   align-self: center;
-  margin-right: 20px !important;
 }
 
 /* Modal **/
+
 @keyframes app-logo-spin {
   from {
     transform: scaleX(-1);
@@ -64,37 +65,39 @@
 }
 
 /* Menu */
+
 .profile-menu {
   margin-top: 30px;
   padding: 0px;
-  margin-left: 20px;
+  margin-left: 0px;
 }
 
 .profile-button {
-  align-self: center;
-  margin-right: 10px;
-  color: lightgrey;
+  align-self: center !important;
+  margin-right: 10px !important;
+  color: lightgrey !important;
 }
 
 /* Smaller devices */
-@media screen and (max-width: 600px) {
+
+@media screen and (max-width:600px) {
   .inner-container {
     flex-direction: column;
-    height: 140px;
     justify-content: space-between;
   }
-  .search-container,
-  .login-button,
-  .profile-button {
-    align-self: flex-start;
+  .search-container, .login-button, .profile-button {
+    align-self: flex-start !important;
+    margin-top: 15px !important;
   }
-
   .logo {
     align-self: flex-start;
-    margin-left: -5px;
   }
-
   .modal-style {
     min-width: 70%;
+  }
+  .profile-menu {
+    margin-top: 75px;
+    padding: 0px;
+    margin-left: 0px;
   }
 }
