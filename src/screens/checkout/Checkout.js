@@ -299,9 +299,12 @@ class Checkout extends Component {
               style: { marginTop: "50px", maxHeight: "250px" },
             }}
           >
-            {this.state.addressStates.map((stateName, index) => (
-              <MenuItem key={index + stateName} value={stateName}>
-                {stateName}
+            {this.state.addressStates.map((stateDetail, index) => (
+              <MenuItem
+                key={index + stateDetail.state_name}
+                value={stateDetail}
+              >
+                {stateDetail.state_name}
               </MenuItem>
             ))}
           </Select>
@@ -370,9 +373,7 @@ class Checkout extends Component {
     xhrGetStatesMethod.addEventListener("readystatechange", function () {
       if (this.readyState === 4 && xhrGetStatesMethod.status === 200) {
         const rspStateDetails = JSON.parse(this.responseText).states;
-        const states = rspStateDetails.map(
-          (stateDetails) => stateDetails.state_name
-        );
+        const states = rspStateDetails.map((stateDetails) => stateDetails);
         that.setState({ addressStates: states });
       } else {
         console.log(this.responseText);
@@ -483,7 +484,59 @@ class Checkout extends Component {
         pincodeHelpText: "dispNone",
       });
     }
+
+    //Check if all the fields needed are present fire the REST api
+    if (
+      this.state.flatBuildingNumRequired === "dispNone" &&
+      this.state.localityRequired === "dispNone" &&
+      this.state.cityRequired === "dispNone" &&
+      this.state.stateRequired === "dispNone" &&
+      this.state.pincodeRequired === "dispNone"
+    ) {
+      this.saveNewAddress();
+    }
   };
+
+  saveNewAddress() {
+    let xhrSaveNewDeliveryAddressesMethod = new XMLHttpRequest();
+
+    xhrSaveNewDeliveryAddressesMethod.addEventListener(
+      "readystatechange",
+      function () {
+        if (
+          this.readyState === 4 &&
+          xhrSaveNewDeliveryAddressesMethod.status === 201
+        ) {
+          const rspAddressesInDetail = JSON.parse(this.responseText);
+          console.log(rspAddressesInDetail);
+        } else {
+          console.log(this.responseText);
+        }
+      }
+    );
+    xhrSaveNewDeliveryAddressesMethod.open(
+      "POST",
+      "http://localhost:8080/api/" + "address"
+    );
+    xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
+      "Accept",
+      "application/json"
+    );
+
+    xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
+      "authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
+
+    let requestBody = {};
+    requestBody.flat_building_name = this.state.flatBuildingNum;
+    requestBody.city = this.state.city;
+    requestBody.locality = this.state.locality;
+    requestBody.pincode = this.state.pincode;
+    requestBody.state_uuid = this.state.selectedState.id;
+
+    xhrSaveNewDeliveryAddressesMethod.send(JSON.stringify(requestBody));
+  }
 
   onClickChangeHandler = () => {
     this.setState({
