@@ -493,11 +493,6 @@ class Checkout extends Component {
       this.state.stateRequired === "dispNone" &&
       this.state.pincodeRequired === "dispNone"
     ) {
-      console.log(
-        "Should fire rest API now" +
-          this.state.selectedState.id +
-          this.state.selectedState.state_name
-      );
       this.saveNewAddress();
     }
   };
