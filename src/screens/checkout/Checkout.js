@@ -484,7 +484,64 @@ class Checkout extends Component {
         pincodeHelpText: "dispNone",
       });
     }
+
+    //Check if all the fields needed are present fire the REST api
+    if (
+      this.state.flatBuildingNumRequired === "dispNone" &&
+      this.state.localityRequired === "dispNone" &&
+      this.state.cityRequired === "dispNone" &&
+      this.state.stateRequired === "dispNone" &&
+      this.state.pincodeRequired === "dispNone"
+    ) {
+      console.log(
+        "Should fire rest API now" +
+          this.state.selectedState.id +
+          this.state.selectedState.state_name
+      );
+      this.saveNewAddress();
+    }
   };
+
+  saveNewAddress() {
+    let xhrSaveNewDeliveryAddressesMethod = new XMLHttpRequest();
+
+    xhrSaveNewDeliveryAddressesMethod.addEventListener(
+      "readystatechange",
+      function () {
+        if (
+          this.readyState === 4 &&
+          xhrSaveNewDeliveryAddressesMethod.status === 201
+        ) {
+          const rspAddressesInDetail = JSON.parse(this.responseText);
+          console.log(rspAddressesInDetail);
+        } else {
+          console.log(this.responseText);
+        }
+      }
+    );
+    xhrSaveNewDeliveryAddressesMethod.open(
+      "POST",
+      "http://localhost:8080/api/" + "address"
+    );
+    xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
+      "Accept",
+      "application/json"
+    );
+
+    xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
+      "authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
+
+    let requestBody = {};
+    requestBody.flat_building_name = this.state.flatBuildingNum;
+    requestBody.city = this.state.city;
+    requestBody.locality = this.state.locality;
+    requestBody.pincode = this.state.pincode;
+    requestBody.state_uuid = this.state.selectedState.id;
+
+    xhrSaveNewDeliveryAddressesMethod.send(JSON.stringify(requestBody));
+  }
 
   onClickChangeHandler = () => {
     this.setState({
