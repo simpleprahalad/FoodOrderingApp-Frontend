@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  width: 100%;
   height: 35px;
   padding: 10px;
   background-color: #263238;
@@ -10,8 +9,8 @@
 
 /** Search **/
 .search-container {
- height: 30px;
- align-self: center;
+  height: 30px;
+  align-self: center;
 }
 
 .search-container input {
@@ -39,7 +38,9 @@
 
 /* Modal **/
 @keyframes app-logo-spin {
-  from { transform: scaleX(-1); }
+  from {
+    transform: scaleX(-1);
+  }
 }
 
 .MuiFormControl-root {
@@ -76,23 +77,24 @@
 }
 
 /* Smaller devices */
-@media screen and (max-width:600px) {
+@media screen and (max-width: 600px) {
   .inner-container {
     flex-direction: column;
     height: 140px;
     justify-content: space-between;
   }
-  .search-container, .login-button, .profile-button {
+  .search-container,
+  .login-button,
+  .profile-button {
     align-self: flex-start;
   }
 
   .logo {
     align-self: flex-start;
     margin-left: -5px;
-  } 
+  }
 
   .modal-style {
     min-width: 70%;
   }
-
 }
