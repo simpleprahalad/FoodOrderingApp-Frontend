@@ -37,12 +37,12 @@ const styles = (theme => ({
   menuItems: {
     "text-decoration": "none",
     "color": "black",
-    "text-decoration-underline": "none",
-    "padding-top": "0px",
-    "padding-bottom": "0px",
+    "text-decoration-underline": "none"
   },
   menuList: {
-    'padding': "0px"
+    'padding': "0px",
+    textDecorationLine: "none",
+    outline: "none"
   }
 }));
 
@@ -106,6 +106,8 @@ class Header extends Component {
       anchorEl: null,
       isLoggedIn: sessionStorage.getItem('access-token') === null ? false : true,
       loggedInUsername: sessionStorage.getItem('customer-name'),
+      isSearchBarVisible: true,
+      searchText: ""
     };
   }
 
@@ -150,7 +152,7 @@ class Header extends Component {
               isLoggedIn: true,
               isSnackBarVisible: true,
               snackBarMessage: "Logged in successfully!",
-              loggedInUsername: loginResponse.first_name 
+              loggedInUsername: loginResponse.first_name
             })
             //Close modal on successfull login
             that.closeModalHandler();
@@ -439,16 +441,19 @@ class Header extends Component {
       <div>
         <div className="inner-container">
           <Fastfood className="logo" fontSize="large" htmlColor="white" />
-          <div className="search-container">
-            <Input className={classes.searchBox} id="search-box" type="search"
-              startAdornment={
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              }
-              placeholder="Search by Restuarant Name"
-            />
-          </div>
+          {/*Show serach bar if flag is true*/}
+          {this.state.isSearchBarVisible &&
+            <div className="search-container">
+              <Input className={classes.searchBox} id="search-box" type="search"
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                }
+                placeholder="Search by Restuarant Name"
+              />
+            </div>
+          }
           {this.state.isLoggedIn !== true ?
             <Button className="login-button" size="medium" variant="contained" onClick={this.openModalHandler}>
               <AccountCircle /> &nbsp; LOGIN
@@ -458,9 +463,9 @@ class Header extends Component {
             </Button>
           }
           <Menu className="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen} onClose={this.profileMenuClickHandler}>
-            <MenuList className={classes.menuItems}>
-              <Link to={"/profile"} underline="none" color={"default"}>
-                <MenuItem className={classes.menuList} disableGutters={false}>My profile</MenuItem>
+            <MenuList className={classes.menuList}>
+              <Link className={classes.menuItems} to={"/profile"} underline="none" color={"default"}>
+                <MenuItem className={classes.menuItems} disableGutters={false}>My profile</MenuItem>
               </Link>
               <MenuItem onClick={this.logoutClickHandler}>Logout</MenuItem>
             </MenuList>
