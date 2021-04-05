@@ -299,9 +299,12 @@ class Checkout extends Component {
               style: { marginTop: "50px", maxHeight: "250px" },
             }}
           >
-            {this.state.addressStates.map((stateName, index) => (
-              <MenuItem key={index + stateName} value={stateName}>
-                {stateName}
+            {this.state.addressStates.map((stateDetail, index) => (
+              <MenuItem
+                key={index + stateDetail.state_name}
+                value={stateDetail}
+              >
+                {stateDetail.state_name}
               </MenuItem>
             ))}
           </Select>
@@ -370,9 +373,7 @@ class Checkout extends Component {
     xhrGetStatesMethod.addEventListener("readystatechange", function () {
       if (this.readyState === 4 && xhrGetStatesMethod.status === 200) {
         const rspStateDetails = JSON.parse(this.responseText).states;
-        const states = rspStateDetails.map(
-          (stateDetails) => stateDetails.state_name
-        );
+        const states = rspStateDetails.map((stateDetails) => stateDetails);
         that.setState({ addressStates: states });
       } else {
         console.log(this.responseText);
