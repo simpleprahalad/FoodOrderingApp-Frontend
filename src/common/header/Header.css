@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  width: 100%;
   padding: 10px;
   background-color: #263238;
 }
@@ -35,7 +34,6 @@
 
 .login-button {
   align-self: center;
-  margin-right: 20px !important;
 }
 
 /* Modal **/
@@ -91,11 +89,9 @@
     align-self: flex-start !important;
     margin-top: 15px !important;
   }
-  
   .logo {
     align-self: flex-start;
   }
-
   .modal-style {
     min-width: 70%;
   }

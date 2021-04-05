@@ -7,11 +7,11 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
-import { Container, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+    maxWidth: 280,
     margin: theme.spacing(1),
   },
   media: {
@@ -21,34 +21,22 @@ const useStyles = makeStyles((theme) => ({
   button: {
     background: "#EACC5E",
   },
+  ratingContainer: {},
 }));
 
 export default function InfoCard(props) {
   const classes = useStyles();
-
   const starIcon = <FontAwesomeIcon icon={faStar} />;
-
-  const ratingString = () => {
-    return (
-      props.avg_rating.toString() + " (" + props.rating_count.toString() + ")"
-    );
-  };
-
-  const itemTypes = () => {
-    return props.item_types.join(", ");
-  };
 
   return (
     <Card className={classes.root}>
       <CardMedia
         className={classes.media}
-        image={props.restaurant_image_url}
+        image={props.photo_URL}
         title="Resturant Name"
       />
       <CardHeader title={props.restaurant_name} />
-      <br />
-      <CardHeader subheader={itemTypes()} />
-      <br />
+      <CardHeader subheader={props.categories} />
       <CardActions disableSpacing>
         <Grid container justify="space-between">
           <Grid item>
@@ -59,16 +47,17 @@ export default function InfoCard(props) {
               startIcon={starIcon}
               color="secondary"
             >
-              {ratingString()}
+              {props.customer_rating +
+                " (" +
+                props.number_customers_rated +
+                ")"}
             </Button>
           </Grid>
           <Grid item>
-            <Container>
-              <FontAwesomeIcon icon={faRupeeSign} />
-              <Typography variant="h6" component="span">
-                {props.pricing} for two
-              </Typography>
-            </Container>
+            <FontAwesomeIcon icon={faRupeeSign} />
+            <Typography variant="h6" component="span">
+              {props.average_price} for two
+            </Typography>
           </Grid>
         </Grid>
       </CardActions>
