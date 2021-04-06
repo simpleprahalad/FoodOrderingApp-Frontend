@@ -30,6 +30,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import { Redirect } from "react-router-dom";
 
 const styles = (theme) => ({
   button: {
@@ -77,14 +78,9 @@ function getSteps() {
 
 function TabPanel(props) {
   return (
-    <div
-      role="tabpanel"
-      hidden={props.value !== props.index}
-      id={`simple-tabpanel-${props.index}`}
-      aria-labelledby={`simple-tab-${props.index}`}
-    >
-      {props.value === props.index && <Typography>{props.children}</Typography>}
-    </div>
+    <Typography component={"div"} variant={"body2"}>
+      {props.children}
+    </Typography>
   );
 }
 
@@ -103,18 +99,21 @@ class Checkout extends Component {
       billedRestaurant: "The Food League",
       billedItems: [
         {
+          id: 1,
           itemName: "Hakka Noodles",
           price: 100,
           qty: 2,
           isVeg: "true",
         },
         {
+          id: 2,
           itemName: "Hyderabadi Biryani",
           price: 250,
           qty: 1,
           isVeg: "false",
         },
         {
+          id: 3,
           itemName: "Veg. Manchuriyan",
           price: 140,
           qty: 2,
@@ -141,6 +140,9 @@ class Checkout extends Component {
       changeOption: "dispNone",
       isSnackBarVisible: false,
       snackBarMessage: "",
+      onNewAddress: false,
+      isLoggedIn:
+        sessionStorage.getItem("access-token") === null ? false : true,
     };
   }
 
@@ -157,16 +159,18 @@ class Checkout extends Component {
   };
 
   handleNext = () => {
-    if (this.state.activeStep === 1) {
-      this.setState({
-        activeStep: this.state.activeStep + 1,
-        changeOption: "dispText",
-      });
-    } else {
-      this.setState({
-        activeStep: this.state.activeStep + 1,
-        changeOption: "dispNone",
-      });
+    if (this.state.onNewAddress !== true) {
+      if (this.state.activeStep === 1) {
+        this.setState({
+          activeStep: this.state.activeStep + 1,
+          changeOption: "dispText",
+        });
+      } else {
+        this.setState({
+          activeStep: this.state.activeStep + 1,
+          changeOption: "dispNone",
+        });
+      }
     }
   };
 
@@ -199,7 +203,7 @@ class Checkout extends Component {
         className={classes.gridList}
         cols={this.state.noOfColumn}
         spacing={2}
-        cellHeight="auto"
+        cellHeight={"auto"}
       >
         {this.state.existingAddresses.map((address) => (
           <GridListTile
@@ -210,9 +214,6 @@ class Checkout extends Component {
             }}
           >
             <div className="grid-list-tile-container">
-              <Typography variant="body1" component="p">
-                {address.flat_buil_number}
-              </Typography>
               <Typography variant="body1" component="p">
                 {address.flat_building_name}
               </Typography>
@@ -361,8 +362,8 @@ class Checkout extends Component {
         console.log(this.responseText);
       }
     });
-    xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "payment");
-    xhrPaymentMethods.setRequestHeader("Accept", "application/json");
+    xhrPaymentMethods.open("GET", this.props.baseUrl + "payment");
+    xhrPaymentMethods.setRequestHeader("Content-Type", "application/json");
     xhrPaymentMethods.send();
   };
 
@@ -379,8 +380,8 @@ class Checkout extends Component {
         console.log(this.responseText);
       }
     });
-    xhrGetStatesMethod.open("GET", "http://localhost:8080/api/" + "states");
-    xhrGetStatesMethod.setRequestHeader("Accept", "application/json");
+    xhrGetStatesMethod.open("GET", this.props.baseUrl + "states");
+    xhrGetStatesMethod.setRequestHeader("Content-Type", "application/json");
     xhrGetStatesMethod.send();
   };
 
@@ -404,10 +405,10 @@ class Checkout extends Component {
     );
     xhrGetDeliveryAddressesMethod.open(
       "GET",
-      "http://localhost:8080/api/" + "address/customer"
+      this.props.baseUrl + "address/customer"
     );
     xhrGetDeliveryAddressesMethod.setRequestHeader(
-      "Accept",
+      "Content-Type",
       "application/json"
     );
 
@@ -423,10 +424,18 @@ class Checkout extends Component {
     this.setState({ selectedPaymentOption: e.target.value });
   };
 
-  componentWillMount = () => {
-    this.getDeliveryAddresses();
-    this.getPaymentMethods();
-    this.getStates();
+  componentDidMount = () => {
+    if (this.state.isLoggedIn) {
+      this.getDeliveryAddresses();
+      this.getPaymentMethods();
+      this.getStates();
+    }
+  };
+
+  redirectToHome = () => {
+    if (!this.state.isLoggedIn) {
+      return <Redirect to="/" />;
+    }
   };
 
   flatNumChangeHandler = (e) => {
@@ -499,6 +508,7 @@ class Checkout extends Component {
 
   saveNewAddress() {
     let xhrSaveNewDeliveryAddressesMethod = new XMLHttpRequest();
+    let that = this;
 
     xhrSaveNewDeliveryAddressesMethod.addEventListener(
       "readystatechange",
@@ -508,6 +518,10 @@ class Checkout extends Component {
           xhrSaveNewDeliveryAddressesMethod.status === 201
         ) {
           const rspAddressesInDetail = JSON.parse(this.responseText);
+          that.setState({
+            value: 0,
+          });
+          that.getDeliveryAddresses();
           console.log(rspAddressesInDetail);
         } else {
           console.log(this.responseText);
@@ -516,10 +530,11 @@ class Checkout extends Component {
     );
     xhrSaveNewDeliveryAddressesMethod.open(
       "POST",
-      "http://localhost:8080/api/" + "address"
+      this.props.baseUrl + "address"
     );
+
     xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
-      "Accept",
+      "Content-Type",
       "application/json"
     );
 
@@ -544,6 +559,14 @@ class Checkout extends Component {
     });
   };
 
+  onExitingAddressTabHandler = () => {
+    this.setState({ onNewAddress: false });
+  };
+
+  onNewAddressTabHandler = () => {
+    this.setState({ onNewAddress: true });
+  };
+
   getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -555,16 +578,31 @@ class Checkout extends Component {
                 onChange={this.tabChangeHandler}
                 aria-label="simple tabs example"
               >
-                <Tab label="Existing Address" />
-                <Tab label="New Address" />
+                <Tab
+                  label="Existing Address"
+                  onClick={this.onExitingAddressTabHandler}
+                />
+                <Tab
+                  label="New Address"
+                  onClick={this.onNewAddressTabHandler}
+                />
               </Tabs>
             </AppBar>
             {this.state.value === 0 ? (
               <TabPanel value={this.state.value} index={0}>
-                {this.state.existingAddresses.length !== 0 ? (
+                {this.state.existingAddresses &&
+                this.state.existingAddresses.length !== 0 ? (
                   this.displayAddressList()
                 ) : (
-                  <Typography variant="body1" component="p">
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    style={{
+                      color: "gray",
+                      marginTop: "5%",
+                      marginBottom: "20%",
+                    }}
+                  >
                     There are no saved addresses! You can save an address using
                     the 'New Address' tab or using your ‘Profile’ menu option.
                   </Typography>
@@ -618,7 +656,8 @@ class Checkout extends Component {
 
     return (
       <div>
-        <Header />
+        {this.redirectToHome()}
+        <Header baseUrl={this.props.baseUrl} />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -626,7 +665,9 @@ class Checkout extends Component {
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent>
-                    <Typography>{this.getStepContent(index)}</Typography>
+                    <Typography component={"div"}>
+                      {this.getStepContent(index)}
+                    </Typography>
                     <div className={classes.actionsContainer}>
                       <div>
                         <Button

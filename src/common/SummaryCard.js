@@ -42,7 +42,8 @@ export default function SummaryCard(props) {
   function calculateNetTotal() {
     return props.billedItems
       .map((item) => item.qty * item.price)
-      .reduce((total, val) => total + val);
+      .reduce((total, val) => total + val)
+      .toFixed(2);
   }
 
   function BillableItemRow(billedItem) {
@@ -82,7 +83,7 @@ export default function SummaryCard(props) {
             component="span"
             color="textSecondary"
           >
-            {billedItem.qty * billedItem.price}
+            {(billedItem.qty * billedItem.price).toFixed(2)}
           </Typography>
         </Grid>
       </React.Fragment>
@@ -94,7 +95,7 @@ export default function SummaryCard(props) {
       <React.Fragment>
         <Grid container spacing={1}>
           {props.billedItems.map((billedItem) => (
-            <Grid container item>
+            <Grid container item key={billedItem.id}>
               <BillableItemRow {...billedItem} />
             </Grid>
           ))}
@@ -163,7 +164,7 @@ export default function SummaryCard(props) {
       </CardContent>
       <CardActions disableSpacing>
         <Button
-          fullWidth="true"
+          fullWidth={true}
           variant="contained"
           size="large"
           color="primary"
