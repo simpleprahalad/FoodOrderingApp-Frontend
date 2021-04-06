@@ -95,7 +95,7 @@ export default function SummaryCard(props) {
       <React.Fragment>
         <Grid container spacing={1}>
           {props.billedItems.map((billedItem) => (
-            <Grid container item>
+            <Grid container item key={billedItem.id}>
               <BillableItemRow {...billedItem} />
             </Grid>
           ))}
@@ -164,7 +164,7 @@ export default function SummaryCard(props) {
       </CardContent>
       <CardActions disableSpacing>
         <Button
-          fullWidth="true"
+          fullWidth={true}
           variant="contained"
           size="large"
           color="primary"

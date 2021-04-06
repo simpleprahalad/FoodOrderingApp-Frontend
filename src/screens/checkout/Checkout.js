@@ -77,14 +77,9 @@ function getSteps() {
 
 function TabPanel(props) {
   return (
-    <div
-      role="tabpanel"
-      hidden={props.value !== props.index}
-      id={`simple-tabpanel-${props.index}`}
-      aria-labelledby={`simple-tab-${props.index}`}
-    >
-      {props.value === props.index && <Typography>{props.children}</Typography>}
-    </div>
+    <Typography component={"div"} variant={"body2"}>
+      {props.children}
+    </Typography>
   );
 }
 
@@ -103,18 +98,21 @@ class Checkout extends Component {
       billedRestaurant: "The Food League",
       billedItems: [
         {
+          id: 1,
           itemName: "Hakka Noodles",
           price: 100,
           qty: 2,
           isVeg: "true",
         },
         {
+          id: 2,
           itemName: "Hyderabadi Biryani",
           price: 250,
           qty: 1,
           isVeg: "false",
         },
         {
+          id: 3,
           itemName: "Veg. Manchuriyan",
           price: 140,
           qty: 2,
@@ -203,7 +201,7 @@ class Checkout extends Component {
         className={classes.gridList}
         cols={this.state.noOfColumn}
         spacing={2}
-        cellHeight="auto"
+        cellHeight={"auto"}
       >
         {this.state.existingAddresses.map((address) => (
           <GridListTile
@@ -656,7 +654,9 @@ class Checkout extends Component {
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent>
-                    <Typography>{this.getStepContent(index)}</Typography>
+                    <Typography component={"div"}>
+                      {this.getStepContent(index)}
+                    </Typography>
                     <div className={classes.actionsContainer}>
                       <div>
                         <Button
