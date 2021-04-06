@@ -142,6 +142,7 @@ class Checkout extends Component {
       isSnackBarVisible: false,
       snackBarMessage: "",
       onNewAddress: false,
+      apiUrl: "http://localhost:8080/api/",
     };
   }
 
@@ -361,7 +362,7 @@ class Checkout extends Component {
         console.log(this.responseText);
       }
     });
-    xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "payment");
+    xhrPaymentMethods.open("GET", this.state.apiUrl + "payment");
     xhrPaymentMethods.setRequestHeader("Content-Type", "application/json");
     xhrPaymentMethods.send();
   };
@@ -379,7 +380,7 @@ class Checkout extends Component {
         console.log(this.responseText);
       }
     });
-    xhrGetStatesMethod.open("GET", "http://localhost:8080/api/" + "states");
+    xhrGetStatesMethod.open("GET", this.state.apiUrl + "states");
     xhrGetStatesMethod.setRequestHeader("Content-Type", "application/json");
     xhrGetStatesMethod.send();
   };
@@ -404,7 +405,7 @@ class Checkout extends Component {
     );
     xhrGetDeliveryAddressesMethod.open(
       "GET",
-      "http://localhost:8080/api/" + "address/customer"
+      this.state.apiUrl + "address/customer"
     );
     xhrGetDeliveryAddressesMethod.setRequestHeader(
       "Content-Type",
@@ -521,7 +522,7 @@ class Checkout extends Component {
     );
     xhrSaveNewDeliveryAddressesMethod.open(
       "POST",
-      "http://localhost:8080/api/" + "address"
+      this.state.apiUrl + "address"
     );
 
     xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
