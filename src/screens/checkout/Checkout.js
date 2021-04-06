@@ -30,6 +30,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import { Redirect } from "react-router-dom";
 
 const styles = (theme) => ({
   button: {
@@ -140,7 +141,8 @@ class Checkout extends Component {
       isSnackBarVisible: false,
       snackBarMessage: "",
       onNewAddress: false,
-      apiUrl: "http://localhost:8080/api/",
+      isLoggedIn:
+        sessionStorage.getItem("access-token") === null ? false : true,
     };
   }
 
@@ -360,7 +362,7 @@ class Checkout extends Component {
         console.log(this.responseText);
       }
     });
-    xhrPaymentMethods.open("GET", this.state.apiUrl + "payment");
+    xhrPaymentMethods.open("GET", this.props.baseUrl + "payment");
     xhrPaymentMethods.setRequestHeader("Content-Type", "application/json");
     xhrPaymentMethods.send();
   };
@@ -378,7 +380,7 @@ class Checkout extends Component {
         console.log(this.responseText);
       }
     });
-    xhrGetStatesMethod.open("GET", this.state.apiUrl + "states");
+    xhrGetStatesMethod.open("GET", this.props.baseUrl + "states");
     xhrGetStatesMethod.setRequestHeader("Content-Type", "application/json");
     xhrGetStatesMethod.send();
   };
@@ -403,7 +405,7 @@ class Checkout extends Component {
     );
     xhrGetDeliveryAddressesMethod.open(
       "GET",
-      this.state.apiUrl + "address/customer"
+      this.props.baseUrl + "address/customer"
     );
     xhrGetDeliveryAddressesMethod.setRequestHeader(
       "Content-Type",
@@ -423,9 +425,17 @@ class Checkout extends Component {
   };
 
   componentDidMount = () => {
-    this.getDeliveryAddresses();
-    this.getPaymentMethods();
-    this.getStates();
+    if (this.state.isLoggedIn) {
+      this.getDeliveryAddresses();
+      this.getPaymentMethods();
+      this.getStates();
+    }
+  };
+
+  redirectToHome = () => {
+    if (!this.state.isLoggedIn) {
+      return <Redirect to="/" />;
+    }
   };
 
   flatNumChangeHandler = (e) => {
@@ -520,7 +530,7 @@ class Checkout extends Component {
     );
     xhrSaveNewDeliveryAddressesMethod.open(
       "POST",
-      this.state.apiUrl + "address"
+      this.props.baseUrl + "address"
     );
 
     xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
@@ -646,7 +656,8 @@ class Checkout extends Component {
 
     return (
       <div>
-        <Header />
+        {this.redirectToHome()}
+        <Header baseUrl={this.props.baseUrl} />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
             <Stepper activeStep={activeStep} orientation="vertical">
