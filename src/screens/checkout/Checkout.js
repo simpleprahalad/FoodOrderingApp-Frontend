@@ -141,6 +141,7 @@ class Checkout extends Component {
       changeOption: "dispNone",
       isSnackBarVisible: false,
       snackBarMessage: "",
+      onNewAddress: false,
     };
   }
 
@@ -157,16 +158,18 @@ class Checkout extends Component {
   };
 
   handleNext = () => {
-    if (this.state.activeStep === 1) {
-      this.setState({
-        activeStep: this.state.activeStep + 1,
-        changeOption: "dispText",
-      });
-    } else {
-      this.setState({
-        activeStep: this.state.activeStep + 1,
-        changeOption: "dispNone",
-      });
+    if (this.state.onNewAddress !== true) {
+      if (this.state.activeStep === 1) {
+        this.setState({
+          activeStep: this.state.activeStep + 1,
+          changeOption: "dispText",
+        });
+      } else {
+        this.setState({
+          activeStep: this.state.activeStep + 1,
+          changeOption: "dispNone",
+        });
+      }
     }
   };
 
@@ -544,6 +547,14 @@ class Checkout extends Component {
     });
   };
 
+  onExitingAddressTabHandler = () => {
+    this.setState({ onNewAddress: false });
+  };
+
+  onNewAddressTabHandler = () => {
+    this.setState({ onNewAddress: true });
+  };
+
   getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -555,8 +566,14 @@ class Checkout extends Component {
                 onChange={this.tabChangeHandler}
                 aria-label="simple tabs example"
               >
-                <Tab label="Existing Address" />
-                <Tab label="New Address" />
+                <Tab
+                  label="Existing Address"
+                  onClick={this.onExitingAddressTabHandler}
+                />
+                <Tab
+                  label="New Address"
+                  onClick={this.onNewAddressTabHandler}
+                />
               </Tabs>
             </AppBar>
             {this.state.value === 0 ? (
@@ -564,7 +581,15 @@ class Checkout extends Component {
                 {this.state.existingAddresses.length !== 0 ? (
                   this.displayAddressList()
                 ) : (
-                  <Typography variant="body1" component="p">
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    style={{
+                      color: "gray",
+                      marginTop: "5%",
+                      marginBottom: "20%",
+                    }}
+                  >
                     There are no saved addresses! You can save an address using
                     the 'New Address' tab or using your ‘Profile’ menu option.
                   </Typography>

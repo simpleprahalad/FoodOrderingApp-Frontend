@@ -42,7 +42,8 @@ export default function SummaryCard(props) {
   function calculateNetTotal() {
     return props.billedItems
       .map((item) => item.qty * item.price)
-      .reduce((total, val) => total + val);
+      .reduce((total, val) => total + val)
+      .toFixed(2);
   }
 
   function BillableItemRow(billedItem) {
@@ -82,7 +83,7 @@ export default function SummaryCard(props) {
             component="span"
             color="textSecondary"
           >
-            {billedItem.qty * billedItem.price}
+            {(billedItem.qty * billedItem.price).toFixed(2)}
           </Typography>
         </Grid>
       </React.Fragment>
