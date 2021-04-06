@@ -214,9 +214,6 @@ class Checkout extends Component {
           >
             <div className="grid-list-tile-container">
               <Typography variant="body1" component="p">
-                {address.flat_buil_number}
-              </Typography>
-              <Typography variant="body1" component="p">
                 {address.flat_building_name}
               </Typography>
               <Typography variant="body1" component="p">
@@ -365,7 +362,7 @@ class Checkout extends Component {
       }
     });
     xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "payment");
-    xhrPaymentMethods.setRequestHeader("Accept", "application/json");
+    xhrPaymentMethods.setRequestHeader("Content-Type", "application/json");
     xhrPaymentMethods.send();
   };
 
@@ -383,7 +380,7 @@ class Checkout extends Component {
       }
     });
     xhrGetStatesMethod.open("GET", "http://localhost:8080/api/" + "states");
-    xhrGetStatesMethod.setRequestHeader("Accept", "application/json");
+    xhrGetStatesMethod.setRequestHeader("Content-Type", "application/json");
     xhrGetStatesMethod.send();
   };
 
@@ -410,7 +407,7 @@ class Checkout extends Component {
       "http://localhost:8080/api/" + "address/customer"
     );
     xhrGetDeliveryAddressesMethod.setRequestHeader(
-      "Accept",
+      "Content-Type",
       "application/json"
     );
 
@@ -426,7 +423,7 @@ class Checkout extends Component {
     this.setState({ selectedPaymentOption: e.target.value });
   };
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.getDeliveryAddresses();
     this.getPaymentMethods();
     this.getStates();
@@ -502,6 +499,7 @@ class Checkout extends Component {
 
   saveNewAddress() {
     let xhrSaveNewDeliveryAddressesMethod = new XMLHttpRequest();
+    let that = this;
 
     xhrSaveNewDeliveryAddressesMethod.addEventListener(
       "readystatechange",
@@ -511,6 +509,10 @@ class Checkout extends Component {
           xhrSaveNewDeliveryAddressesMethod.status === 201
         ) {
           const rspAddressesInDetail = JSON.parse(this.responseText);
+          that.setState({
+            value: 0,
+          });
+          that.getDeliveryAddresses();
           console.log(rspAddressesInDetail);
         } else {
           console.log(this.responseText);
@@ -521,8 +523,9 @@ class Checkout extends Component {
       "POST",
       "http://localhost:8080/api/" + "address"
     );
+
     xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
-      "Accept",
+      "Content-Type",
       "application/json"
     );
 
@@ -578,7 +581,8 @@ class Checkout extends Component {
             </AppBar>
             {this.state.value === 0 ? (
               <TabPanel value={this.state.value} index={0}>
-                {this.state.existingAddresses.length !== 0 ? (
+                {this.state.existingAddresses &&
+                this.state.existingAddresses.length !== 0 ? (
                   this.displayAddressList()
                 ) : (
                   <Typography
