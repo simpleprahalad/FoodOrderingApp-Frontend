@@ -159,7 +159,7 @@ class Checkout extends Component {
   };
 
   handleNext = () => {
-    if (this.state.onNewAddress !== true) {
+    if (this.state.onNewAddress !== true && this.state.selectedAddress !== "") {
       if (this.state.activeStep === 1) {
         this.setState({
           activeStep: this.state.activeStep + 1,
@@ -484,6 +484,7 @@ class Checkout extends Component {
         });
       } else {
         this.setState({
+          pincodeRequired: "dispNone",
           pincodeHelpText: "dispNone",
         });
       }
@@ -494,16 +495,16 @@ class Checkout extends Component {
       });
     }
 
-    //Check if all the fields needed are present fire the REST api
     if (
-      this.state.flatBuildingNumRequired === "dispNone" &&
-      this.state.localityRequired === "dispNone" &&
-      this.state.cityRequired === "dispNone" &&
-      this.state.stateRequired === "dispNone" &&
-      this.state.pincodeRequired === "dispNone"
+      this.state.flatBuildingNum === "" ||
+      this.state.locality === "" ||
+      this.state.city === "" ||
+      this.state.pincode === "" ||
+      this.state.selectedState === ""
     ) {
-      this.saveNewAddress();
+      return;
     }
+    this.saveNewAddress();
   };
 
   saveNewAddress() {
@@ -520,14 +521,21 @@ class Checkout extends Component {
           const rspAddressesInDetail = JSON.parse(this.responseText);
           that.setState({
             value: 0,
+            onNewAddress: false,
+            selectedAddress: "",
+            selectedState: "",
+            flatBuildingNum: "",
+            locality: "",
+            city: "",
+            pincode: "",
           });
           that.getDeliveryAddresses();
-          console.log(rspAddressesInDetail);
         } else {
           console.log(this.responseText);
         }
       }
     );
+
     xhrSaveNewDeliveryAddressesMethod.open(
       "POST",
       this.props.baseUrl + "address"
@@ -561,6 +569,13 @@ class Checkout extends Component {
 
   onExitingAddressTabHandler = () => {
     this.setState({ onNewAddress: false });
+    this.setState({
+      pincodeRequired: "dispNone",
+      flatBuildingNumRequired: "dispNone",
+      localityRequired: "dispNone",
+      cityRequired: "dispNone",
+      stateRequired: "dispNone",
+    });
   };
 
   onNewAddressTabHandler = () => {
