@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Header from "../header/Header";
+import Header from "../../common/header/Header";
 import "./Checkout.css";
 import { withStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
@@ -12,7 +12,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import PropTypes from "prop-types";
-import Card from "@material-ui/core/Card";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -23,12 +22,15 @@ import Input from "@material-ui/core/Input";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import SummaryCard from "../common/SummaryCard";
+import SummaryCard from "../../common/SummaryCard";
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
+import { Redirect } from "react-router-dom";
 
 const styles = (theme) => ({
   button: {
@@ -76,14 +78,9 @@ function getSteps() {
 
 function TabPanel(props) {
   return (
-    <div
-      role="tabpanel"
-      hidden={props.value !== props.index}
-      id={`simple-tabpanel-${props.index}`}
-      aria-labelledby={`simple-tab-${props.index}`}
-    >
-      {props.value === props.index && <Typography>{props.children}</Typography>}
-    </div>
+    <Typography component={"div"} variant={"body2"}>
+      {props.children}
+    </Typography>
   );
 }
 
@@ -102,74 +99,28 @@ class Checkout extends Component {
       billedRestaurant: "The Food League",
       billedItems: [
         {
+          id: 1,
           itemName: "Hakka Noodles",
           price: 100,
           qty: 2,
           isVeg: "true",
         },
         {
+          id: 2,
           itemName: "Hyderabadi Biryani",
           price: 250,
           qty: 1,
           isVeg: "false",
         },
         {
+          id: 3,
           itemName: "Veg. Manchuriyan",
           price: 140,
           qty: 2,
           isVeg: "true",
         },
       ],
-      existingAddresses: [
-        {
-          id: 100,
-          flat_buil_number: "B113",
-          flat_building_name: "SVS Palms1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-        {
-          id: 101,
-          flat_buil_number: "B112",
-          flat_building_name: "SVS Palms1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-        {
-          id: 102,
-          flat_buil_number: "B114",
-          flat_building_name: "SVS Palms1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-        {
-          id: 103,
-          flat_buil_number: "B115",
-          flat_building_name: "SVS Palsm1",
-          locality: "Marathalli",
-          city: "Bangalore",
-          pincode: 560037,
-          state: {
-            state_name: "Karnataka",
-          },
-          selected: false,
-        },
-      ],
+      existingAddresses: [],
       paymentOptions: [],
       selectedAddress: "",
       noOfColumn: 3,
@@ -185,15 +136,44 @@ class Checkout extends Component {
       stateRequired: "dispNone",
       pincode: "",
       pincodeRequired: "dispNone",
+      pincodeHelpText: "dispNone",
+      changeOption: "dispNone",
+      isSnackBarVisible: false,
+      snackBarMessage: "",
+      onNewAddress: false,
+      isLoggedIn:
+        sessionStorage.getItem("access-token") === null ? false : true,
     };
   }
+
+  snackBarClose = () => {
+    this.setState({
+      ...this.state,
+      snackBarMessage: "",
+      isSnackBarVisible: false,
+    });
+  };
 
   handleBack = () => {
     this.setState({ activeStep: this.state.activeStep - 1 });
   };
 
   handleNext = () => {
-    this.setState({ activeStep: this.state.activeStep + 1 });
+    if (this.state.onNewAddress !== true && this.state.selectedAddress !== "") {
+      if (this.state.activeStep === 1) {
+        if (this.state.selectedPaymentOption !== "") {
+          this.setState({
+            activeStep: this.state.activeStep + 1,
+            changeOption: "dispBlock",
+          });
+        }
+      } else {
+        this.setState({
+          activeStep: this.state.activeStep + 1,
+          changeOption: "dispNone",
+        });
+      }
+    }
   };
 
   tabChangeHandler = (event, value) => {
@@ -225,7 +205,7 @@ class Checkout extends Component {
         className={classes.gridList}
         cols={this.state.noOfColumn}
         spacing={2}
-        cellHeight="auto"
+        cellHeight={"auto"}
       >
         {this.state.existingAddresses.map((address) => (
           <GridListTile
@@ -236,9 +216,6 @@ class Checkout extends Component {
             }}
           >
             <div className="grid-list-tile-container">
-              <Typography variant="body1" component="p">
-                {address.flat_buil_number}
-              </Typography>
               <Typography variant="body1" component="p">
                 {address.flat_building_name}
               </Typography>
@@ -271,7 +248,7 @@ class Checkout extends Component {
 
   getAddNewAddressTabDetails = () => {
     return (
-      <div style={{maxWidth: "250px"}}>
+      <div style={{ maxWidth: "250px" }}>
         <FormControl required>
           <InputLabel htmlFor="flatBuildNo">Flat / Building No.</InputLabel>
           <Input
@@ -325,9 +302,12 @@ class Checkout extends Component {
               style: { marginTop: "50px", maxHeight: "250px" },
             }}
           >
-            {this.state.addressStates.map((stateName, index) => (
-              <MenuItem key={index + stateName} value={stateName}>
-                {stateName}
+            {this.state.addressStates.map((stateDetail, index) => (
+              <MenuItem
+                key={index + stateDetail.state_name}
+                value={stateDetail}
+              >
+                {stateDetail.state_name}
               </MenuItem>
             ))}
           </Select>
@@ -348,6 +328,11 @@ class Checkout extends Component {
           <FormHelperText className={this.state.pincodeRequired}>
             <span className="red">required</span>
           </FormHelperText>
+          <FormHelperText className={this.state.pincodeHelpText}>
+            <span className="red">
+              Pincode must contain only numbers and must be 6 digits long
+            </span>
+          </FormHelperText>
         </FormControl>
         <br />
         <br />
@@ -365,36 +350,88 @@ class Checkout extends Component {
   };
 
   getPaymentMethods = () => {
-    // TODO : to be received from backend
-    const paymentOptions = [
-      "Cash on Delivery",
-      "Wallet",
-      "Net Banking",
-      "Debit / Credit Card",
-    ];
-    this.setState({ paymentOptions: paymentOptions });
+    let xhrPaymentMethods = new XMLHttpRequest();
+    let that = this;
+
+    xhrPaymentMethods.addEventListener("readystatechange", function () {
+      if (this.readyState === 4 && xhrPaymentMethods.status === 200) {
+        const rspPaymentOptions = JSON.parse(this.responseText).paymentMethods;
+        const paymentOptionStrings = rspPaymentOptions.map(
+          (paymentMode) => paymentMode.payment_name
+        );
+        that.setState({ paymentOptions: paymentOptionStrings });
+      }
+    });
+    xhrPaymentMethods.open("GET", this.props.baseUrl + "payment");
+    xhrPaymentMethods.setRequestHeader("Content-Type", "application/json");
+    xhrPaymentMethods.send();
   };
 
   getStates = () => {
-    const states = [
-      "Karnataka",
-      "Odissa",
-      "Kerala",
-      "Maharastra",
-      "MP",
-      "Delhi",
-      "Haryana",
-    ];
-    this.setState({ addressStates: states });
+    let xhrGetStatesMethod = new XMLHttpRequest();
+    let that = this;
+
+    xhrGetStatesMethod.addEventListener("readystatechange", function () {
+      if (this.readyState === 4 && xhrGetStatesMethod.status === 200) {
+        const rspStateDetails = JSON.parse(this.responseText).states;
+        const states = rspStateDetails.map((stateDetails) => stateDetails);
+        that.setState({ addressStates: states });
+      }
+    });
+    xhrGetStatesMethod.open("GET", this.props.baseUrl + "states");
+    xhrGetStatesMethod.setRequestHeader("Content-Type", "application/json");
+    xhrGetStatesMethod.send();
+  };
+
+  getDeliveryAddresses = () => {
+    let xhrGetDeliveryAddressesMethod = new XMLHttpRequest();
+    let that = this;
+
+    xhrGetDeliveryAddressesMethod.addEventListener(
+      "readystatechange",
+      function () {
+        if (
+          this.readyState === 4 &&
+          xhrGetDeliveryAddressesMethod.status === 200
+        ) {
+          const rspAddressesInDetail = JSON.parse(this.responseText).addresses;
+          that.setState({ existingAddresses: rspAddressesInDetail });
+        }
+      }
+    );
+    xhrGetDeliveryAddressesMethod.open(
+      "GET",
+      this.props.baseUrl + "address/customer"
+    );
+    xhrGetDeliveryAddressesMethod.setRequestHeader(
+      "Content-Type",
+      "application/json"
+    );
+
+    xhrGetDeliveryAddressesMethod.setRequestHeader(
+      "authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
+
+    xhrGetDeliveryAddressesMethod.send();
   };
 
   handlePaymentModeChange = (e) => {
     this.setState({ selectedPaymentOption: e.target.value });
   };
 
-  componentWillMount = () => {
-    this.getPaymentMethods();
-    this.getStates();
+  componentDidMount = () => {
+    if (this.state.isLoggedIn) {
+      this.getDeliveryAddresses();
+      this.getPaymentMethods();
+      this.getStates();
+    }
+  };
+
+  redirectToHome = () => {
+    if (!this.state.isLoggedIn) {
+      return <Redirect to="/" />;
+    }
   };
 
   flatNumChangeHandler = (e) => {
@@ -434,9 +471,111 @@ class Checkout extends Component {
       ? this.setState({ stateRequired: "dispBlock" })
       : this.setState({ stateRequired: "dispNone" });
 
-    this.state.pincode === ""
-      ? this.setState({ pincodeRequired: "dispBlock" })
-      : this.setState({ pincodeRequired: "dispNone" });
+    if (this.state.pincode !== "") {
+      var pincodePattern = /^\d{6}$/;
+      if (!this.state.pincode.match(pincodePattern)) {
+        this.setState({
+          pincodeRequired: "dispNone",
+          pincodeHelpText: "dispBlock",
+        });
+      } else {
+        this.setState({
+          pincodeRequired: "dispNone",
+          pincodeHelpText: "dispNone",
+        });
+      }
+    } else {
+      this.setState({
+        pincodeRequired: "dispBlock",
+        pincodeHelpText: "dispNone",
+      });
+    }
+
+    if (
+      this.state.flatBuildingNum === "" ||
+      this.state.locality === "" ||
+      this.state.city === "" ||
+      this.state.pincode === "" ||
+      this.state.selectedState === ""
+    ) {
+      return;
+    }
+    this.saveNewAddress();
+  };
+
+  saveNewAddress() {
+    let xhrSaveNewDeliveryAddressesMethod = new XMLHttpRequest();
+    let that = this;
+
+    xhrSaveNewDeliveryAddressesMethod.addEventListener(
+      "readystatechange",
+      function () {
+        if (
+          this.readyState === 4 &&
+          xhrSaveNewDeliveryAddressesMethod.status === 201
+        ) {
+          that.setState({
+            value: 0,
+            onNewAddress: false,
+            selectedAddress: "",
+            selectedState: "",
+            flatBuildingNum: "",
+            locality: "",
+            city: "",
+            pincode: "",
+          });
+          that.getDeliveryAddresses();
+        } else {
+          console.log(this.responseText);
+        }
+      }
+    );
+
+    xhrSaveNewDeliveryAddressesMethod.open(
+      "POST",
+      this.props.baseUrl + "address"
+    );
+
+    xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
+      "Content-Type",
+      "application/json"
+    );
+
+    xhrSaveNewDeliveryAddressesMethod.setRequestHeader(
+      "authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
+
+    let requestBody = {};
+    requestBody.flat_building_name = this.state.flatBuildingNum;
+    requestBody.city = this.state.city;
+    requestBody.locality = this.state.locality;
+    requestBody.pincode = this.state.pincode;
+    requestBody.state_uuid = this.state.selectedState.id;
+
+    xhrSaveNewDeliveryAddressesMethod.send(JSON.stringify(requestBody));
+  }
+
+  onClickChangeHandler = () => {
+    this.setState({
+      activeStep: 0,
+      changeOption: "dispNone",
+    });
+  };
+
+  onExitingAddressTabHandler = () => {
+    this.setState({ onNewAddress: false });
+    this.setState({
+      pincodeRequired: "dispNone",
+      flatBuildingNumRequired: "dispNone",
+      localityRequired: "dispNone",
+      cityRequired: "dispNone",
+      stateRequired: "dispNone",
+    });
+  };
+
+  onNewAddressTabHandler = () => {
+    this.setState({ onNewAddress: true });
   };
 
   getStepContent = (step) => {
@@ -450,16 +589,31 @@ class Checkout extends Component {
                 onChange={this.tabChangeHandler}
                 aria-label="simple tabs example"
               >
-                <Tab label="Existing Address" />
-                <Tab label="New Address" />
+                <Tab
+                  label="Existing Address"
+                  onClick={this.onExitingAddressTabHandler}
+                />
+                <Tab
+                  label="New Address"
+                  onClick={this.onNewAddressTabHandler}
+                />
               </Tabs>
             </AppBar>
             {this.state.value === 0 ? (
               <TabPanel value={this.state.value} index={0}>
-                {this.state.existingAddresses.length !== 0 ? (
+                {this.state.existingAddresses &&
+                this.state.existingAddresses.length !== 0 ? (
                   this.displayAddressList()
                 ) : (
-                  <Typography variant="body1" component="p">
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    style={{
+                      color: "gray",
+                      marginTop: "5%",
+                      marginBottom: "20%",
+                    }}
+                  >
                     There are no saved addresses! You can save an address using
                     the 'New Address' tab or using your ‘Profile’ menu option.
                   </Typography>
@@ -498,6 +652,14 @@ class Checkout extends Component {
     }
   };
 
+  placeOrderClickHandler = () => {
+    // TODO : handler order/success failure cases
+    this.setState({
+      snackBarMessage: "Order placed successfully! Your order ID is XXX",
+      isSnackBarVisible: true,
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
@@ -505,7 +667,8 @@ class Checkout extends Component {
 
     return (
       <div>
-        <Header />
+        {this.redirectToHome()}
+        <Header baseUrl={this.props.baseUrl} />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -513,7 +676,9 @@ class Checkout extends Component {
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent>
-                    <Typography>{this.getStepContent(index)}</Typography>
+                    <Typography component={"div"}>
+                      {this.getStepContent(index)}
+                    </Typography>
                     <div className={classes.actionsContainer}>
                       <div>
                         <Button
@@ -537,12 +702,50 @@ class Checkout extends Component {
                 </Step>
               ))}
             </Stepper>
+            <div
+              className={this.state.changeOption}
+              style={{ marginTop: "10px" }}
+            >
+              <div style={{ marginLeft: "3%", fontSize: "24px" }}>
+                View the summary and place your order now!
+              </div>
+              <Button
+                style={{ marginLeft: "5%", fontSize: "20px" }}
+                onClick={this.onClickChangeHandler}
+                className={classes.button}
+              >
+                CHANGE
+              </Button>
+            </div>
           </Grid>
 
           <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
-            <SummaryCard {...this.state} />
+            <SummaryCard
+              {...this.state}
+              placeOrderClickHandler={this.placeOrderClickHandler}
+            />
           </Grid>
         </Grid>
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            open={this.state.isSnackBarVisible}
+            autoHideDuration={4000}
+            onClose={this.snackBarClose}
+            ContentProps={{
+              "aria-describedby": "message-id",
+            }}
+            message={<span id="message-id">{this.state.snackBarMessage}</span>}
+            action={
+              <IconButton color="inherit" onClick={this.snackBarClose}>
+                <CloseIcon />
+              </IconButton>
+            }
+          />
+        </div>
       </div>
     );
   }
