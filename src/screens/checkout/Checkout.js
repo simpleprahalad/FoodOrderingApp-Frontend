@@ -161,10 +161,12 @@ class Checkout extends Component {
   handleNext = () => {
     if (this.state.onNewAddress !== true && this.state.selectedAddress !== "") {
       if (this.state.activeStep === 1) {
-        this.setState({
-          activeStep: this.state.activeStep + 1,
-          changeOption: "dispText",
-        });
+        if (this.state.selectedPaymentOption !== "") {
+          this.setState({
+            activeStep: this.state.activeStep + 1,
+            changeOption: "dispBlock",
+          });
+        }
       } else {
         this.setState({
           activeStep: this.state.activeStep + 1,
@@ -358,8 +360,6 @@ class Checkout extends Component {
           (paymentMode) => paymentMode.payment_name
         );
         that.setState({ paymentOptions: paymentOptionStrings });
-      } else {
-        console.log(this.responseText);
       }
     });
     xhrPaymentMethods.open("GET", this.props.baseUrl + "payment");
@@ -376,8 +376,6 @@ class Checkout extends Component {
         const rspStateDetails = JSON.parse(this.responseText).states;
         const states = rspStateDetails.map((stateDetails) => stateDetails);
         that.setState({ addressStates: states });
-      } else {
-        console.log(this.responseText);
       }
     });
     xhrGetStatesMethod.open("GET", this.props.baseUrl + "states");
@@ -398,8 +396,6 @@ class Checkout extends Component {
         ) {
           const rspAddressesInDetail = JSON.parse(this.responseText).addresses;
           that.setState({ existingAddresses: rspAddressesInDetail });
-        } else {
-          console.log(this.responseText);
         }
       }
     );
@@ -518,7 +514,6 @@ class Checkout extends Component {
           this.readyState === 4 &&
           xhrSaveNewDeliveryAddressesMethod.status === 201
         ) {
-          const rspAddressesInDetail = JSON.parse(this.responseText);
           that.setState({
             value: 0,
             onNewAddress: false,
@@ -564,6 +559,7 @@ class Checkout extends Component {
   onClickChangeHandler = () => {
     this.setState({
       activeStep: 0,
+      changeOption: "dispNone",
     });
   };
 
