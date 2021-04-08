@@ -8,6 +8,8 @@ class Home extends Component {
     super();
     this.state = {
       restaurantsList: [],
+      searchResultRestuarants: [],
+      isSearchActive: false
     };
   }
 
@@ -23,8 +25,6 @@ class Home extends Component {
       if (this.readyState === 4 && xhrPaymentMethods.status === 200) {
         const restaurantsObjArray = JSON.parse(this.responseText).restaurants;
         that.setState({ restaurantsList: restaurantsObjArray });
-      } else {
-        console.log(this.responseText);
       }
     });
     xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "restaurant");
@@ -32,14 +32,34 @@ class Home extends Component {
     xhrPaymentMethods.send();
   };
 
+  //Populate searched restaurants from header callback
+  getRestaurantsBySearch = (searchedRestaurants, isSearchActive) => {
+    if (isSearchActive) {
+      this.setState({
+        searchResultRestuarants: searchedRestaurants,
+        isSearchActive: true,
+      })
+    } else {
+      this.setState({
+        isSearchActive: false,
+      });
+    }
+  }
+
   render() {
     return (
       <div>
-        <Header />
+        <Header isSearchBarVisible={true} restaurantsBySearch={this.getRestaurantsBySearch} />
         <div className="container">
-          {this.state.restaurantsList.map((restaurant) => (
+          {this.state.isSearchActive ?
+          this.state.searchResultRestuarants.map((restaurant) => (
             <InfoCard {...restaurant} />
-          ))}
+          ))
+          :
+          this.state.restaurantsList.map((restaurant) => (
+            <InfoCard {...restaurant} />
+          ))
+        }
         </div>
       </div>
     );
