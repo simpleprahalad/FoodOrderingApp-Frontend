@@ -99,14 +99,12 @@ class Header extends Component {
       contactAlreadyInUse: "dispNone",
       isSnackBarVisible: false,
       snackBarMessage: "",
-      isLoggedIn: false,
       invalidPassword: "dispNone",
       notRegisteredContact: "dispNone",
       isProfileMenuOpen: false,
       anchorEl: null,
       isLoggedIn: sessionStorage.getItem('access-token') === null ? false : true,
       loggedInUsername: sessionStorage.getItem('customer-name'),
-      isSearchBarVisible: true,
       searchText: ""
     };
   }
@@ -159,7 +157,6 @@ class Header extends Component {
             //Error
           } else if (xhrLogin.status === 401) {
             let loginResponse = JSON.parse(this.responseText);
-            console.log(loginResponse);
             let notRegisteredContact = "dispNone"
             let invalidPassword = "dispNone"
             if (loginResponse.code === 'ATH-001') {
@@ -185,7 +182,6 @@ class Header extends Component {
   }
 
   signupClickHandler = () => {
-    console.log('I was triggered during componentDidMount')
     if (this.signUpFormValidation()) {
       //Populate post data
       let data = JSON.stringify({
@@ -211,7 +207,6 @@ class Header extends Component {
           //Error
           if (xhrSignUp.status === 400) {
             let responseData = JSON.parse(this.responseText)
-            console.log(responseData);
             if (responseData.code === 'SGR-001') {
               that.setState({
                 ...that.state,
@@ -306,7 +301,7 @@ class Header extends Component {
       isSignupFormValidated = false;
     }
     else if (this.state.email !== "") {
-      if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(this.state.email))) {
+      if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,})+$/.test(this.state.email))) {
         invalidEmail = "dispBlock"
         isSignupFormValidated = false;
       }
@@ -430,9 +425,33 @@ class Header extends Component {
     xhrLogout.open('POST', "http://localhost:8080/api/" + 'customer/logout');
     xhrLogout.setRequestHeader('authorization', 'Bearer ' + sessionStorage.getItem('access-token'));
     xhrLogout.send(logoutData);
-
-
   }
+
+  //Search handler
+  searchTextChangeHandler = (event) => {
+    let isSearchActive = false;
+    if (!(event.target.value === "")) {
+      let restaurantData = null;
+      let xhrSearchRestaurant = new XMLHttpRequest();
+      let that = this
+      xhrSearchRestaurant.addEventListener("readystatechange", function () {
+        if (xhrSearchRestaurant.readyState === 4 && xhrSearchRestaurant.status === 200) {
+          var restaurants = JSON.parse(this.responseText).restaurants;
+          isSearchActive = true;
+          that.props.restaurantsBySearch(restaurants, isSearchActive);
+        }
+      })
+
+      xhrSearchRestaurant.open('GET', "http://localhost:8080/api/" + 'restaurant/name/' + event.target.value)
+      xhrSearchRestaurant.setRequestHeader("Content-Type", "application/json");
+      xhrSearchRestaurant.setRequestHeader("Cache-Control", "no-cache");
+      xhrSearchRestaurant.send(restaurantData);
+    } else {
+      isSearchActive = false
+      this.props.restaurantsBySearch([], isSearchActive);
+    }
+  }
+
 
   render() {
     const { classes } = this.props;
@@ -442,7 +461,7 @@ class Header extends Component {
         <div className="inner-container">
           <Fastfood className="logo" fontSize="large" htmlColor="white" />
           {/*Show serach bar if flag is true*/}
-          {this.state.isSearchBarVisible &&
+          {this.props.isSearchBarVisible &&
             <div className="search-container">
               <Input className={classes.searchBox} id="search-box" type="search"
                 startAdornment={
@@ -451,6 +470,7 @@ class Header extends Component {
                   </InputAdornment>
                 }
                 placeholder="Search by Restuarant Name"
+                onChange={this.searchTextChangeHandler}
               />
             </div>
           }
