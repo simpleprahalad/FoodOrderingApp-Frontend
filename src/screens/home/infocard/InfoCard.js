@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { Grid, Typography } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +20,14 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "56.25%", // 16:9
   },
   button: {
+    color: "#FFFFFF",
     background: "#EACC5E",
+    backgroundColor: "#EACC5E",
+    "&:hover": {
+      //you want this to be the same as the backgroundColor above
+      backgroundColor: "#EACC5E",
+      cursor: "auto",
+    },
   },
   ratingContainer: {},
 }));
@@ -27,9 +35,14 @@ const useStyles = makeStyles((theme) => ({
 export default function InfoCard(props) {
   const classes = useStyles();
   const starIcon = <FontAwesomeIcon icon={faStar} />;
+  const history = useHistory();
+
+  function navigateToRestaurantDetailsScreen() {
+    history.push("/restaurant/" + props.id);
+  }
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} onClick={navigateToRestaurantDetailsScreen}>
       <CardMedia
         className={classes.media}
         image={props.photo_URL}
@@ -41,11 +54,11 @@ export default function InfoCard(props) {
         <Grid container justify="space-between">
           <Grid item>
             <Button
-              variant="contained"
-              aria-label="start"
+              variant="raised"
               className={classes.button}
               startIcon={starIcon}
               color="secondary"
+              disableRipple
             >
               {props.customer_rating +
                 " (" +
