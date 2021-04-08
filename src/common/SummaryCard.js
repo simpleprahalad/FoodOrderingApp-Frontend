@@ -41,8 +41,8 @@ export default function SummaryCard(props) {
 
   function calculateNetTotal() {
     return props.billedItems
-      .map((item) => item.qty * item.price)
-      .reduce((total, val) => total + val)
+      .map((item) => item.priceForAll)
+      .reduce((total, val) => total + val, 0)
       .toFixed(2);
   }
 
@@ -53,7 +53,7 @@ export default function SummaryCard(props) {
           <FontAwesomeIcon
             icon={faStopCircle}
             className={
-              billedItem.isVeg === "true" ? classes.vegIcon : classes.nonVegIcon
+              billedItem.type === "VEG" ? classes.vegIcon : classes.nonVegIcon
             }
           />
           <Typography
@@ -62,7 +62,7 @@ export default function SummaryCard(props) {
             component="span"
             color="textSecondary"
           >
-            {billedItem.itemName}
+            {billedItem.name}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -72,7 +72,7 @@ export default function SummaryCard(props) {
             component="span"
             color="textSecondary"
           >
-            {billedItem.qty}
+            {billedItem.quantity}
           </Typography>
         </Grid>
         <Grid item xs={3}>
@@ -83,7 +83,7 @@ export default function SummaryCard(props) {
             component="span"
             color="textSecondary"
           >
-            {(billedItem.qty * billedItem.price).toFixed(2)}
+            {billedItem.priceForAll.toFixed(2)}
           </Typography>
         </Grid>
       </React.Fragment>
