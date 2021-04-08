@@ -96,30 +96,8 @@ class Checkout extends Component {
     this.state = {
       activeStep: 0,
       value: 0,
-      billedRestaurant: "The Food League",
-      billedItems: [
-        {
-          id: 1,
-          itemName: "Hakka Noodles",
-          price: 100,
-          qty: 2,
-          isVeg: "true",
-        },
-        {
-          id: 2,
-          itemName: "Hyderabadi Biryani",
-          price: 250,
-          qty: 1,
-          isVeg: "false",
-        },
-        {
-          id: 3,
-          itemName: "Veg. Manchuriyan",
-          price: 140,
-          qty: 2,
-          isVeg: "true",
-        },
-      ],
+      billedRestaurant: "",
+      billedItems: [],
       existingAddresses: [],
       paymentOptions: [],
       selectedAddress: "",
@@ -420,11 +398,19 @@ class Checkout extends Component {
     this.setState({ selectedPaymentOption: e.target.value });
   };
 
+  updateSummary = () => {
+    this.setState({
+      billedRestaurant: this.props.history.location.state.restaurantName,
+      billedItems: this.props.history.location.state.orderItems.items,
+    });
+  };
+
   componentDidMount = () => {
     if (this.state.isLoggedIn) {
       this.getDeliveryAddresses();
       this.getPaymentMethods();
       this.getStates();
+      this.updateSummary();
     }
   };
 
