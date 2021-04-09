@@ -39,13 +39,6 @@ export default function SummaryCard(props) {
     <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
   );
 
-  function calculateNetTotal() {
-    return props.billedItems
-      .map((item) => item.priceForAll)
-      .reduce((total, val) => total + val, 0)
-      .toFixed(2);
-  }
-
   function BillableItemRow(billedItem) {
     return (
       <React.Fragment>
@@ -83,7 +76,7 @@ export default function SummaryCard(props) {
             component="span"
             color="textSecondary"
           >
-            {billedItem.priceForAll.toFixed(2)}
+            {billedItem.price.toFixed(2)}
           </Typography>
         </Grid>
       </React.Fragment>
@@ -95,7 +88,7 @@ export default function SummaryCard(props) {
       <React.Fragment>
         <Grid container spacing={1}>
           {props.billedItems.map((billedItem) => (
-            <Grid container item key={billedItem.id}>
+            <Grid container item key={billedItem.item_id}>
               <BillableItemRow {...billedItem} />
             </Grid>
           ))}
@@ -136,7 +129,10 @@ export default function SummaryCard(props) {
       <React.Fragment>
         <Grid container spacing={1}>
           <Grid container item>
-            <NetBillableItemRow text="Net Amount" value={calculateNetTotal()} />
+            <NetBillableItemRow
+              text="Net Amount"
+              value={props.totalBillAmount.toFixed(2)}
+            />
           </Grid>
         </Grid>
       </React.Fragment>

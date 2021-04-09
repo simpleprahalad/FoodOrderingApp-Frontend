@@ -23,6 +23,7 @@ class Details extends Component {
     this.state = {
       id: null,
       restaurantName: null,
+      restaurantId: null,
       photoUrl: null,
       customerRating: null,
       averagePrice: null,
@@ -62,6 +63,7 @@ class Details extends Component {
         // console.log(JSON.parse(responseText).id)
         that.setState({
           id: responseObject.id,
+          restaurantId: responseObject.id,
           restaurantName: responseObject.restaurant_name,
           photoUrl: responseObject.photo_URL,
           customerRating: responseObject.customer_rating,
@@ -81,15 +83,12 @@ class Details extends Component {
     totalItemCount += 1;
 
     const newItem = this.state.cartItem;
-    newItem.id = id;
+    newItem.item_id = id;
     newItem.type = type;
     newItem.name = name;
     newItem.pricePerItem = price;
     newItem.quantity = 1;
-    newItem.priceForAll = price;
-
-    console.log("Printing added item here");
-    console.log(newItem);
+    newItem.price = price;
 
     this.setState({ cartItem: newItem });
     totalAmount += price;
@@ -103,11 +102,11 @@ class Details extends Component {
       );
       let quantity = this.state.orderItems.items[index].quantity + 1;
       let priceForAll =
-        this.state.orderItems.items[index].priceForAll +
+        this.state.orderItems.items[index].price +
         this.state.orderItems.items[index].pricePerItem;
       let item = this.state.orderItems.items[index];
       item.quantity = quantity;
-      item.priceForAll = priceForAll;
+      item.price = priceForAll;
       this.setState(item);
     } else {
       this.state.cartItems.push(this.state.cartItem);
@@ -128,11 +127,11 @@ class Details extends Component {
     );
     let quantity = this.state.orderItems.items[itemIndex].quantity + 1;
     let priceForAll =
-      this.state.orderItems.items[itemIndex].priceForAll +
+      this.state.orderItems.items[itemIndex].price +
       this.state.orderItems.items[itemIndex].pricePerItem;
     let itemAdded = this.state.orderItems.items[itemIndex];
     itemAdded.quantity = quantity;
-    itemAdded.priceForAll = priceForAll;
+    itemAdded.price = priceForAll;
     this.setState(item);
     this.setState({ itemQuantityIncreased: true });
     let totalAmount = this.state.totalAmount;
@@ -151,11 +150,11 @@ class Details extends Component {
     if (this.state.orderItems.items[index].quantity > 1) {
       let quantity = this.state.orderItems.items[index].quantity - 1;
       let priceForAll =
-        this.state.orderItems.items[index].priceForAll -
+        this.state.orderItems.items[index].price -
         this.state.orderItems.items[index].pricePerItem;
       let item = this.state.orderItems.items[index];
       item.quantity = quantity;
-      item.priceForAll = priceForAll;
+      item.price = priceForAll;
       this.setState(item);
       this.setState({ itemQuantityDecreased: true });
     } else {
@@ -183,6 +182,7 @@ class Details extends Component {
           orderItems: this.state.orderItems,
           total: this.state.totalAmount,
           restaurantName: this.state.restaurantName,
+          restaurantId: this.state.restaurantId,
         },
       });
     }
@@ -387,7 +387,7 @@ class Details extends Component {
                     <Grid container>
                       {this.state.orderItems.items !== undefined
                         ? this.state.orderItems.items.map((item, index) => (
-                            <Fragment key={item.id}>
+                            <Fragment key={item.item_id}>
                               <Grid item xs={2} lg={2}>
                                 {item.type === "VEG" ? (
                                   <span
@@ -481,7 +481,7 @@ class Details extends Component {
                                     aria-hidden="true"
                                   ></i>
                                   <span style={{ paddingLeft: "2px" }}>
-                                    {item.priceForAll.toFixed(2)}
+                                    {item.price.toFixed(2)}
                                   </span>
                                 </span>
                               </Grid>

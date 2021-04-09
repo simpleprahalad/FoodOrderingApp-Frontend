@@ -9,7 +9,7 @@ class Home extends Component {
     this.state = {
       restaurantsList: [],
       searchResultRestuarants: [],
-      isSearchActive: false
+      isSearchActive: false,
     };
   }
 
@@ -38,28 +38,29 @@ class Home extends Component {
       this.setState({
         searchResultRestuarants: searchedRestaurants,
         isSearchActive: true,
-      })
+      });
     } else {
       this.setState({
         isSearchActive: false,
       });
     }
-  }
+  };
 
   render() {
     return (
       <div>
-        <Header isSearchBarVisible={true} restaurantsBySearch={this.getRestaurantsBySearch} />
+        <Header
+          isSearchBarVisible={true}
+          restaurantsBySearch={this.getRestaurantsBySearch}
+        />
         <div className="container">
-          {this.state.isSearchActive ?
-          this.state.searchResultRestuarants.map((restaurant) => (
-            <InfoCard {...restaurant} />
-          ))
-          :
-          this.state.restaurantsList.map((restaurant) => (
-            <InfoCard {...restaurant} />
-          ))
-        }
+          {this.state.isSearchActive
+            ? this.state.searchResultRestuarants.map((restaurant) => (
+                <InfoCard {...restaurant} key={restaurant.id} />
+              ))
+            : this.state.restaurantsList.map((restaurant) => (
+                <InfoCard {...restaurant} key={restaurant.id} />
+              ))}
         </div>
       </div>
     );

@@ -54,7 +54,7 @@ export default function InfoCard(props) {
         <Grid container justify="space-between">
           <Grid item>
             <Button
-              variant="raised"
+              variant="contained"
               className={classes.button}
               startIcon={starIcon}
               color="secondary"
