@@ -97,12 +97,14 @@ class Checkout extends Component {
       activeStep: 0,
       value: 0,
       billedRestaurant: "",
+      billedRestaurantId: "",
       billedItems: [],
+      totalBillAmount: 0,
       existingAddresses: [],
       paymentOptions: [],
       selectedAddress: "",
       noOfColumn: 3,
-      selectedPaymentOption: "",
+      selectedPaymentOptionId: "",
       flatBuildingNum: "",
       flatBuildingNumRequired: "dispNone",
       locality: "",
@@ -139,7 +141,7 @@ class Checkout extends Component {
   handleNext = () => {
     if (this.state.onNewAddress !== true && this.state.selectedAddress !== "") {
       if (this.state.activeStep === 1) {
-        if (this.state.selectedPaymentOption !== "") {
+        if (this.state.selectedPaymentOptionId !== "") {
           this.setState({
             activeStep: this.state.activeStep + 1,
             changeOption: "dispBlock",
@@ -335,7 +337,7 @@ class Checkout extends Component {
       if (this.readyState === 4 && xhrPaymentMethods.status === 200) {
         const rspPaymentOptions = JSON.parse(this.responseText).paymentMethods;
         const paymentOptionStrings = rspPaymentOptions.map(
-          (paymentMode) => paymentMode.payment_name
+          (paymentMode) => paymentMode
         );
         that.setState({ paymentOptions: paymentOptionStrings });
       }
@@ -395,13 +397,15 @@ class Checkout extends Component {
   };
 
   handlePaymentModeChange = (e) => {
-    this.setState({ selectedPaymentOption: e.target.value });
+    this.setState({ selectedPaymentOptionId: e.target.value });
   };
 
   updateSummary = () => {
     this.setState({
       billedRestaurant: this.props.history.location.state.restaurantName,
+      billedRestaurantId: this.props.history.location.state.restaurantId,
       billedItems: this.props.history.location.state.orderItems.items,
+      totalBillAmount: this.props.history.location.state.total,
     });
   };
 
@@ -619,14 +623,14 @@ class Checkout extends Component {
             <RadioGroup
               aria-label="Payment Method"
               name="payment"
-              value={this.state.selectedPaymentOption}
+              value={this.state.selectedPaymentOptionId}
               onChange={this.handlePaymentModeChange}
             >
               {this.state.paymentOptions.map((payMethod, index) => (
                 <FormControlLabel
-                  value={payMethod}
+                  value={payMethod.id}
                   control={<Radio />}
-                  label={payMethod}
+                  label={payMethod.payment_name}
                   key={index}
                 />
               ))}
@@ -639,11 +643,40 @@ class Checkout extends Component {
   };
 
   placeOrderClickHandler = () => {
-    // TODO : handler order/success failure cases
-    this.setState({
-      snackBarMessage: "Order placed successfully! Your order ID is XXX",
-      isSnackBarVisible: true,
+    let xhrPlaceOrderMethod = new XMLHttpRequest();
+    let that = this;
+
+    xhrPlaceOrderMethod.addEventListener("readystatechange", function () {
+      if (this.readyState === 4 && xhrPlaceOrderMethod.status === 201) {
+        const orderStatus = JSON.parse(this.responseText);
+        that.setState({
+          snackBarMessage:
+            "Order placed successfully! Your order ID is " + orderStatus.id,
+          isSnackBarVisible: true,
+        });
+      } else {
+        that.setState({
+          snackBarMessage: "Unable to place your order! Please try again!",
+          isSnackBarVisible: true,
+        });
+      }
     });
+    xhrPlaceOrderMethod.open("POST", this.props.baseUrl + "order");
+    xhrPlaceOrderMethod.setRequestHeader("Content-Type", "application/json");
+    xhrPlaceOrderMethod.setRequestHeader(
+      "authorization",
+      "Bearer " + sessionStorage.getItem("access-token")
+    );
+    let requestBody = {};
+    requestBody.address_id = this.state.selectedAddress;
+    requestBody.bill = this.state.totalBillAmount;
+    requestBody.coupon_id = "";
+    requestBody.discount = 0;
+    requestBody.item_quantities = this.state.billedItems;
+    requestBody.payment_id = this.state.selectedPaymentOptionId;
+    requestBody.restaurant_id = this.state.billedRestaurantId;
+
+    xhrPlaceOrderMethod.send(JSON.stringify(requestBody));
   };
 
   render() {
@@ -654,7 +687,7 @@ class Checkout extends Component {
     return (
       <div>
         {this.redirectToHome()}
-        <Header baseUrl={this.props.baseUrl} />
+        <Header isSearchBarVisible={false} baseUrl={this.props.baseUrl} />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
             <Stepper activeStep={activeStep} orientation="vertical">
