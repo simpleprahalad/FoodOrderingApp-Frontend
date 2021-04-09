@@ -1,322 +1,287 @@
 .main {
-    flex-direction: column;
-    display: flex;
+  flex-direction: column;
+  display: flex;
 }
 
 .restaurant-details {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    width: auto;
-    background-color: lightgray;
-    justify-content: flex-start;
-    height: 200px;
-    padding: 25px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: auto;
+  background-color: lightgray;
+  justify-content: flex-start;
+  height: 200px;
+  padding: 25px 20px;
 }
 
 .restaurant-name {
-    font-weight: normal;
-    font-size: 30px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+  font-weight: normal;
+  font-size: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .cart-counter {
-    z-index: 0;
+  z-index: 0;
 }
 
 .restaurant-image {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 .rating-section-left {
-    flex: 50%;
+  flex: 50%;
 }
 
 .avgprice-container {
-    flex: 50%;
+  flex: 50%;
 }
 
 .image-container {
-    height: 200px;
-    width: 250px;
-    flex: 25%;
+  height: 200px;
+  width: 250px;
+  flex: 25%;
 }
 
 .rating-avgprice-container {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  display: flex;
+}
+
+.rating-container {
+  width: 50%;
 }
 
 .menu {
-    justify-content: space-between;
-    margin-left: 20px;
-    margin-right: 40px;
-    display: flex;
-    flex-direction: row;
+  justify-content: space-between;
+  margin-left: 20px;
+  margin-right: 40px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
 }
 
 .items-list {
-    padding-top: 25px;
-    flex: 60%;
-    width: 40%;
-    padding-left: 50px;
-
+  padding-top: 25px;
+  flex: 60%;
+  width: 40%;
+  padding-left: 50px;
 }
 
 .details-container {
-    flex: 75%;
-    padding-left: 20px;
+  flex: 75%;
+  padding-left: 20px;
 }
 
 .category {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .item {
-    padding-top: 10px;
-    width: 100%;
-    flex-wrap: nowrap;
-    display: flex;
-    flex-direction: row;
-    font-weight: normal;
-    font-size: 18px;
-    align-items: baseline;
-    justify-content: space-between;
+  padding-top: 10px;
+  width: 100%;
+  flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+  font-weight: normal;
+  font-size: 18px;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 .item-right {
-    width: 100%;
-    flex-direction: row;
-    flex: 40%;
-    align-items: center;
-    justify-content: space-around;
-    display: flex;
-
+  width: 100%;
+  flex-direction: row;
+  flex: 40%;
+  align-items: center;
+  justify-content: space-around;
+  display: flex;
 }
 
 .price {
-    float: right;
+  float: right;
 }
 
 .addIcon {
-    flex: 50%;
-    padding-right: 100px;
+  flex: 50%;
+  padding-right: 100px;
 }
 
 .item-left {
-    width: 100%;
-    margin-right: 20px;
-    flex: 60%;
+  width: 100%;
+  margin-right: 20px;
+  flex: 60%;
 }
 
 .add-remove-icon {
-    align-items: center;
-    justify-content: center;
-    flex: 30%;
-    display: flex;
-    flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 30%;
+  display: flex;
+  flex-direction: row;
 }
 
-
 .add-icon-plus-button {
-    display: flex;
-    padding: 0;
+  display: flex;
+  padding: 0;
 }
 
 .add-remove-btn:hover {
-    background-color: #fdff81 !important;
+  background-color: #fdff81 !important;
 }
 
 .cart-container {
-    padding-left: 150px;
-    height: auto;
-    width: 50%;
-    padding-top: 25px;
+  padding-left: 150px;
+  height: auto;
+  width: 50%;
+  padding-top: 25px;
 }
 
 .cart-item {
-    font-size: 16px;
-    font-weight: lighter;
+  font-size: 16px;
+  font-weight: lighter;
 }
 
 .items-in-cart {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .cart-item {
-    margin-top: 3px;
-    font-size: 18px;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
-    font-weight: lighter;
-    display: flex;
+  margin-top: 3px;
+  font-size: 18px;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  font-weight: lighter;
+  display: flex;
 }
 
 .cart-item-right {
-    float: right;
+  float: right;
 }
 
 .CardContent {
-    padding: 10px
+  padding: 10px;
 }
 
 .total-amount-section {
-    font-size: 18px;
-    margin-top: 25px;
-    font-weight: bold;
+  font-size: 18px;
+  margin-top: 25px;
+  font-weight: bold;
 }
 
 .item-name {
-    padding-left: 12px;
-    word-wrap: break-word;
+  padding-left: 12px;
+  word-wrap: break-word;
 }
 
 .cart-item-left {
-    flex: 50%;
+  flex: 50%;
 }
 
 .cart-item-centre {
-    flex: 30%;
-    font-weight: bold;
+  flex: 30%;
+  font-weight: bold;
 }
 
 .cart-item-right {
-    flex: 20%;
+  flex: 20%;
 }
 
 .checkout-btn {
-    width: 100%
+  width: 100%;
 }
 
 /* media query for mobile devices */
-@media only screen and (min-width: 150px) and (max-width: 480px) {
-    .main-container-body {
-        width: 100%
-    }
-    .menu {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        margin: 0px;
-    }
-    .restaurant-details {
-        width: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 4px 2px;
-        height: auto;
-    }
-    .image-container {
-        width: 80%;
-        padding: 5px 2px;
-    }
-    .details-container {
-        width: 70%;
-        text-align: center;
-    }
-    .items-list {
-        flex: 100%;
-        width: 80%;
-        font-size: 15px;
-        margin: 10px;
-        padding: 5px;
-    }
-    .item {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding-top: 10px;
-        width: 100%;
-    }
-    .item-left {
-        flex: 50%;
-        width: 100%;
-    }
-    .removeIcon-cart {
-        padding: 2px;
-    }
-    .addIcon {
-        padding-right: 0px;
-    }
-    .item-right {
-        flex: 50%;
-        width: 100%;
-    }
-    .cart-container {
-        flex: 100%;
-        width: 300px;
-        padding: 10px 5px;
-    }
-    .add-remove-icon {
-        flex: 30%;
-    }
-    .cart-item-centre {
-        flex: 30%;
-        font-weight: bolder;
-        padding: 0 0;
-    }
-    .cart-item-right {
-        flex: 30%;
-    }
-    .item-name {
-        padding-left: 2px;
-    }
-    .cart-item {
-        display: flex;
-        flex-direction: row;
-        align-items: baseline;
-        justify-content: space-between;
-    }
-    .addIcon-cart {
-        padding: 2px;
-    }
-    .cart-item-left {
-        flex: 40%;
-        flex-wrap: wrap;
-    }
-}
-
-/* Tablet device media query */
-@media (min-width: 200px) and (max-width: 1000px) {
-    .main-container-body {
-        width: 100%
-    }
-    .details-container {
-        width: 60%;
-        text-align: center;
-    }
-    .menu {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-    .items-list {
-        flex: 100%;
-        width: 70%;
-    }
-    .cart-container {
-        flex: 100%;
-        padding-left: 15px;
-        width: 450px;
-    }
-    .restaurant-details {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        height: 400px;
-        align-items: center;
-        padding: 15px 5px;
-    }
-    .image-container {
-        width: 70%;
-        padding: 5px 2px;
-    }
+/* @media only screen and (min-width: 150px) and (max-width: 480px) { */
+@media screen and (max-width: 600px) {
+  .main-container-body {
+    width: 100%;
+  }
+  .menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0px;
+  }
+  .restaurant-details {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 2px;
+    height: auto;
+  }
+  .image-container {
+    width: 70%;
+  }
+  .details-container {
+    width: 80%;
+    text-align: center;
+    padding-left: 0px;
+  }
+  .items-list {
+    flex: 100%;
+    width: 80%;
+    font-size: 15px;
+    margin: 10px;
+    padding: 5px;
+  }
+  .item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 10px;
+    width: 100%;
+  }
+  .item-left {
+    flex: 50%;
+    width: 100%;
+  }
+  .removeIcon-cart {
+    padding: 2px;
+  }
+  .addIcon {
+    padding-right: 0px;
+  }
+  .item-right {
+    flex: 50%;
+    width: 100%;
+  }
+  .cart-container {
+    flex: 100%;
+    width: 80%;
+    padding: 10px 5px;
+  }
+  .add-remove-icon {
+    flex: 30%;
+  }
+  .cart-item-centre {
+    flex: 30%;
+    font-weight: bolder;
+    padding: 0 0;
+  }
+  .cart-item-right {
+    flex: 30%;
+  }
+  .item-name {
+    padding-left: 2px;
+  }
+  .cart-item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .addIcon-cart {
+    padding: 2px;
+  }
+  .cart-item-left {
+    flex: 40%;
+    flex-wrap: wrap;
+  }
 }
