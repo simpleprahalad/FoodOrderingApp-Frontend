@@ -687,7 +687,7 @@ class Checkout extends Component {
     return (
       <div>
         {this.redirectToHome()}
-        <Header baseUrl={this.props.baseUrl} />
+        <Header isSearchBarVisible={false} baseUrl={this.props.baseUrl} />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
             <Stepper activeStep={activeStep} orientation="vertical">
