@@ -53,22 +53,23 @@ class Home extends Component {
           baseUrl={this.props.baseUrl}
           isSearchBarVisible={true}
           restaurantsBySearch={this.getRestaurantsBySearch}
-          baseUrl={this.props.baseUrl}
         />
         <div className="container">
-          {this.state.isSearchActive
-            ?
-            (this.state.searchResultRestuarants.length > 0
-              ?
+          {this.state.isSearchActive ? (
+            this.state.searchResultRestuarants.length > 0 ? (
               this.state.searchResultRestuarants.map((restaurant) => (
                 <InfoCard {...restaurant} key={restaurant.id} />
               ))
-              :
-              <span className="no-restaurant">No restaurant with the given name</span>
+            ) : (
+              <span className="no-restaurant">
+                No restaurant with the given name
+              </span>
             )
-            : this.state.restaurantsList.map((restaurant) => (
+          ) : (
+            this.state.restaurantsList.map((restaurant) => (
               <InfoCard {...restaurant} key={restaurant.id} />
-            ))}
+            ))
+          )}
         </div>
       </div>
     );
