@@ -309,7 +309,7 @@ class Details extends Component {
                   />
                   {category.item_list.map((item) => (
                     <Grid container key={item.id} style={{ marginBottom: 5 }}>
-                      <Grid item xs={1} lg={1}>
+                      <Grid item xs={1} >
                         {item.item_type === "VEG" ? (
                           <span
                             className="fa fa-circle"
@@ -324,7 +324,7 @@ class Details extends Component {
                           />
                         )}
                       </Grid>
-                      <Grid item xs={5} lg={6}>
+                      <Grid item xs={5} >
                         <Typography>
                           <span className="item-name">
                             {/* To Pascal Case */}
@@ -337,7 +337,7 @@ class Details extends Component {
                           </span>
                         </Typography>
                       </Grid>
-                      <Grid item xs={3} lg={2}>
+                      <Grid item xs={3} >
                         <div className="price">
                           <span>
                             <i className="fa fa-inr" aria-hidden="true"></i>
@@ -347,8 +347,7 @@ class Details extends Component {
                           </span>
                         </div>
                       </Grid>
-                      <Grid item xs={1} lg={1}></Grid>
-                      <Grid item xs={2} lg={2}>
+                      <Grid item xs={3} >
                         <IconButton
                           style={{ padding: 0, float: "left" }}
                           onClick={(event) =>
@@ -433,6 +432,7 @@ class Details extends Component {
                                 style={{ flexWrap: "wrap" }}
                               >
                                 <div className="add-remove-icon">
+                                <div className="minus">
                                   <IconButton
                                     className="add-remove-btn"
                                     style={{ display: "flex", padding: 0 }}
@@ -457,6 +457,8 @@ class Details extends Component {
                                   <Typography style={{ fontWeight: "bold" }}>
                                     {item.quantity}
                                   </Typography>
+                                  </div>
+                                  <div className="plus">
                                   <IconButton
                                     className="add-remove-btn"
                                     style={{ display: "flex", padding: 0 }}
@@ -474,6 +476,7 @@ class Details extends Component {
                                       }}
                                     />
                                   </IconButton>
+                                  </div>
                                 </div>
                               </Grid>
                               <Grid item xs={4} lg={3}>

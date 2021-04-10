@@ -280,6 +280,9 @@
         flex: 50%;
         width: 100%;
     }
+    .minus{
+        display: flex;
+    }
     .removeIcon-cart {
         padding: 2px;
     }
@@ -297,6 +300,7 @@
     }
     .add-remove-icon {
         flex: 30%;
+        flex-direction: column;
     }
     .cart-item-centre {
         flex: 30%;
