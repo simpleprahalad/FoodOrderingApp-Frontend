@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   paper: {
-    padding: theme.spacing(1),
-    textAlign: "start",
+    // padding: theme.spacing(1),
+    // textAlign: "start",
   },
   vegIcon: {
     color: "#5A9A5A",
@@ -42,7 +42,7 @@ export default function SummaryCard(props) {
   function BillableItemRow(billedItem) {
     return (
       <React.Fragment>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <FontAwesomeIcon
             icon={faStopCircle}
             className={
@@ -54,28 +54,31 @@ export default function SummaryCard(props) {
             variant="body1"
             component="span"
             color="textSecondary"
+            style={{ marginLeft: "5px" }}
           >
             {billedItem.name}
           </Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={1}>
           <Typography
             className={classes.paper}
             variant="body1"
             component="span"
             color="textSecondary"
+            style={{ marginLeft: "-20px" }}
           >
             {billedItem.quantity}
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          {inrSymbol}
           <Typography
             className={classes.paper}
             variant="body1"
             component="span"
             color="textSecondary"
+            style={{ float: "right" }}
           >
+            {inrSymbol}
             {billedItem.price.toFixed(2)}
           </Typography>
         </Grid>
@@ -109,14 +112,14 @@ export default function SummaryCard(props) {
             {props.text}
           </Typography>
         </Grid>
-        <Grid item xs={3} />
-        <Grid item xs={3}>
-          <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
+        <Grid item xs={6}>
           <Typography
             className={classes.paper}
             variant="body1"
             component="span"
+            style={{ float: "right" }}
           >
+            {inrSymbol}
             {props.value}
           </Typography>
         </Grid>

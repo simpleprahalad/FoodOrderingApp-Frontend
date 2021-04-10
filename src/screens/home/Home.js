@@ -53,6 +53,7 @@ class Home extends Component {
           baseUrl={this.props.baseUrl}
           isSearchBarVisible={true}
           restaurantsBySearch={this.getRestaurantsBySearch}
+          baseUrl={this.props.baseUrl}
         />
         <div className="container">
           {this.state.isSearchActive

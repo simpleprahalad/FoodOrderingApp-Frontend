@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
@@ -9,11 +8,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { Grid, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 280,
+    maxWidth: 260,
     margin: theme.spacing(1),
+    "&:hover": {
+      cursor: "pointer",
+    },
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    "@media screen and (max-width:600px)": {
+      width: "30%",
+    },
   },
   media: {
     height: 0,
@@ -26,10 +35,8 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       //you want this to be the same as the backgroundColor above
       backgroundColor: "#EACC5E",
-      cursor: "auto",
     },
   },
-  ratingContainer: {},
 }));
 
 export default function InfoCard(props) {
@@ -48,8 +55,20 @@ export default function InfoCard(props) {
         image={props.photo_URL}
         title="Resturant Name"
       />
-      <CardHeader title={props.restaurant_name} />
-      <CardHeader subheader={props.categories} />
+      <CardContent>
+        <Typography gutterBottom variant="h6" component="h2">
+          {props.restaurant_name}
+        </Typography>
+        <div>
+          <br />
+          <Typography style={{ height: "18px" }} variant="body1">
+            {props.categories}
+          </Typography>
+        </div>
+        <br />
+        <br />
+      </CardContent>
+
       <CardActions disableSpacing>
         <Grid container justify="space-between">
           <Grid item>
@@ -67,8 +86,8 @@ export default function InfoCard(props) {
             </Button>
           </Grid>
           <Grid item>
-            <FontAwesomeIcon icon={faRupeeSign} />
-            <Typography variant="h6" component="span">
+            <Typography style={{ marginTop: "5px" }}>
+              <FontAwesomeIcon icon={faRupeeSign} />
               {props.average_price} for two
             </Typography>
           </Grid>
