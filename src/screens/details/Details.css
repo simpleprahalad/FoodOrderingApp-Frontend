@@ -30,6 +30,10 @@
     width: 100%;
 }
 
+.rating-container {
+    width: 50%;
+}
+
 .rating-section-left {
     flex: 50%;
 }
@@ -39,32 +43,32 @@
 }
 
 .image-container {
+    flex: 25%;
     height: 200px;
     width: 250px;
-    flex: 25%;
 }
 
 .rating-avgprice-container {
+    display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
-    display: flex;
 }
 
 .menu {
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
     margin-left: 20px;
     margin-right: 40px;
-    display: flex;
-    flex-direction: row;
+    margin-bottom: 20px;
 }
 
 .items-list {
-    padding-top: 25px;
-    flex: 60%;
     width: 40%;
     padding-left: 50px;
-
+    padding-top: 25px;
+    flex: 60%;
 }
 
 .details-container {
@@ -77,25 +81,24 @@
 }
 
 .item {
-    padding-top: 10px;
-    width: 100%;
-    flex-wrap: nowrap;
     display: flex;
     flex-direction: row;
-    font-weight: normal;
-    font-size: 18px;
     align-items: baseline;
     justify-content: space-between;
+    padding-top: 10px;
+    width: 100%;
+    font-weight: normal;
+    font-size: 18px;
+    flex-wrap: nowrap;
 }
 
 .item-right {
-    width: 100%;
-    flex-direction: row;
     flex: 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-around;
-    display: flex;
-
 }
 
 .price {
@@ -108,17 +111,17 @@
 }
 
 .item-left {
+    flex: 60%;
     width: 100%;
     margin-right: 20px;
-    flex: 60%;
 }
 
 .add-remove-icon {
-    align-items: center;
-    justify-content: center;
-    flex: 30%;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex: 30%
 }
 
 
@@ -133,9 +136,9 @@
 
 .cart-container {
     padding-left: 150px;
+    padding-top: 25px;
     height: auto;
     width: 50%;
-    padding-top: 25px;
 }
 
 .cart-item {
@@ -150,11 +153,11 @@
 .cart-item {
     margin-top: 3px;
     font-size: 18px;
+    display: flex;
     flex-direction: row;
     align-items: baseline;
     justify-content: space-between;
     font-weight: lighter;
-    display: flex;
 }
 
 .cart-item-right {
@@ -166,9 +169,9 @@
 }
 
 .total-amount-section {
+    font-weight: bold;
     font-size: 18px;
     margin-top: 25px;
-    font-weight: bold;
 }
 
 .item-name {
@@ -193,7 +196,45 @@
     width: 100%
 }
 
-/* media query for mobile devices */
+/*Tablet Query*/
+
+@media (min-width: 200px) and (max-width: 1000px) {
+    .main-container-body {
+        width: 100%
+    }
+    .details-container {
+        width: 60%;
+        text-align: center;
+    }
+    .menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .items-list {
+        flex: 100%;
+        width: 70%;
+    }
+    .cart-container {
+        flex: 100%;
+        padding-left: 15px;
+        width: 450px;
+    }
+    .restaurant-details {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 400px;
+        align-items: center;
+        padding: 15px 5px;
+    }
+    .image-container {
+        width: 70%;
+        padding: 5px 2px;
+    }
+}
+
 @media only screen and (min-width: 150px) and (max-width: 480px) {
     .main-container-body {
         width: 100%
@@ -214,12 +255,12 @@
         height: auto;
     }
     .image-container {
-        width: 80%;
-        padding: 5px 2px;
+        width: 70%;
     }
     .details-container {
-        width: 70%;
+        width: 80%;
         text-align: center;
+        padding-left: 0px;
     }
     .items-list {
         flex: 100%;
@@ -280,43 +321,5 @@
     .cart-item-left {
         flex: 40%;
         flex-wrap: wrap;
-    }
-}
-
-/* Tablet device media query */
-@media (min-width: 200px) and (max-width: 1000px) {
-    .main-container-body {
-        width: 100%
-    }
-    .details-container {
-        width: 60%;
-        text-align: center;
-    }
-    .menu {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-    .items-list {
-        flex: 100%;
-        width: 70%;
-    }
-    .cart-container {
-        flex: 100%;
-        padding-left: 15px;
-        width: 450px;
-    }
-    .restaurant-details {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        height: 400px;
-        align-items: center;
-        padding: 15px 5px;
-    }
-    .image-container {
-        width: 70%;
-        padding: 5px 2px;
     }
 }
