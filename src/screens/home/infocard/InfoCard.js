@@ -12,7 +12,10 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 280,
+    "@media screen and (max-width:600px)": {
+      width: "40%",
+    },
+    maxWidth: 260,
     margin: theme.spacing(1),
   },
   media: {
