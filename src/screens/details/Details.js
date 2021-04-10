@@ -177,7 +177,7 @@ class Details extends Component {
       this.setState({ userNotLoggedIn: true });
     } else {
       this.props.history.push({
-        pathname: "/checkout/",
+        pathname: "/checkout",
         state: {
           orderItems: this.state.orderItems,
           total: this.state.totalAmount,
@@ -201,7 +201,7 @@ class Details extends Component {
   render() {
     return (
       <div>
-        <Header 
+        <Header
           baseUrl={this.props.baseUrl}
         />
         {this.state.text}
@@ -304,12 +304,12 @@ class Details extends Component {
                     style={{
                       marginTop: "10px",
                       marginBottom: "10px",
-                      width: "90%",
+                      width: "100%",
                     }}
                   />
                   {category.item_list.map((item) => (
                     <Grid container key={item.id} style={{ marginBottom: 5 }}>
-                      <Grid item xs={1} lg={1}>
+                      <Grid item xs={1} >
                         {item.item_type === "VEG" ? (
                           <span
                             className="fa fa-circle"
@@ -324,7 +324,7 @@ class Details extends Component {
                           />
                         )}
                       </Grid>
-                      <Grid item xs={5} lg={6}>
+                      <Grid item xs={6} >
                         <Typography>
                           <span className="item-name">
                             {/* To Pascal Case */}
@@ -337,20 +337,19 @@ class Details extends Component {
                           </span>
                         </Typography>
                       </Grid>
-                      <Grid item xs={3} lg={2}>
+                      <Grid item xs={3} >
                         <div className="price">
                           <span>
                             <i className="fa fa-inr" aria-hidden="true"></i>
-                            <span style={{ paddingLeft: "2px" }}>
+                            <span style={{ paddingLeft: "2px", float: "right" }}>
                               {item.price.toFixed(2)}
                             </span>
                           </span>
                         </div>
                       </Grid>
-                      <Grid item xs={1} lg={1}></Grid>
-                      <Grid item xs={2} lg={2}>
+                      <Grid item xs={2} >
                         <IconButton
-                          style={{ padding: 0, float: "left" }}
+                          style={{ padding: 0, float: "right" }}
                           onClick={(event) =>
                             this.addToCartHandler(
                               event,
@@ -361,7 +360,7 @@ class Details extends Component {
                             )
                           }
                         >
-                          <AddIcon style={{ padding: 0 }} fontSize="small" />
+                          <AddIcon style={{ padding: 0, fontSize: 'large' }} />
                         </IconButton>
                       </Grid>
                     </Grid>
@@ -389,53 +388,53 @@ class Details extends Component {
                     <Grid container>
                       {this.state.orderItems.items !== undefined
                         ? this.state.orderItems.items.map((item, index) => (
-                            <Fragment key={item.item_id}>
-                              <Grid item xs={2} lg={2}>
-                                {item.type === "VEG" ? (
-                                  <span
-                                    className="fa fa-stop-circle-o"
-                                    aria-hidden="true"
-                                    style={{
-                                      fontSize: "12px",
-                                      color: "green",
-                                      paddingRight: "12px",
-                                    }}
-                                  />
-                                ) : (
-                                  <span
-                                    className="fa fa-stop-circle-o"
-                                    aria-hidden="true"
-                                    style={{
-                                      fontSize: "12px",
-                                      color: "red",
-                                      paddingRight: "12px",
-                                    }}
-                                  />
+                          <Fragment key={item.item_id}>
+                            <Grid item xs={1}>
+                              {item.type === "VEG" ? (
+                                <span
+                                  className="fa fa-stop-circle-o"
+                                  aria-hidden="true"
+                                  style={{
+                                    fontSize: "12px",
+                                    color: "green",
+                                    paddingRight: "12px",
+                                  }}
+                                />
+                              ) : (
+                                <span
+                                  className="fa fa-stop-circle-o"
+                                  aria-hidden="true"
+                                  style={{
+                                    fontSize: "12px",
+                                    color: "red",
+                                    paddingRight: "12px",
+                                  }}
+                                />
+                              )}
+                            </Grid>
+                            <Grid item xs={5}>
+                              <Typography>
+                                {/* Pascal case */}
+                                {item.name.replace(
+                                  /(\w)(\w*)/g,
+                                  function (g0, g1, g2) {
+                                    return (
+                                      g1.toUpperCase() + g2.toLowerCase()
+                                    );
+                                  }
                                 )}
-                              </Grid>
-                              <Grid item xs={3} lg={4}>
-                                <Typography>
-                                  {/* Pascal case */}
-                                  {item.name.replace(
-                                    /(\w)(\w*)/g,
-                                    function (g0, g1, g2) {
-                                      return (
-                                        g1.toUpperCase() + g2.toLowerCase()
-                                      );
-                                    }
-                                  )}
-                                </Typography>
-                              </Grid>
-                              <Grid
-                                item
-                                xs={3}
-                                lg={3}
-                                style={{ flexWrap: "wrap" }}
-                              >
-                                <div className="add-remove-icon">
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              xs={3}
+                              style={{ flexWrap: "wrap" }}
+                            >
+                              <div className="add-remove-icon">
+                                <div className="minus">
                                   <IconButton
                                     className="add-remove-btn"
-                                    style={{ display: "flex", padding: 0 }}
+                                    style={{ display: "flex", padding: 0, width: '10', height: '10' }}
                                     onClick={(event) =>
                                       this.decrementItemQuantity(
                                         event,
@@ -450,13 +449,20 @@ class Details extends Component {
                                       fontSize="default"
                                       style={{
                                         color: "black",
-                                        fontWeight: "bolder",
+                                        fontSize: 'large'
                                       }}
                                     />
                                   </IconButton>
-                                  <Typography style={{ fontWeight: "bold" }}>
+                                  <Typography
+                                    style={{
+                                      color: "black",
+                                      fontSize: 'medium'
+                                    }}
+                                  >
                                     {item.quantity}
                                   </Typography>
+                                </div>
+                                <div className="plus">
                                   <IconButton
                                     className="add-remove-btn"
                                     style={{ display: "flex", padding: 0 }}
@@ -467,28 +473,28 @@ class Details extends Component {
                                     )}
                                   >
                                     <AddIcon
-                                      fontSize="default"
                                       style={{
                                         color: "black",
-                                        fontWeight: "bolder",
+                                        fontSize: 'large'
                                       }}
                                     />
                                   </IconButton>
                                 </div>
-                              </Grid>
-                              <Grid item xs={4} lg={3}>
-                                <span style={{ float: "right" }}>
-                                  <i
-                                    className="fa fa-inr"
-                                    aria-hidden="true"
-                                  ></i>
-                                  <span style={{ paddingLeft: "2px" }}>
-                                    {item.price.toFixed(2)}
-                                  </span>
+                              </div>
+                            </Grid>
+                            <Grid item xs={3}>
+                              <span style={{ float: "right" }}>
+                                <i
+                                  className="fa fa-inr"
+                                  aria-hidden="true"
+                                ></i>
+                                <span style={{ paddingLeft: "2px" }}>
+                                  {item.price.toFixed(2)}
                                 </span>
-                              </Grid>
-                            </Fragment>
-                          ))
+                              </span>
+                            </Grid>
+                          </Fragment>
+                        ))
                         : null}
                       <Grid item xs={8} lg={9}>
                         <div style={{ marginTop: 15, marginBottom: 15 }}>
