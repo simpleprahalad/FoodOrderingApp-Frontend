@@ -70,6 +70,17 @@ const styles = (theme) => ({
     // Style fro the address check button
     float: "right",
   },
+  summaryContainer: {
+    "@media screen and (max-width: 600px)": {
+      margin: "20px",
+      xs: 12,
+      width: "90%",
+    },
+    marginLeft: "10px",
+    marginTop: "30px",
+    xs: 4,
+    width: "30%",
+  },
 });
 
 function getSteps() {
@@ -752,8 +763,7 @@ class Checkout extends Component {
               </Button>
             </div>
           </Grid>
-
-          <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
+          <Grid item className={classes.summaryContainer}>
             <SummaryCard
               {...this.state}
               placeOrderClickHandler={this.placeOrderClickHandler}
