@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     },
     maxWidth: 260,
     margin: theme.spacing(1),
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   media: {
     height: 0,
@@ -29,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       //you want this to be the same as the backgroundColor above
       backgroundColor: "#EACC5E",
-      cursor: "auto",
     },
   },
   ratingContainer: {},
