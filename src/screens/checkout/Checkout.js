@@ -604,7 +604,7 @@ class Checkout extends Component {
             {this.state.value === 0 ? (
               <TabPanel value={this.state.value} index={0}>
                 {this.state.existingAddresses &&
-                this.state.existingAddresses.length !== 0 ? (
+                  this.state.existingAddresses.length !== 0 ? (
                   this.displayAddressList()
                 ) : (
                   <Typography
@@ -713,7 +713,10 @@ class Checkout extends Component {
     return (
       <div>
         {this.redirectToHome()}
-        <Header isSearchBarVisible={false} baseUrl={this.props.baseUrl} />
+        <Header
+          isSearchBarVisible={false}
+          baseUrl={this.props.baseUrl}
+        />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
             <Stepper activeStep={activeStep} orientation="vertical">

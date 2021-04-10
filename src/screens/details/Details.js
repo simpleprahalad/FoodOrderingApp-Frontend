@@ -201,7 +201,9 @@ class Details extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header 
+          baseUrl={this.props.baseUrl}
+        />
         {this.state.text}
         <div className="main">
           <div className="restaurant-details">

@@ -27,7 +27,7 @@ class Home extends Component {
         that.setState({ restaurantsList: restaurantsObjArray });
       }
     });
-    xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "restaurant");
+    xhrPaymentMethods.open("GET", this.props.baseUrl + "restaurant");
     xhrPaymentMethods.setRequestHeader("Accept", "application/json");
     xhrPaymentMethods.send();
   };
@@ -50,17 +50,24 @@ class Home extends Component {
     return (
       <div>
         <Header
+          baseUrl={this.props.baseUrl}
           isSearchBarVisible={true}
           restaurantsBySearch={this.getRestaurantsBySearch}
         />
         <div className="container">
           {this.state.isSearchActive
-            ? this.state.searchResultRestuarants.map((restaurant) => (
+            ?
+            (this.state.searchResultRestuarants.length > 0
+              ?
+              this.state.searchResultRestuarants.map((restaurant) => (
                 <InfoCard {...restaurant} key={restaurant.id} />
               ))
+              :
+              <span className="no-restaurant">No restaurant with the given name</span>
+            )
             : this.state.restaurantsList.map((restaurant) => (
-                <InfoCard {...restaurant} key={restaurant.id} />
-              ))}
+              <InfoCard {...restaurant} key={restaurant.id} />
+            ))}
         </div>
       </div>
     );
