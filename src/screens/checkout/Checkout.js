@@ -415,6 +415,7 @@ class Checkout extends Component {
       this.getPaymentMethods();
       this.getStates();
       this.updateSummary();
+      window.addEventListener("resize", this.getGridListColumn); //Adding a event listening on the  to change the no of columns for the grid.
     }
   };
 
@@ -677,6 +678,20 @@ class Checkout extends Component {
     requestBody.restaurant_id = this.state.billedRestaurantId;
 
     xhrPlaceOrderMethod.send(JSON.stringify(requestBody));
+  };
+
+  getGridListColumn = () => {
+    if (window.innerWidth <= 600) {
+      this.setState({
+        ...this.state,
+        noOfColumn: 2,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        noOfColumn: 3,
+      });
+    }
   };
 
   render() {
