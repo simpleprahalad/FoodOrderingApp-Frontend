@@ -62,7 +62,7 @@ TabContainer.propTypes = {
 const customStyles = {
   content: {
     top: '50%',
-    left: '48%',
+    left: '50%',
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
@@ -120,10 +120,6 @@ class Header extends Component {
     localStorage.removeItem('savedState');
   }
 
-  componentWillUnmount() {
-    localStorage.removeItem('savedState');
-  }
-
   openModalHandler = () => {
     const savedState = JSON.parse(localStorage.getItem('savedState'));
     this.setState({ savedState });
@@ -139,9 +135,7 @@ class Header extends Component {
   }
 
   tabChangeHandler = (event, value) => {
-    const savedState = JSON.parse(localStorage.getItem('savedState'));
     this.setState({
-      ...this.state,
       value: value
     });
   }
@@ -196,7 +190,7 @@ class Header extends Component {
           }
         }
       })
-      xhrLogin.open("POST", "http://localhost:8080/api/" + "customer/login");
+      xhrLogin.open("POST", this.props.baseUrl + "customer/login");
       xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.contactnumber + ":" + this.state.loginPassword));
       xhrLogin.setRequestHeader("Content-Type", "application/json");
       xhrLogin.setRequestHeader("Cache-Control", "no-cache");
@@ -240,7 +234,7 @@ class Header extends Component {
         }
         localStorage.setItem('savedState', JSON.stringify(this.state))
       });
-      xhrSignUp.open("POST", "http://localhost:8080/api/" + "customer/signup");
+      xhrSignUp.open("POST", this.props.baseUrl + "customer/signup");
       xhrSignUp.setRequestHeader("Content-Type", "application/json");
       xhrSignUp.setRequestHeader("Cache-Control", "no-cache");
       xhrSignUp.send(data);
@@ -446,7 +440,7 @@ class Header extends Component {
 
     })
 
-    xhrLogout.open('POST', "http://localhost:8080/api/" + 'customer/logout');
+    xhrLogout.open('POST', this.props.baseUrl + 'customer/logout');
     xhrLogout.setRequestHeader('authorization', 'Bearer ' + sessionStorage.getItem('access-token'));
     xhrLogout.send(logoutData);
   }
@@ -467,7 +461,7 @@ class Header extends Component {
         }
       })
 
-      xhrSearchRestaurant.open('GET', "http://localhost:8080/api/" + 'restaurant/name/' + event.target.value)
+      xhrSearchRestaurant.open('GET', this.props.baseUrl + 'restaurant/name/' + event.target.value)
       xhrSearchRestaurant.setRequestHeader("Content-Type", "application/json");
       xhrSearchRestaurant.setRequestHeader("Cache-Control", "no-cache");
       xhrSearchRestaurant.send(restaurantData);
@@ -506,7 +500,7 @@ class Header extends Component {
               <AccountCircle />  &nbsp; {this.state.loggedInUsername}
             </Button>
           }
-          <Menu className="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen}>
+          <Menu className="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen} onClose={this.profileMenuClickHandler}>
             <MenuList className={classes.menuList}>
               <Link className={classes.menuItems} to={"/profile"} underline="none" color={"default"}>
                 <MenuItem className={classes.menuItems} disableGutters={false}>My profile</MenuItem>
@@ -524,6 +518,7 @@ class Header extends Component {
           </Tabs>
           {this.state.value === 0 &&
             <TabContainer>
+              <form>
               <FormControl required>
                 <InputLabel htmlFor="contactnumber">Contact No.</InputLabel>
                 <Input id="contactnumber" type="text" contactnumber={this.state.contactnumber} value={this.state.contactnumber} onChange={this.inputcontactnumberChangeHandler} />
@@ -536,8 +531,8 @@ class Header extends Component {
               </FormControl>
               <br /><br />
               <FormControl required>
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input id="password" type="password" password={this.state.loginPassword} value={this.state.loginPassword} onChange={this.inputPasswordChangeHandler} />
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input id="password" type="password" password={this.state.loginPassword} value={this.state.loginPassword} onChange={this.inputPasswordChangeHandler} autoComplete="password" />
                 <FormHelperText className={this.state.loginPasswordRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -550,10 +545,12 @@ class Header extends Component {
               </FormControl>
               <br /><br />
               <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
+              </form>
             </TabContainer>}
 
           {this.state.value === 1 &&
             <TabContainer>
+              <form>
               <FormControl required>
                 <InputLabel htmlFor="firstname">First Name</InputLabel>
                 <Input id="firstname" type="text" firstname={this.state.firstname} value={this.state.firstname} onChange={this.inputFirstNameChangeHandler} />
@@ -579,8 +576,8 @@ class Header extends Component {
               </FormControl>
               <br /><br />
               <FormControl required>
-                <InputLabel htmlFor="signupPassword">Password</InputLabel>
-                <Input id="signupPassword" type="password" signuppassword={this.state.signupPassword} value={this.state.signupPassword} onChange={this.inputSignupPasswordChangeHandler} />
+                  <InputLabel htmlFor="signupPassword">Password</InputLabel>
+                  <Input id="signupPassword" type="password" signuppassword={this.state.signupPassword} value={this.state.signupPassword} onChange={this.inputSignupPasswordChangeHandler} autoComplete="signupPassword" />
                 <FormHelperText className={this.state.signupPasswordRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -604,6 +601,7 @@ class Header extends Component {
               </FormControl>
               <br /><br />
               <Button variant="contained" color="primary" onClick={this.signupClickHandler}>SIGNUP</Button>
+              </form>
             </TabContainer>}
         </Modal>
 

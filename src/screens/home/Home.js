@@ -27,7 +27,7 @@ class Home extends Component {
         that.setState({ restaurantsList: restaurantsObjArray });
       }
     });
-    xhrPaymentMethods.open("GET", "http://localhost:8080/api/" + "restaurant");
+    xhrPaymentMethods.open("GET", this.props.baseUrl + "restaurant");
     xhrPaymentMethods.setRequestHeader("Accept", "application/json");
     xhrPaymentMethods.send();
   };
@@ -50,6 +50,7 @@ class Home extends Component {
     return (
       <div>
         <Header
+          baseUrl={this.props.baseUrl}
           isSearchBarVisible={true}
           restaurantsBySearch={this.getRestaurantsBySearch}
         />

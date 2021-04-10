@@ -4,6 +4,7 @@
   flex-direction: row;
   padding: 10px;
   background-color: #263238;
+  width: 100%;
 }
 
 /** Search **/
