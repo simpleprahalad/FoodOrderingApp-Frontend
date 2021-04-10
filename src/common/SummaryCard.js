@@ -56,7 +56,9 @@ export default function SummaryCard(props) {
             color="textSecondary"
             style={{ marginLeft: "5px" }}
           >
-            {billedItem.name}
+            {billedItem.name.replace(/(\w)(\w*)/g, function (g0, g1, g2) {
+              return g1.toUpperCase() + g2.toLowerCase();
+            })}
           </Typography>
         </Grid>
         <Grid item xs={1}>
