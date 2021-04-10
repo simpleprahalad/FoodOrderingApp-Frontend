@@ -70,6 +70,17 @@ const styles = (theme) => ({
     // Style fro the address check button
     float: "right",
   },
+  summaryContainer: {
+    "@media screen and (max-width: 600px)": {
+      margin: "20px",
+      xs: 12,
+      width: "90%",
+    },
+    marginLeft: "10px",
+    marginTop: "30px",
+    xs: 4,
+    width: "30%",
+  },
 });
 
 function getSteps() {
@@ -415,6 +426,7 @@ class Checkout extends Component {
       this.getPaymentMethods();
       this.getStates();
       this.updateSummary();
+      window.addEventListener("resize", this.getGridListColumn); //Adding a event listening on the  to change the no of columns for the grid.
     }
   };
 
@@ -679,6 +691,20 @@ class Checkout extends Component {
     xhrPlaceOrderMethod.send(JSON.stringify(requestBody));
   };
 
+  getGridListColumn = () => {
+    if (window.innerWidth <= 600) {
+      this.setState({
+        ...this.state,
+        noOfColumn: 2,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        noOfColumn: 3,
+      });
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
@@ -737,8 +763,7 @@ class Checkout extends Component {
               </Button>
             </div>
           </Grid>
-
-          <Grid item xs={4} style={{ marginTop: "20px", marginLeft: "-10px" }}>
+          <Grid item className={classes.summaryContainer}>
             <SummaryCard
               {...this.state}
               placeOrderClickHandler={this.placeOrderClickHandler}
