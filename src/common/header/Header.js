@@ -75,9 +75,23 @@ class Header extends Component {
 
   constructor() {
     super();
+
     this.state = {
+      ...Header.initialState,
       modalIsOpen: false,
       value: 0,
+      isSnackBarVisible: false,
+      snackBarMessage: "",
+      isProfileMenuOpen: false,
+      anchorEl: null,
+      isLoggedIn: sessionStorage.getItem('access-token') === null ? false : true,
+      loggedInUsername: sessionStorage.getItem('customer-name'),
+      searchText: ""
+    };
+  }
+
+  static get initialState() {
+    const value = {
       contactnumber: "",
       loginContactRequired: "dispNone",
       loginPassword: "",
@@ -85,7 +99,6 @@ class Header extends Component {
       firstname: "",
       firstnameRequired: "dispNone",
       lastname: "",
-      lastnameRequired: "dispNone",
       email: "",
       emailRequired: "dispNone",
       signupPassword: "",
@@ -97,31 +110,40 @@ class Header extends Component {
       invalidcontactnumber: "dispNone",
       invalidLoginContact: "dispNone",
       contactAlreadyInUse: "dispNone",
-      isSnackBarVisible: false,
-      snackBarMessage: "",
       invalidPassword: "dispNone",
       notRegisteredContact: "dispNone",
-      isProfileMenuOpen: false,
-      anchorEl: null,
-      isLoggedIn: sessionStorage.getItem('access-token') === null ? false : true,
-      loggedInUsername: sessionStorage.getItem('customer-name'),
-      searchText: ""
-    };
+    }
+    return value;
+  }
+
+  componentDidMount() {
+    localStorage.removeItem('savedState');
+  }
+
+  componentWillUnmount() {
+    localStorage.removeItem('savedState');
   }
 
   openModalHandler = () => {
-    this.setState({ value: 0 })
+    const savedState = JSON.parse(localStorage.getItem('savedState'));
+    this.setState({ savedState });
     this.setState({ modalIsOpen: true });
   }
 
   closeModalHandler = () => {
-    this.setState({ modalIsOpen: false });
-    this.setState({ contactnumberRequired: "dispNone" })
-    this.setState({ passwordRequired: "dispNone" })
+    this.setState({
+      ...Header.initialState,
+      modalIsOpen: false
+    });
+    localStorage.removeItem('savedState');
   }
 
   tabChangeHandler = (event, value) => {
-    this.setState({ value });
+    const savedState = JSON.parse(localStorage.getItem('savedState'));
+    this.setState({
+      ...this.state,
+      value: value
+    });
   }
 
   inputcontactnumberChangeHandler = (e) => {
@@ -170,6 +192,7 @@ class Header extends Component {
               notRegisteredContact: notRegisteredContact,
               invalidPassword: invalidPassword,
             })
+            localStorage.setItem('savedState', JSON.stringify(that.state))
           }
         }
       })
@@ -215,6 +238,7 @@ class Header extends Component {
             }
           }
         }
+        localStorage.setItem('savedState', JSON.stringify(this.state))
       });
       xhrSignUp.open("POST", "http://localhost:8080/api/" + "customer/signup");
       xhrSignUp.setRequestHeader("Content-Type", "application/json");
@@ -257,8 +281,8 @@ class Header extends Component {
       isFormValid = false;
     }
     else if (this.state.contactnumber !== "") {
-      var validator = "[7-9][0-9]{9}";
-      if (!this.state.contactnumber.match(validator)) {
+      var pattern = new RegExp(/^[0-9\b]+$/);
+      if (!pattern.test(this.state.contactnumber)) {
         invalidLoginContact = "dispBlock"
         isFormValid = false;
       }
@@ -301,7 +325,8 @@ class Header extends Component {
       isSignupFormValidated = false;
     }
     else if (this.state.email !== "") {
-      if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,})+$/.test(this.state.email))) {
+      let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+      if (!pattern.test(this.state.email)) {
         invalidEmail = "dispBlock"
         isSignupFormValidated = false;
       }
@@ -313,7 +338,7 @@ class Header extends Component {
       isSignupFormValidated = false;
     }
     else if (this.state.signupcontact !== "") {
-      var pattern = new RegExp(/^[0-9\b]+$/);
+      let pattern = new RegExp(/^[0-9\b]+$/);
       if (!pattern.test(this.state.signupcontact) || this.state.signupcontact.length !== 10) {
         invalidcontactnumber = "dispBlock"
         isSignupFormValidated = false;
@@ -394,13 +419,12 @@ class Header extends Component {
 
   //Profile menu
   openMenu = () => this.setState({
-    ...this.state,
     isProfileMenuOpen: !this.state.isProfileMenuOpen
   })
 
   profileMenuClickHandler = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
     this.openMenu();
-    this.state.anchorEl ? this.setState({ anchorEl: null }) : this.setState({ anchorEl: event.currentTarget });
   };
 
   //Logout
@@ -429,7 +453,6 @@ class Header extends Component {
 
   //Search handler
   searchTextChangeHandler = (event) => {
-    let isSearchActive = false;
     if (!(event.target.value === "")) {
       let restaurantData = null;
       let xhrSearchRestaurant = new XMLHttpRequest();
@@ -437,8 +460,10 @@ class Header extends Component {
       xhrSearchRestaurant.addEventListener("readystatechange", function () {
         if (xhrSearchRestaurant.readyState === 4 && xhrSearchRestaurant.status === 200) {
           var restaurants = JSON.parse(this.responseText).restaurants;
-          isSearchActive = true;
-          that.props.restaurantsBySearch(restaurants, isSearchActive);
+          that.props.restaurantsBySearch(restaurants, true);
+        }
+        else {
+          that.props.restaurantsBySearch([], true);
         }
       })
 
@@ -447,8 +472,7 @@ class Header extends Component {
       xhrSearchRestaurant.setRequestHeader("Cache-Control", "no-cache");
       xhrSearchRestaurant.send(restaurantData);
     } else {
-      isSearchActive = false
-      this.props.restaurantsBySearch([], isSearchActive);
+      this.props.restaurantsBySearch([], false);
     }
   }
 
@@ -482,7 +506,7 @@ class Header extends Component {
               <AccountCircle />  &nbsp; {this.state.loggedInUsername}
             </Button>
           }
-          <Menu className="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen} onClose={this.profileMenuClickHandler}>
+          <Menu className="profile-menu" anchorEl={this.state.anchorEl} open={this.state.isProfileMenuOpen}>
             <MenuList className={classes.menuList}>
               <Link className={classes.menuItems} to={"/profile"} underline="none" color={"default"}>
                 <MenuItem className={classes.menuItems} disableGutters={false}>My profile</MenuItem>
@@ -502,7 +526,7 @@ class Header extends Component {
             <TabContainer>
               <FormControl required>
                 <InputLabel htmlFor="contactnumber">Contact No.</InputLabel>
-                <Input id="contactnumber" type="text" contactnumber={this.state.contactnumber} onChange={this.inputcontactnumberChangeHandler} />
+                <Input id="contactnumber" type="text" contactnumber={this.state.contactnumber} value={this.state.contactnumber} onChange={this.inputcontactnumberChangeHandler} />
                 <FormHelperText className={this.state.loginContactRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -513,7 +537,7 @@ class Header extends Component {
               <br /><br />
               <FormControl required>
                 <InputLabel htmlFor="password">Password</InputLabel>
-                <Input id="password" type="password" password={this.state.loginPassword} onChange={this.inputPasswordChangeHandler} />
+                <Input id="password" type="password" password={this.state.loginPassword} value={this.state.loginPassword} onChange={this.inputPasswordChangeHandler} />
                 <FormHelperText className={this.state.loginPasswordRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -532,7 +556,7 @@ class Header extends Component {
             <TabContainer>
               <FormControl required>
                 <InputLabel htmlFor="firstname">First Name</InputLabel>
-                <Input id="firstname" type="text" firstname={this.state.firstname} onChange={this.inputFirstNameChangeHandler} />
+                <Input id="firstname" type="text" firstname={this.state.firstname} value={this.state.firstname} onChange={this.inputFirstNameChangeHandler} />
                 <FormHelperText className={this.state.firstnameRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -540,12 +564,12 @@ class Header extends Component {
               <br /><br />
               <FormControl>
                 <InputLabel htmlFor="lastname">Last Name</InputLabel>
-                <Input id="lastname" type="text" lastname={this.state.lastname} onChange={this.inputLastNameChangeHandler} />
+                <Input id="lastname" type="text" lastname={this.state.lastname} value={this.state.lastname} onChange={this.inputLastNameChangeHandler} />
               </FormControl>
               <br /><br />
               <FormControl required>
                 <InputLabel htmlFor="email">Email</InputLabel>
-                <Input id="email" type="text" email={this.state.email} onChange={this.inputEmailChangeHandler} />
+                <Input id="email" type="text" email={this.state.email} value={this.state.email} onChange={this.inputEmailChangeHandler} />
                 <FormHelperText className={this.state.emailRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -556,7 +580,7 @@ class Header extends Component {
               <br /><br />
               <FormControl required>
                 <InputLabel htmlFor="signupPassword">Password</InputLabel>
-                <Input id="signupPassword" type="password" signuppassword={this.state.signupPassword} onChange={this.inputSignupPasswordChangeHandler} />
+                <Input id="signupPassword" type="password" signuppassword={this.state.signupPassword} value={this.state.signupPassword} onChange={this.inputSignupPasswordChangeHandler} />
                 <FormHelperText className={this.state.signupPasswordRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -567,7 +591,7 @@ class Header extends Component {
               <br /><br />
               <FormControl required>
                 <InputLabel htmlFor="contact">Contact No.</InputLabel>
-                <Input id="contact" type="text" signupcontact={this.state.signupcontact} onChange={this.inputsignupcontactChangeHandler} />
+                <Input id="contact" type="text" signupcontact={this.state.signupcontact} value={this.state.signupcontact} onChange={this.inputsignupcontactChangeHandler} />
                 <FormHelperText className={this.state.signupcontactRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
@@ -595,7 +619,7 @@ class Header extends Component {
               color: 'red'
             }}
             open={this.state.isSnackBarVisible}
-            autoHideDuration={4000}
+            autoHideDuration={3000}
             onClose={this.snackBarClose}
             TransitionComponent={this.state.transition}
             ContentProps={{

@@ -55,12 +55,18 @@ class Home extends Component {
         />
         <div className="container">
           {this.state.isSearchActive
-            ? this.state.searchResultRestuarants.map((restaurant) => (
+            ?
+            (this.state.searchResultRestuarants.length > 0
+              ?
+              this.state.searchResultRestuarants.map((restaurant) => (
                 <InfoCard {...restaurant} key={restaurant.id} />
               ))
+              :
+              <span className="no-restaurant">No restaurant with the given name</span>
+            )
             : this.state.restaurantsList.map((restaurant) => (
-                <InfoCard {...restaurant} key={restaurant.id} />
-              ))}
+              <InfoCard {...restaurant} key={restaurant.id} />
+            ))}
         </div>
       </div>
     );
