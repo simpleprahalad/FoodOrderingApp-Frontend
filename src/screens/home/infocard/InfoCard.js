@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "space-between",
     "@media screen and (max-width:600px)": {
-      width: "30%",
+      width: "80%",
     },
   },
   media: {
