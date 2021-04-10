@@ -11,6 +11,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    padding: 0px;
+    margin: 0px;
     margin-left: 5px;
   }
 }

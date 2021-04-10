@@ -9,16 +9,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { Grid, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    "@media screen and (max-width:600px)": {
-      width: "40%",
-    },
     maxWidth: 260,
     margin: theme.spacing(1),
     "&:hover": {
       cursor: "pointer",
+    },
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    "@media screen and (max-width:600px)": {
+      width: "30%",
     },
   },
   media: {
@@ -34,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#EACC5E",
     },
   },
-  ratingContainer: {},
 }));
 
 export default function InfoCard(props) {
@@ -53,8 +56,20 @@ export default function InfoCard(props) {
         image={props.photo_URL}
         title="Resturant Name"
       />
-      <CardHeader title={props.restaurant_name} />
-      <CardHeader subheader={props.categories} />
+      <CardContent>
+        <Typography gutterBottom variant="h6" component="h2">
+          {props.restaurant_name}
+        </Typography>
+        <div>
+          <br />
+          <Typography style={{ height: "18px" }} variant="body1">
+            {props.categories}
+          </Typography>
+        </div>
+        <br />
+        <br />
+      </CardContent>
+
       <CardActions disableSpacing>
         <Grid container justify="space-between">
           <Grid item>
@@ -72,8 +87,8 @@ export default function InfoCard(props) {
             </Button>
           </Grid>
           <Grid item>
-            <FontAwesomeIcon icon={faRupeeSign} />
-            <Typography variant="h6" component="span">
+            <Typography style={{ marginTop: "5px" }}>
+              <FontAwesomeIcon icon={faRupeeSign} />
               {props.average_price} for two
             </Typography>
           </Grid>
