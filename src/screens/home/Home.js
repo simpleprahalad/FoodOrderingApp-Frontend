@@ -23,6 +23,7 @@ class Home extends Component {
     window.addEventListener("resize", this.noOfColumns);
   };
 
+  // GET API call for getting details of all restuarant from backend server
   getRestaurantDetails = () => {
     let xhrPaymentMethods = new XMLHttpRequest();
     let that = this;
@@ -30,6 +31,7 @@ class Home extends Component {
     xhrPaymentMethods.addEventListener("readystatechange", function () {
       if (this.readyState === 4 && xhrPaymentMethods.status === 200) {
         const restaurantsObjArray = JSON.parse(this.responseText).restaurants;
+        // Saving all the restaurant details in state variable
         that.setState({ restaurantsList: restaurantsObjArray });
       }
     });
@@ -55,33 +57,26 @@ class Home extends Component {
   //method updates the no columns according to the window size
   noOfColumns = () => {
     if (window.innerWidth >= 320 && window.innerWidth <= 600) {
-      this.setState({
-        cards: 1,
-      });
+      this.setState({ cards: 1 });
       return;
     }
 
-    if (window.innerWidth >= 601 && window.innerWidth <= 1000) {
-      this.setState({
-        cards: 2,
-      });
+    if (window.innerWidth > 600 && window.innerWidth <= 1000) {
+      this.setState({ cards: 2 });
       return;
     }
 
-    if (window.innerWidth >= 1001 && window.innerWidth <= 1270) {
-      this.setState({
-        cards: 3,
-      });
+    if (window.innerWidth > 1000 && window.innerWidth <= 1270) {
+      this.setState({ cards: 3 });
       return;
     }
 
-    if (window.innerWidth >= 1271 && window.innerWidth <= 1530) {
-      this.setState({
-        cards: 4,
-      });
+    if (window.innerWidth > 1270 && window.innerWidth <= 1530) {
+      this.setState({ cards: 4 });
       return;
     }
-    if (window.innerWidth >= 1530) {
+
+    if (window.innerWidth > 1530) {
       this.setState({ cards: 5 });
       return;
     }

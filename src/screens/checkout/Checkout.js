@@ -130,13 +130,15 @@ class Checkout extends Component {
       changeOption: "dispNone",
       isSnackBarVisible: false,
       snackBarMessage: "",
-      onNewAddress: false,
+      onNewAddress: false /*flag to trace if user is currently in the
+                            "existing address tab or new address tab" */,
       isLoggedIn:
         sessionStorage.getItem("access-token") === null ? false : true,
     };
   }
 
   snackBarClose = () => {
+    // reset snackbar related varibles to hide snackbar
     this.setState({
       ...this.state,
       snackBarMessage: "",
@@ -144,13 +146,18 @@ class Checkout extends Component {
     });
   };
 
+  // Handle "Back" button of Stepper
   handleBack = () => {
     this.setState({ activeStep: this.state.activeStep - 1 });
   };
 
+  // Handle "Next" button of Stepper
   handleNext = () => {
+    // Handle Next only when the user is in Existing Address Tab
+    // Allow Next of stepper only when user Selects address else no action
     if (this.state.onNewAddress !== true && this.state.selectedAddress !== "") {
       if (this.state.activeStep === 1) {
+        // Allow Next of stepper only when user Selects one of the payment option
         if (this.state.selectedPaymentOptionId !== "") {
           this.setState({
             activeStep: this.state.activeStep + 1,
@@ -158,6 +165,7 @@ class Checkout extends Component {
           });
         }
       } else {
+        // Display "Change" option after user has selected 1 address and 1 of the payment mode
         this.setState({
           activeStep: this.state.activeStep + 1,
           changeOption: "dispNone",
@@ -166,10 +174,13 @@ class Checkout extends Component {
     }
   };
 
+  // Handles click between existing address and new address tabs
   tabChangeHandler = (event, value) => {
     this.setState({ value });
   };
 
+  // Method to select address when user clicks on any of the address
+  // in the horizontal scroll bar
   addressSelectedClickHandler = (addressId) => {
     let addresses = this.state.existingAddresses;
     let selectedAddress = "";
@@ -188,6 +199,7 @@ class Checkout extends Component {
     });
   };
 
+  // Method to display all the address available in DB in an horizontal scroll bar manner
   displayAddressList = () => {
     const { classes } = this.props;
     return (
@@ -236,6 +248,12 @@ class Checkout extends Component {
     );
   };
 
+  /* Method to handle new address tab with following 5 fields :
+    1. Flat / Building No.
+    2. Locality
+    3. City
+    4. State
+    5. Pincode */
   getAddNewAddressTabDetails = () => {
     return (
       <div style={{ maxWidth: "250px" }}>
@@ -339,6 +357,7 @@ class Checkout extends Component {
     );
   };
 
+  // API call to GET various payment methods from Backend server
   getPaymentMethods = () => {
     let xhrPaymentMethods = new XMLHttpRequest();
     let that = this;
@@ -349,6 +368,7 @@ class Checkout extends Component {
         const paymentOptionStrings = rspPaymentOptions.map(
           (paymentMode) => paymentMode
         );
+        // Save the payment options list received from backend into a state variable
         that.setState({ paymentOptions: paymentOptionStrings });
       }
     });
@@ -357,6 +377,7 @@ class Checkout extends Component {
     xhrPaymentMethods.send();
   };
 
+  // API call to GET different states for populating state field in address from Backend server
   getStates = () => {
     let xhrGetStatesMethod = new XMLHttpRequest();
     let that = this;
@@ -365,6 +386,7 @@ class Checkout extends Component {
       if (this.readyState === 4 && xhrGetStatesMethod.status === 200) {
         const rspStateDetails = JSON.parse(this.responseText).states;
         const states = rspStateDetails.map((stateDetails) => stateDetails);
+        // Save the state list received from backend into a state variable
         that.setState({ addressStates: states });
       }
     });
@@ -373,6 +395,7 @@ class Checkout extends Component {
     xhrGetStatesMethod.send();
   };
 
+  // API call to GET different address of a customer from Backend server
   getDeliveryAddresses = () => {
     let xhrGetDeliveryAddressesMethod = new XMLHttpRequest();
     let that = this;
@@ -385,6 +408,7 @@ class Checkout extends Component {
           xhrGetDeliveryAddressesMethod.status === 200
         ) {
           const rspAddressesInDetail = JSON.parse(this.responseText).addresses;
+          // Save the address list received from backend into a state variable
           that.setState({ existingAddresses: rspAddressesInDetail });
         }
       }
@@ -410,6 +434,8 @@ class Checkout extends Component {
     this.setState({ selectedPaymentOptionId: e.target.value });
   };
 
+  // Update all the data received from Details page into the summary component
+  // displayed in checkout page
   updateSummary = () => {
     this.setState({
       billedRestaurant: this.props.history.location.state.restaurantName,
@@ -420,19 +446,26 @@ class Checkout extends Component {
   };
 
   componentDidMount = () => {
+    // Make API calls only when user is logged in
     if (this.state.isLoggedIn) {
       this.getDeliveryAddresses();
       this.getPaymentMethods();
       this.getStates();
       this.updateSummary();
-      window.addEventListener("resize", this.getGridListColumn); //Adding a event listening on the  to change the no of columns for the grid.
+      // Adding a event-listener to track resize of screen so as to change the
+      // no of columns for the grid.
+      window.addEventListener("resize", this.getGridListColumn);
     }
   };
 
   componentWillUnmount() {
+    // Remove listener when component is unmounted
     window.removeEventListener("resize", this.getGridListColumn);
   }
 
+  // Method to redirect to home screen when
+  // 1. User logs out
+  // 2. Any tries going directly to checkout page using url
   redirectToHome = () => {
     if (sessionStorage.getItem("access-token") === null) {
       this.props.history.push({
@@ -441,26 +474,32 @@ class Checkout extends Component {
     }
   };
 
+  // Input change handler for flat number/building name
   flatNumChangeHandler = (e) => {
     this.setState({ flatBuildingNum: e.target.value });
   };
 
+  // Input change handler for locatity of address field
   localityChangeHandler = (e) => {
     this.setState({ locality: e.target.value });
   };
 
+  // Input change handler for city of address field
   cityChangeHandler = (e) => {
     this.setState({ city: e.target.value });
   };
 
+  // Input change handler for state of address field
   stateChangeHandler = (e) => {
     this.setState({ selectedState: e.target.value });
   };
 
+  // Input change handler for pincode of address field
   pincodeChangeHandler = (e) => {
     this.setState({ pincode: e.target.value });
   };
 
+  // Handling required option for address parameters
   saveAddressClickHandler = () => {
     this.state.flatBuildingNum === ""
       ? this.setState({ flatBuildingNumRequired: "dispBlock" })
@@ -478,6 +517,7 @@ class Checkout extends Component {
       ? this.setState({ stateRequired: "dispBlock" })
       : this.setState({ stateRequired: "dispNone" });
 
+    // Pincode validation code for 6 digits
     if (this.state.pincode !== "") {
       var pincodePattern = /^\d{6}$/;
       if (!this.state.pincode.match(pincodePattern)) {
@@ -498,6 +538,7 @@ class Checkout extends Component {
       });
     }
 
+    // if any of the fields is null, then donot make API call to save address
     if (
       this.state.flatBuildingNum === "" ||
       this.state.locality === "" ||
@@ -507,9 +548,12 @@ class Checkout extends Component {
     ) {
       return;
     }
+
+    // API call for saving address in the DB
     this.saveNewAddress();
   };
 
+  // POST method to update new address into the backend server
   saveNewAddress() {
     let xhrSaveNewDeliveryAddressesMethod = new XMLHttpRequest();
     let that = this;
@@ -521,8 +565,10 @@ class Checkout extends Component {
           this.readyState === 4 &&
           xhrSaveNewDeliveryAddressesMethod.status === 201
         ) {
+          // Reset all the fields of address when the address is
+          // updated successfully in the DB
           that.setState({
-            value: 0,
+            value: 0, // moving to existing tab after address is updated sccessfully
             onNewAddress: false,
             selectedAddress: "",
             selectedState: "",
@@ -531,6 +577,9 @@ class Checkout extends Component {
             city: "",
             pincode: "",
           });
+
+          // Update the screen with the lastest address added in DB
+          // Lastest/recent most address is displayed as the 1st address in the list
           that.getDeliveryAddresses();
         }
       }
@@ -551,6 +600,7 @@ class Checkout extends Component {
       "Bearer " + sessionStorage.getItem("access-token")
     );
 
+    // Preparing the response object to be stored in the backend
     let requestBody = {};
     requestBody.flat_building_name = this.state.flatBuildingNum;
     requestBody.city = this.state.city;
@@ -561,6 +611,7 @@ class Checkout extends Component {
     xhrSaveNewDeliveryAddressesMethod.send(JSON.stringify(requestBody));
   }
 
+  // Go back to Stepper->Exisiting address tab when "Change" button is pressed by user
   onClickChangeHandler = () => {
     this.setState({
       activeStep: 0,
@@ -568,6 +619,7 @@ class Checkout extends Component {
     });
   };
 
+  // Displaying all the address available DB and reset all the fields of new address tab
   onExitingAddressTabHandler = () => {
     this.setState({ onNewAddress: false });
     this.setState({
@@ -579,10 +631,12 @@ class Checkout extends Component {
     });
   };
 
+  // Setting flag to indicate that user is currently in the new address tab
   onNewAddressTabHandler = () => {
     this.setState({ onNewAddress: true });
   };
 
+  // Setup the existing and new address tab UI
   getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -657,6 +711,9 @@ class Checkout extends Component {
     }
   };
 
+  // POST method for saving the order in the backend server and updating
+  // snackbar with order id when order is successfull, else displaying a
+  // failure message in snackbar
   placeOrderClickHandler = () => {
     let xhrPlaceOrderMethod = new XMLHttpRequest();
     let that = this;
@@ -682,6 +739,8 @@ class Checkout extends Component {
       "authorization",
       "Bearer " + sessionStorage.getItem("access-token")
     );
+
+    // Creating an order object to be sent out to backend server for storing order
     let requestBody = {};
     requestBody.address_id = this.state.selectedAddress;
     requestBody.bill = this.state.totalBillAmount;
@@ -694,6 +753,8 @@ class Checkout extends Component {
     xhrPlaceOrderMethod.send(JSON.stringify(requestBody));
   };
 
+  // Method to handle displaying of 3 address when in full screen mode
+  // and displaying 2 address blocks when in Phone mode
   getGridListColumn = () => {
     if (window.innerWidth <= 600) {
       this.setState({
