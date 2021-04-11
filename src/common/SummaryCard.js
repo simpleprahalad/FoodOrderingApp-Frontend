@@ -80,7 +80,7 @@ export default function SummaryCard(props) {
             color="textSecondary"
             style={{ float: "right" }}
           >
-            {inrSymbol}
+            {inrSymbol} {}
             {billedItem.price.toFixed(2)}
           </Typography>
         </Grid>
@@ -121,7 +121,7 @@ export default function SummaryCard(props) {
             component="span"
             style={{ float: "right" }}
           >
-            {inrSymbol}
+            {inrSymbol} {}
             {props.value}
           </Typography>
         </Grid>
