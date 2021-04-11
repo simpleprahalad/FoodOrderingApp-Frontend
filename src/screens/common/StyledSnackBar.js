@@ -3,8 +3,11 @@ import Snackbar from '@material-ui/core/Snackbar'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
+// This is a snackbar that is styled according to the requirement
+// This component is usable through the SPA for sending user notification.
 function StyledSnackBar(props) {
     return (
+        //Material-UI's snackbar is used as a core of this component
         <Snackbar
             anchorOrigin={{
                 vertical: 'bottom',
