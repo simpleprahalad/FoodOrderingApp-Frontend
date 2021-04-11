@@ -5,7 +5,9 @@
   padding-top: 10px;
 }
 
-@media screen and (max-width: 600px) {
+/* Extra small devices (phones, 600px and down) */
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px), (max-width: 768px) {
   .container {
     justify-content: center;
     padding: 0px;

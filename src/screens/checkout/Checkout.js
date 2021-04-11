@@ -71,7 +71,7 @@ const styles = (theme) => ({
     float: "right",
   },
   summaryContainer: {
-    "@media screen and (max-width: 600px)": {
+    "@media screen and (max-width: 600px), (max-width: 768px)": {
       margin: "20px",
       xs: 12,
       width: "90%",

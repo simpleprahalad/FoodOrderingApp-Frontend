@@ -79,9 +79,9 @@
   color: lightgrey !important;
 }
 
-/* Smaller devices */
-
-@media screen and (max-width: 600px) {
+/* Extra small devices (phones, 600px and down) */
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px), (max-width: 768px) {
   .inner-container {
     flex-direction: column;
     justify-content: space-between;
