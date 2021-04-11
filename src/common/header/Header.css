@@ -1,0 +1,106 @@
+.inner-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 10px;
+  background-color: #263238;
+}
+
+/** Search **/
+
+.search-container {
+  height: 30px;
+  align-self: center;
+}
+
+.search-container input {
+  width: 300px !important;
+}
+
+/** To remove cross icon **/
+
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/** Left Logo **/
+
+.logo {
+  align-self: center;
+  padding-left: 10px;
+  height: 40px;
+}
+
+.login-button {
+  align-self: center;
+}
+
+/* Modal **/
+
+@keyframes app-logo-spin {
+  from {
+    transform: scaleX(-1);
+  }
+}
+
+.MuiFormControl-root {
+  width: 80%;
+}
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.dispNone {
+  display: none;
+}
+
+.dispBlock {
+  display: block;
+}
+
+.red {
+  color: red;
+}
+
+/* Menu */
+
+.profile-menu {
+  margin-top: 30px;
+  padding: 0px;
+  margin-left: 0px;
+}
+
+.profile-button {
+  align-self: center !important;
+  margin-right: 10px !important;
+  color: lightgrey !important;
+}
+
+/* Extra small devices (phones, 600px and down) */
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px), (max-width: 768px) {
+  .inner-container {
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .search-container,
+  .login-button,
+  .profile-button {
+    align-self: flex-start !important;
+    margin-top: 15px !important;
+  }
+  .logo {
+    align-self: flex-start;
+  }
+  .modal-style {
+    min-width: 70%;
+  }
+  .profile-menu {
+    margin-top: 75px;
+    padding: 0px;
+    margin-left: 0px;
+  }
+}
