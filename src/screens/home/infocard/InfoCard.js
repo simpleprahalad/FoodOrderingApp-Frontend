@@ -12,14 +12,17 @@ import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 260,
+    width: 300,
+    maxWidth: 300,
     margin: theme.spacing(1),
+
     "&:hover": {
       cursor: "pointer",
     },
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "center",
+
     "@media screen and (max-width:600px)": {
       width: "80%",
     },

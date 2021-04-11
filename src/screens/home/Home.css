@@ -13,6 +13,11 @@
     padding: 0px;
     width: 100%;
   }
+
+  .MuiGridListTile-tile {
+    display: flex !important;
+    justify-content: center !important;
+  }
 }
 
 .no-restaurant {
