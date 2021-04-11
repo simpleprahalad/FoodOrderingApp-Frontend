@@ -438,6 +438,7 @@ class Header extends Component {
           isLoggedIn: false,
           isProfileMenuOpen: !that.state.isProfileMenuOpen,
         });
+        that.props.logoutHandler();
       }
     });
 

@@ -30,7 +30,6 @@ import IconButton from "@material-ui/core/IconButton";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
-import { Redirect } from "react-router-dom";
 
 const styles = (theme) => ({
   button: {
@@ -430,9 +429,15 @@ class Checkout extends Component {
     }
   };
 
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.getGridListColumn);
+  }
+
   redirectToHome = () => {
-    if (!this.state.isLoggedIn) {
-      return <Redirect to="/" />;
+    if (sessionStorage.getItem("access-token") === null) {
+      this.props.history.push({
+        pathname: "/",
+      });
     }
   };
 
@@ -527,8 +532,6 @@ class Checkout extends Component {
             pincode: "",
           });
           that.getDeliveryAddresses();
-        } else {
-          console.log(this.responseText);
         }
       }
     );
@@ -604,7 +607,7 @@ class Checkout extends Component {
             {this.state.value === 0 ? (
               <TabPanel value={this.state.value} index={0}>
                 {this.state.existingAddresses &&
-                  this.state.existingAddresses.length !== 0 ? (
+                this.state.existingAddresses.length !== 0 ? (
                   this.displayAddressList()
                 ) : (
                   <Typography
@@ -716,6 +719,7 @@ class Checkout extends Component {
         <Header
           isSearchBarVisible={false}
           baseUrl={this.props.baseUrl}
+          logoutHandler={this.redirectToHome}
         />
         <Grid container spacing={1}>
           <Grid item xs={12} md={8}>
