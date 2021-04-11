@@ -218,7 +218,6 @@
   padding-top: 20px;
 }
 
-
 /* Extra small devices (phones, 600px and down) */
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 600px), (max-width: 768px) {
@@ -311,6 +310,6 @@
     flex-wrap: wrap;
   }
   .plus {
-    margin-left: auto;
+    margin-left: -10px;
   }
 }
