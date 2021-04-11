@@ -445,7 +445,7 @@ class Details extends Component {
                                       }
                                     >
                                       <i
-                                        class="fa fa-minus add-icon-plus-button"
+                                        className="fa fa-minus add-icon-plus-button"
                                         aria-hidden="true"
                                       ></i>
                                     </IconButton>
@@ -469,7 +469,7 @@ class Details extends Component {
                                       )}
                                     >
                                       <i
-                                        class="fa fa-plus add-icon-plus-button"
+                                        className="fa fa-plus add-icon-plus-button"
                                         aria-hidden="true"
                                       ></i>
                                     </IconButton>
