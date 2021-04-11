@@ -10,6 +10,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import CardContent from "@material-ui/core/CardContent";
 
+//Custom styles
 const useStyles = makeStyles((theme) => ({
   root: {
     width: 300,
@@ -42,11 +43,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//Re-usable functional component
 export default function InfoCard(props) {
   const classes = useStyles();
   const starIcon = <FontAwesomeIcon icon={faStar} />;
   const history = useHistory();
 
+  //Navigate to Details screen
   function navigateToRestaurantDetailsScreen() {
     history.push("/restaurant/" + props.id);
   }

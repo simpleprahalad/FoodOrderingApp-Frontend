@@ -11,16 +11,13 @@ import Grid from "@material-ui/core/Grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRupeeSign, faStopCircle } from "@fortawesome/free-solid-svg-icons";
 
+//Custom styles
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 400,
   },
   margin: {
     margin: theme.spacing(1),
-  },
-  paper: {
-    // padding: theme.spacing(1),
-    // textAlign: "start",
   },
   vegIcon: {
     color: "#5A9A5A",
@@ -33,12 +30,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//Re-usable functional component
 export default function SummaryCard(props) {
   const classes = useStyles();
   const inrSymbol = (
     <FontAwesomeIcon icon={faRupeeSign} className={classes.inrIcon} />
   );
 
+  //Billable Item
   function BillableItemRow(billedItem) {
     return (
       <React.Fragment>
@@ -50,7 +49,6 @@ export default function SummaryCard(props) {
             }
           />
           <Typography
-            className={classes.paper}
             variant="body1"
             component="span"
             color="textSecondary"
@@ -63,7 +61,6 @@ export default function SummaryCard(props) {
         </Grid>
         <Grid item xs={1}>
           <Typography
-            className={classes.paper}
             variant="body1"
             component="span"
             color="textSecondary"
@@ -74,7 +71,6 @@ export default function SummaryCard(props) {
         </Grid>
         <Grid item xs={3}>
           <Typography
-            className={classes.paper}
             variant="body1"
             component="span"
             color="textSecondary"
@@ -88,6 +84,7 @@ export default function SummaryCard(props) {
     );
   }
 
+  //Billable grid - Collection of Billable items
   function BillableItemGrid() {
     return (
       <React.Fragment>
@@ -102,21 +99,17 @@ export default function SummaryCard(props) {
     );
   }
 
+  //Net-billable item.
   function NetBillableItemRow(props) {
     return (
       <React.Fragment>
         <Grid item xs={6}>
-          <Typography
-            className={classes.paper}
-            variant="body1"
-            component="span"
-          >
+          <Typography variant="body1" component="span">
             {props.text}
           </Typography>
         </Grid>
         <Grid item xs={6}>
           <Typography
-            className={classes.paper}
             variant="body1"
             component="span"
             style={{ float: "right" }}
@@ -129,6 +122,7 @@ export default function SummaryCard(props) {
     );
   }
 
+  //Net-billable item wrapper
   function NetBillableItemGrid() {
     return (
       <React.Fragment>
@@ -144,6 +138,7 @@ export default function SummaryCard(props) {
     );
   }
 
+  //The final UI layout
   return (
     <Card className={classes.root}>
       <CardHeader title="Summary" />
