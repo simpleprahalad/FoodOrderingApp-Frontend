@@ -16,10 +16,14 @@ import AddIcon from "@material-ui/icons/Add";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import "font-awesome/css/font-awesome.min.css";
 
+//This is Details component used to show details of the user selected restaurant
+//This component shows the restuarant details' such as avg rating, avg price, menu items, etc.
+//This component also provides the functionality of adding items in a cart and proceed to checkout page.
 class Details extends Component {
   constructor() {
     super();
     this.state = {
+      //State variables of the component that captures details of restuarant that was clicked from the home page by user
       id: null,
       restaurantName: null,
       restaurantId: null,
@@ -30,12 +34,16 @@ class Details extends Component {
       locality: null,
       categories: [],
 
+      //State variables that captures and updates the user's cart according to the items added by him/her
       totalAmount: 0,
       totalItemCount: 0,
       orderItems: { id: null, items: [], total: 0 },
       cartItems: [],
       cartItem: {},
 
+      //State variables to show snackbar notifications to user as per the requirement
+      //This shows notification to user on adding/removing an item, increasing/decreasing item's quanitity, 
+      // checking out while not logged in, etc.
       itemAddedNotification: false,
       isCartEmpty: false,
       itemQuantityDecreased: false,
@@ -46,6 +54,9 @@ class Details extends Component {
     };
   }
 
+  //This function is invoked immediately after it is mounted
+  //This function hits the backend API with GET request to fetch the information of the respective 
+  // restaurant (which user clicked upon)
   componentDidMount() {
     let data = null;
     let xhr = new XMLHttpRequest();
@@ -58,9 +69,8 @@ class Details extends Component {
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4 && this.status === 200) {
         let responseObject = JSON.parse(this.responseText);
-        // console.log(JSON.parse(responseText))
-        // console.log(JSON.parse(responseText).id)
         that.setState({
+          //Sets the state variables that captures restaurant information from response from backend
           id: responseObject.id,
           restaurantId: responseObject.id,
           restaurantName: responseObject.restaurant_name,
@@ -76,6 +86,7 @@ class Details extends Component {
     });
   }
 
+  //Handler function for adding an item to cart
   addToCartHandler = (event, id, type, name, price) => {
     let totalAmount = this.state.totalAmount;
     let totalItemCount = this.state.totalItemCount;
@@ -92,6 +103,7 @@ class Details extends Component {
     this.setState({ cartItem: newItem });
     totalAmount += price;
 
+    //If the item exist in the cart already and its amount/quantity is to be incremented and cart is not empty
     if (
       this.state.orderItems.items !== undefined &&
       this.state.orderItems.items.some((item) => item.name === name)
@@ -107,7 +119,8 @@ class Details extends Component {
       item.quantity = quantity;
       item.price = priceForAll;
       this.setState(item);
-    } else {
+    } else { 
+      //If the item does not exist in the cart or cart is empty
       this.state.cartItems.push(this.state.cartItem);
       this.setState({ cartItem: {} });
       const orderItems = this.state.orderItems;
@@ -115,11 +128,15 @@ class Details extends Component {
       this.setState({ orderItems: orderItems });
     }
 
+    //Show notification via snackbar
     this.setState({ itemAddedNotification: true });
+
+    //Update the item count and total amount of the cart for the user
     this.setState({ totalItemCount: totalItemCount });
     this.setState({ totalAmount: totalAmount });
   };
 
+  //Handler for incrementing item quantity from the cart
   incrementItemQuantity = (item, index) => {
     let itemIndex = this.state.orderItems.items.findIndex(
       (element) => element["name"] === item.name
@@ -138,10 +155,13 @@ class Details extends Component {
     let totalItemCount = this.state.totalItemCount;
     totalItemCount += 1;
 
+    //Update state variables of the component to re-render the 
+    // updated amount/item count of the cart
     this.setState({ totalItemCount: totalItemCount });
     this.setState({ totalAmount: totalAmount });
   };
 
+  //Handler for decrementing item quantity from the cart
   decrementItemQuantity = (event, id, type, name, price) => {
     let index = this.state.orderItems.items.findIndex(
       (element) => element["name"] === name
@@ -165,16 +185,27 @@ class Details extends Component {
     let totalItemCount = this.state.totalItemCount;
     totalItemCount -= 1;
 
+    //Update state variables of the component to re-render the 
+    // updated amount/item count of the cart
     this.setState({ totalItemCount: totalItemCount });
     this.setState({ totalAmount: totalAmount });
   };
 
+  //Handler that validates the cart and takes logged in user to 
+  // the checkout page in case of a valid cart + user is logged in
   checkoutHandler = () => {
+    //In case no items are added to the cart - show respective 
+    // snackbar notification by updating respective state variable
     if (this.state.totalItemCount === 0) {
       this.setState({ isCartEmpty: true });
-    } else if (sessionStorage.getItem("access-token") === null) {
+    } 
+    //In user is not logged - show respective 
+    // snackbar notification by updating respective state variable
+    else if (sessionStorage.getItem("access-token") === null) {
       this.setState({ userNotLoggedIn: true });
     } else {
+      //Let user proceed to the checkout page in case of 
+      // valid cart + user is logged in.
       this.props.history.push({
         pathname: "/checkout",
         state: {
@@ -187,6 +218,7 @@ class Details extends Component {
     }
   };
 
+  //Auto close the snackbar notification for irrespective of type of notification
   closeSnackBar = () => {
     this.setState({ itemAddedNotification: false });
     this.setState({ isCartEmpty: false });
@@ -197,6 +229,7 @@ class Details extends Component {
     this.setState({ itemQuantityIncreased: false });
   };
 
+  //Render method for the Details react component.
   render() {
     return (
       <div>
@@ -561,4 +594,6 @@ class Details extends Component {
   }
 }
 
+//Export the component in its default config for the Controller.js 
+// react component to use according to the design of SPA
 export default Details;

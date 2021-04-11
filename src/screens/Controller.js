@@ -5,6 +5,11 @@ import Home from "../screens/home/Home";
 import Details from "../screens/details/Details";
 import Profile from "../screens/profile/Profile";
 
+// This is a controller component that provides access and routing for the SPA Food Ordering App and its 4 views viz.
+// 1. Home Page ("/")
+// 2. Details Page ("/restaurant/:restaurantId")
+// 3. Checkout Page ("/checkout")
+// 4. Profile Page ("/profile")
 class Controller extends Component {
   constructor() {
     super();
